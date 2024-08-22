@@ -8,7 +8,7 @@ Welcome to my LeetCode solutions repository! This repository contains my solutio
 
 The repository is structured as follows:
 
-\```
+\
 ├── README.md
 ├── Easy
 │   ├── problem_name_1.py
@@ -26,7 +26,7 @@ The repository is structured as follows:
     ├── problem_name_1.py
     ├── problem_name_2.py
     └── ...
-\```
+\
 
 - **Easy**: Contains solutions for problems categorized as "Easy" on LeetCode.
 - **Medium**: Contains solutions for problems categorized as "Medium" on LeetCode.
