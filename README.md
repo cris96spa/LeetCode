@@ -8,7 +8,7 @@ Welcome to my LeetCode solutions repository! This repository contains my solutio
 
 The repository is structured as follows:
 
-\
+
 ├── README.md
 ├── Easy
 │   ├── problem_name_1.py
@@ -26,7 +26,7 @@ The repository is structured as follows:
     ├── problem_name_1.py
     ├── problem_name_2.py
     └── ...
-\
+
 
 - **Easy**: Contains solutions for problems categorized as "Easy" on LeetCode.
 - **Medium**: Contains solutions for problems categorized as "Medium" on LeetCode.
@@ -40,19 +40,19 @@ The repository is structured as follows:
 ## How to Use
 
 1. **Clone the repository**:
-   \```
+   ```
    git clone https://github.com/your_username/leetcode-solutions.git
-   \```
+   ```
 
 2. **Navigate to the problem of interest**:
-   \```
+   ```
    cd leetcode-solutions/Easy/problem_name.py
-   \```
+   ```
 
 3. **Run the solution**:
-   \```
+   ```
    python3 problem_name.py
-   \```
+   ```
 
 ## Contributions
 
