@@ -1,3 +1,6 @@
+from collections import deque
+
+
 class Solution:
     """Given a directed acyclic graph (DAG) of n nodes labeled from 0 to n - 1,
     find all possible paths from node 0 to node n - 1 and return them in any order.
@@ -57,4 +60,41 @@ class Solution:
         # Perform the dfs from the initial node
         dfs(0)
 
+        return paths
+
+
+""" This problem can be solved also using BFS which allow to find each path in order, from the shorter to the longer one.
+
+"""
+
+
+class Solution:
+    def allPathsSourceTarget(self, graph: List[List[int]]) -> List[List[int]]:
+        if not graph or len(graph) == 0:
+            return paths
+
+        paths = []
+
+        # Queue for BFS: each element is a path (list of nodes)
+        queue = deque()
+        queue.append([0])  # Start with a path containing only the source node
+
+        while queue:
+            # Extract the current path from the queue
+            curr_path = queue.popleft()
+
+            # The current node to be processed is the last element of curr_path
+            curr_node = curr_path[-1]
+
+            # We add the directly connected nodes to the path
+            for _next in graph[curr_node]:
+                # Add the next node to the next path
+                next_path = curr_path.copy()
+                next_path.append(_next)
+                # If we find a path toward the destination, we add it to the list
+                if _next == len(graph) - 1:
+                    paths.append(next_path)
+                else:
+                    # Otherwise, we add the path to the queue
+                    queue.append(next_path)
         return paths
