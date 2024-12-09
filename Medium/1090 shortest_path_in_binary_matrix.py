@@ -93,3 +93,83 @@ class Solution:
                     grid[new_i][new_j] = 1
             
         return -1
+
+
+from heapq import heappop, heappush
+from typing import List
+
+class Solution:
+    """
+    We solve this problem using Prim's Algorithm:
+    1. Start with any arbitrary node and add its edges to a priority queue (min-heap).
+    2. Extract the minimum-cost edge that connects a new node to the growing MST.
+    3. Mark the node as visited and add its unvisited neighbors to the heap.
+    4. Repeat until all nodes are part of the MST.
+
+    Optimization:
+    -------------
+    Instead of precomputing all edges and storing them in memory (which would take O(n^2) space),
+    edges are computed on-the-fly during heap operations. This reduces memory usage and allows 
+    the algorithm to handle larger inputs more efficiently.
+
+    Complexity:
+    -----------
+    - Time Complexity: O(n^2 * log n), where n is the number of points.
+      - O(n^2) for edge computations as each node considers all other nodes as potential neighbors.
+      - O(log n) for heap operations.
+    - Space Complexity: O(n), for the heap and the visited array.
+    """
+
+    def _manhattan_distance(self, a: List[int], b: List[int]) -> int:
+        """Computes the Manhattan distance between two points a and b."""
+        return abs(a[0] - b[0]) + abs(a[1] - b[1])
+
+    def minCostConnectPoints(self, points: List[List[int]]) -> int:
+        """
+        Finds the minimum cost to connect all points using Prim's Algorithm.
+        
+        Args:
+        -----
+        points : List[List[int]]
+            A list of coordinates [x, y] of points on a 2D plane.
+
+        Returns:
+        --------
+        int
+            The minimum cost to connect all points.
+        """
+        n = len(points)
+        if n == 1:
+            return 0
+
+        # Minimum cost to connect all points
+        min_cost = 0
+
+        # Min heap to manage edges
+        min_heap = [(0, 0)]  # (cost, point)
+        
+        # Array to track visited nodes
+        visited = [False] * n
+        
+        # Counter to track how many nodes have been included in the MST
+        edges_used = 0
+
+        # Prim's algorithm main loop
+        while edges_used < n:
+            cost, current = heappop(min_heap)
+
+            # Skip if this node is already visited
+            if visited[current]:
+                continue
+
+            # Include this node in the MST
+            visited[current] = True
+            min_cost += cost
+            edges_used += 1
+
+            # Add all unvisited neighbors to the heap
+            for next_point in range(n):
+                if not visited[next_point]:
+                    heappush(min_heap, (self._manhattan_distance(points[current], points[next_point]), next_point))
+
+        return min_cost
