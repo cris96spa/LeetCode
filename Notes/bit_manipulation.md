@@ -13,6 +13,90 @@ Bit manipulation involves using bitwise operators to solve problems efficiently 
 | Left Shift  | `<<`   | Multiplies by 2 per shift       |
 | Right Shift | `>>`   | Divides by 2 per shift          |
 
+## **Binary Representation**
+
+### **1. Structure of Binary Numbers**
+
+- Each bit (binary digit) represents a power of 2.
+- Example:
+  - Binary: `1101`
+  - Decimal: \( 1 \times 2^3 + 1 \times 2^2 + 0 \times 2^1 + 1 \times 2^0 = 8 + 4 + 0 + 1 = 13 \)
+
+### **2. Signed vs Unsigned Numbers**
+
+- **Unsigned Binary Numbers:** Represent only non-negative integers.
+  - Example: `8-bit binary 1101 = 13 (decimal)`.
+- **Signed Binary Numbers:** Use one bit (usually the leftmost) to indicate the sign.
+  - Example: Using Two's Complement, `8-bit binary 11101101 = -19 (decimal)`.
+
+### **3. Two's Complement Representation**
+
+- A common way to represent negative numbers in binary.
+- To calculate the two's complement of a number:
+  1. Invert all bits (1 becomes 0, and 0 becomes 1).
+  2. Add 1 to the result.
+- Example:
+  - Start with `5 (decimal): 00000101`
+  - Invert: `11111010`
+  - Add 1: `11111011` (This is `-5` in 8-bit two's complement).
+
+---
+
+## **Converting Between Representations**
+
+### **1. Binary to Decimal**
+
+- Multiply each bit by its corresponding power of 2 and sum them up.
+- Example:
+  - Binary: `1011`
+  - Decimal: \( 1 \times 2^3 + 0 \times 2^2 + 1 \times 2^1 + 1 \times 2^0 = 8 + 0 + 2 + 1 = 11 \)
+
+### **2. Decimal to Binary**
+
+- Repeatedly divide the number by 2 and record the remainder. The binary representation is the remainders read from bottom to top.
+- Example:
+  - Decimal: `11`
+  - Steps:
+    - \( 11 \div 2 = 5 \, R: 1 \)
+    - \( 5 \div 2 = 2 \, R: 1 \)
+    - \( 2 \div 2 = 1 \, R: 0 \)
+    - \( 1 \div 2 = 0 \, R: 1 \)
+  - Binary: `1011`
+
+### **3. Binary to Hexadecimal**
+
+- Group binary digits in sets of 4 (starting from the right) and convert each group to its hexadecimal equivalent.
+- Example:
+  - Binary: `10111001`
+  - Grouped: `1011 1001`
+  - Hex: `B9` (where `1011 = B` and `1001 = 9`).
+
+### **4. Hexadecimal to Binary**
+
+- Replace each hex digit with its 4-bit binary equivalent.
+- Example:
+  - Hex: `B9`
+  - Binary: `1011 1001` (where `B = 1011` and `9 = 1001`).
+
+### **5. Decimal to Hexadecimal**
+
+- Repeatedly divide the number by 16 and record the remainder in hexadecimal.
+- Example:
+  - Decimal: `185`
+  - Steps:
+    - \( 185 \div 16 = 11 \, R: 9 \)
+    - \( 11 \div 16 = 0 \, R: B \)
+  - Hex: `B9`.
+
+### **6. Hexadecimal to Decimal**
+
+- Multiply each hex digit by its corresponding power of 16 and sum them up.
+- Example:
+  - Hex: `B9`
+  - Decimal: \( B \times 16^1 + 9 \times 16^0 = 11 \times 16 + 9 = 185 \).
+
+---
+
 ## **Common Bitwise Tricks**
 
 ### **1. Check if a number is odd or even**
