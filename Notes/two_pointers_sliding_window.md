@@ -1,30 +1,8 @@
-# Two Pointers & Sliding Window - Complete Guide
-
-**Interview Frequency:** ⭐⭐⭐⭐⭐ (80% of Google interviews)  
-**Google Frequency:** ⭐⭐⭐⭐⭐ (Multiple problems per interview)  
-**Mastery Time:** 5-6 hours
-
-## Why These Patterns are Essential
-
-Two pointers and sliding window are **optimization techniques** that:
-- Reduce O(n²) to O(n) or O(n log n)
-- Minimize space complexity
-- Enable elegant, readable solutions
-
-**Google loves these because:**
-- They test algorithmic thinking
-- Multiple variations exist
-- Real-world applications (streaming data, memory constraints)
-
----
+# Two Pointers & Sliding Window
 
 ## Pattern 1: Two Pointers - Opposite Direction
 
-**When to Use:**
-- Sorted array problems
-- Pair-finding problems
-- Palindrome checking
-- Array partitioning
+**When to Use:** Sorted arrays, pair-finding, palindrome checking, array partitioning.
 
 ### Template
 
@@ -33,9 +11,7 @@ def two_pointer_opposite(arr):
     left, right = 0, len(arr) - 1
     
     while left < right:
-        # Process current state
         if condition:
-            # Move based on logic
             left += 1
         else:
             right -= 1
@@ -43,11 +19,9 @@ def two_pointer_opposite(arr):
     return result
 ```
 
----
+### Two Sum II (LC 167)
 
-### Problem: Two Sum II (LC 167) ⭐⭐⭐⭐⭐
-
-**Problem:** Find two numbers that sum to target in **sorted** array.
+Find two numbers that sum to target in a **sorted** array.
 
 ```python
 def twoSum(numbers: List[int], target: int) -> List[int]:
@@ -59,33 +33,27 @@ def twoSum(numbers: List[int], target: int) -> List[int]:
         if curr_sum == target:
             return [left + 1, right + 1]  # 1-indexed
         elif curr_sum < target:
-            left += 1  # Need larger sum
+            left += 1
         else:
-            right -= 1  # Need smaller sum
+            right -= 1
     
     return []
 ```
 
-**Complexity:** O(n) time, O(1) space
+**Time:** O(n) | **Space:** O(1)
 
-**Key Insight:** Sorted array allows us to make directed decisions.
-
----
-
-### Problem: Valid Palindrome (LC 125) ⭐⭐⭐⭐⭐
+### Valid Palindrome (LC 125)
 
 ```python
 def isPalindrome(s: str) -> bool:
     left, right = 0, len(s) - 1
     
     while left < right:
-        # Skip non-alphanumeric
         while left < right and not s[left].isalnum():
             left += 1
         while left < right and not s[right].isalnum():
             right -= 1
         
-        # Compare
         if s[left].lower() != s[right].lower():
             return False
         
@@ -95,25 +63,21 @@ def isPalindrome(s: str) -> bool:
     return True
 ```
 
-**Complexity:** O(n) time, O(1) space
+**Time:** O(n) | **Space:** O(1)
 
----
+### 3Sum (LC 15)
 
-### Problem: 3Sum (LC 15) ⭐⭐⭐⭐⭐
-
-**Problem:** Find all triplets that sum to 0.
+Find all triplets that sum to 0.
 
 ```python
 def threeSum(nums: List[int]) -> List[List[int]]:
-    nums.sort()  # O(n log n)
+    nums.sort()
     result = []
     
     for i in range(len(nums) - 2):
-        # Skip duplicates for first number
         if i > 0 and nums[i] == nums[i - 1]:
-            continue
+            continue  # Skip duplicates
         
-        # Two pointer for remaining
         left, right = i + 1, len(nums) - 1
         target = -nums[i]
         
@@ -123,7 +87,6 @@ def threeSum(nums: List[int]) -> List[List[int]]:
             if curr_sum == target:
                 result.append([nums[i], nums[left], nums[right]])
                 
-                # Skip duplicates
                 while left < right and nums[left] == nums[left + 1]:
                     left += 1
                 while left < right and nums[right] == nums[right - 1]:
@@ -139,19 +102,72 @@ def threeSum(nums: List[int]) -> List[List[int]]:
     return result
 ```
 
-**Complexity:** O(n²) time, O(1) space (excluding output)
+**Time:** O(n^2) | **Space:** O(1) excluding output
 
-**Pattern:** Fix one element, two-pointer for rest → reduces O(n³) to O(n²)
+Fix one element, two-pointer for the rest: reduces O(n^3) to O(n^2).
+
+### Container With Most Water (LC 11)
+
+Two vertical lines form a container. Maximize the water area.
+
+```python
+def maxArea(height: List[int]) -> int:
+    left, right = 0, len(height) - 1
+    max_water = 0
+    
+    while left < right:
+        width = right - left
+        h = min(height[left], height[right])
+        max_water = max(max_water, width * h)
+        
+        # Move the shorter line inward
+        if height[left] < height[right]:
+            left += 1
+        else:
+            right -= 1
+    
+    return max_water
+```
+
+**Time:** O(n) | **Space:** O(1)
+
+Moving the shorter line is correct because the width is shrinking, so the only way to get more area is a taller line.
+
+### Trapping Rain Water (LC 42)
+
+Two pointer O(1) space approach. Track left_max and right_max as you converge.
+
+```python
+def trap(height: List[int]) -> int:
+    if not height:
+        return 0
+    
+    left, right = 0, len(height) - 1
+    left_max, right_max = height[left], height[right]
+    water = 0
+    
+    while left < right:
+        if left_max < right_max:
+            left += 1
+            left_max = max(left_max, height[left])
+            water += left_max - height[left]
+        else:
+            right -= 1
+            right_max = max(right_max, height[right])
+            water += right_max - height[right]
+    
+    return water
+```
+
+**Time:** O(n) | **Space:** O(1)
+
+Water at each position = min(left_max, right_max) - height. By processing from the side with the smaller max, we know the other side has an equal or taller wall.
 
 ---
 
 ## Pattern 2: Two Pointers - Same Direction (Fast & Slow)
 
-**When to Use:**
-- Cycle detection
-- Finding middle element
-- In-place array modification
-- Removing duplicates
+**When to Use:** Cycle detection, finding middle element, in-place array modification, removing duplicates.
 
 ### Template
 
@@ -160,25 +176,22 @@ def fast_slow_pointers(arr):
     slow = fast = 0
     
     while fast < len(arr):
-        # Fast pointer explores ahead
         if condition:
             arr[slow] = arr[fast]
             slow += 1
         fast += 1
     
-    return slow  # New length or result
+    return slow
 ```
 
----
-
-### Problem: Remove Duplicates (LC 26) ⭐⭐⭐⭐
+### Remove Duplicates (LC 26)
 
 ```python
 def removeDuplicates(nums: List[int]) -> int:
     if not nums:
         return 0
     
-    slow = 1  # Position to place next unique
+    slow = 1
     
     for fast in range(1, len(nums)):
         if nums[fast] != nums[fast - 1]:
@@ -188,15 +201,11 @@ def removeDuplicates(nums: List[int]) -> int:
     return slow
 ```
 
-**Complexity:** O(n) time, O(1) space
+**Time:** O(n) | **Space:** O(1)
 
-**Key Pattern:** Slow marks write position, fast explores.
+### Linked List Cycle (LC 141)
 
----
-
-### Problem: Linked List Cycle (LC 141) ⭐⭐⭐⭐⭐
-
-**Floyd's Tortoise and Hare Algorithm:**
+Floyd's Tortoise and Hare.
 
 ```python
 def hasCycle(head: ListNode) -> bool:
@@ -206,8 +215,8 @@ def hasCycle(head: ListNode) -> bool:
     slow = fast = head
     
     while fast and fast.next:
-        slow = slow.next       # Move 1 step
-        fast = fast.next.next  # Move 2 steps
+        slow = slow.next
+        fast = fast.next.next
         
         if slow == fast:
             return True
@@ -215,28 +224,21 @@ def hasCycle(head: ListNode) -> bool:
     return False
 ```
 
-**Complexity:** O(n) time, O(1) space
-
-**Why it works:** In a cycle, fast will eventually catch slow.
+**Time:** O(n) | **Space:** O(1)
 
 ---
 
 ## Pattern 3: Sliding Window - Fixed Size
 
-**When to Use:**
-- Subarray of size K
-- Moving average
-- K consecutive elements
+**When to Use:** Subarray of exact size k, moving average, k consecutive elements.
 
 ### Template
 
 ```python
 def sliding_window_fixed(arr, k):
-    # Initialize window
     window_sum = sum(arr[:k])
     max_sum = window_sum
     
-    # Slide window
     for i in range(k, len(arr)):
         window_sum += arr[i] - arr[i - k]
         max_sum = max(max_sum, window_sum)
@@ -244,17 +246,13 @@ def sliding_window_fixed(arr, k):
     return max_sum
 ```
 
----
-
-### Problem: Maximum Average Subarray (LC 643) ⭐⭐⭐⭐
+### Maximum Average Subarray (LC 643)
 
 ```python
 def findMaxAverage(nums: List[int], k: int) -> float:
-    # Initial window
     curr_sum = sum(nums[:k])
     max_sum = curr_sum
     
-    # Slide window
     for i in range(k, len(nums)):
         curr_sum += nums[i] - nums[i - k]
         max_sum = max(max_sum, curr_sum)
@@ -262,16 +260,13 @@ def findMaxAverage(nums: List[int], k: int) -> float:
     return max_sum / k
 ```
 
-**Complexity:** O(n) time, O(1) space
+**Time:** O(n) | **Space:** O(1)
 
 ---
 
 ## Pattern 4: Sliding Window - Variable Size
 
-**When to Use:**
-- Longest/shortest subarray with condition
-- At most K distinct elements
-- Minimum window substring
+**When to Use:** Longest/shortest subarray with a condition, at most k distinct elements.
 
 ### Template
 
@@ -282,10 +277,10 @@ def sliding_window_variable(arr):
     window = {}  # Track window state
     
     for right in range(len(arr)):
-        # Expand window
+        # Expand: add arr[right] to window
         window[arr[right]] = window.get(arr[right], 0) + 1
         
-        # Contract window while invalid
+        # Contract: while window is invalid
         while not is_valid(window):
             window[arr[left]] -= 1
             if window[arr[left]] == 0:
@@ -298,9 +293,7 @@ def sliding_window_variable(arr):
     return result
 ```
 
----
-
-### Problem: Longest Substring Without Repeating Characters (LC 3) ⭐⭐⭐⭐⭐
+### Longest Substring Without Repeating Characters (LC 3)
 
 ```python
 def lengthOfLongestSubstring(s: str) -> int:
@@ -309,23 +302,19 @@ def lengthOfLongestSubstring(s: str) -> int:
     char_set = set()
     
     for right in range(len(s)):
-        # Shrink window until no duplicates
         while s[right] in char_set:
             char_set.remove(s[left])
             left += 1
         
-        # Add current character
         char_set.add(s[right])
-        
-        # Update max length
         max_len = max(max_len, right - left + 1)
     
     return max_len
 ```
 
-**Complexity:** O(n) time, O(min(n, charset)) space
+**Time:** O(n) | **Space:** O(min(n, charset))
 
-**Alternative with Hash Map:**
+**Optimized with hash map** (jump left pointer directly):
 ```python
 def lengthOfLongestSubstring(s: str) -> int:
     left = 0
@@ -334,7 +323,6 @@ def lengthOfLongestSubstring(s: str) -> int:
     
     for right in range(len(s)):
         if s[right] in char_index:
-            # Jump left pointer past duplicate
             left = max(left, char_index[s[right]] + 1)
         
         char_index[s[right]] = right
@@ -343,11 +331,9 @@ def lengthOfLongestSubstring(s: str) -> int:
     return max_len
 ```
 
----
+### Minimum Window Substring (LC 76)
 
-### Problem: Minimum Window Substring (LC 76) ⭐⭐⭐⭐⭐
-
-**Problem:** Find minimum window in s containing all characters of t.
+Find minimum window in s containing all characters of t.
 
 ```python
 def minWindow(s: str, t: str) -> str:
@@ -356,35 +342,27 @@ def minWindow(s: str, t: str) -> str:
     if not s or not t:
         return ""
     
-    # Count characters in t
     t_count = Counter(t)
     required = len(t_count)
     
     left = 0
     formed = 0
     window_counts = {}
-    
-    # (window_length, left, right)
-    ans = (float('inf'), 0, 0)
+    ans = (float('inf'), 0, 0)  # (length, left, right)
     
     for right in range(len(s)):
-        # Add character to window
         char = s[right]
         window_counts[char] = window_counts.get(char, 0) + 1
         
-        # Check if this character satisfies requirement
         if char in t_count and window_counts[char] == t_count[char]:
             formed += 1
         
-        # Contract window
         while left <= right and formed == required:
             char = s[left]
             
-            # Update result
             if right - left + 1 < ans[0]:
                 ans = (right - left + 1, left, right)
             
-            # Remove leftmost character
             window_counts[char] -= 1
             if char in t_count and window_counts[char] < t_count[char]:
                 formed -= 1
@@ -394,17 +372,76 @@ def minWindow(s: str, t: str) -> str:
     return "" if ans[0] == float('inf') else s[ans[1]:ans[2] + 1]
 ```
 
-**Complexity:** O(|s| + |t|) time, O(|s| + |t|) space
+**Time:** O(|s| + |t|) | **Space:** O(|s| + |t|)
+
+### Longest Repeating Character Replacement (LC 424)
+
+Longest substring where you can replace at most k characters to make all characters the same.
+
+```python
+def characterReplacement(s: str, k: int) -> int:
+    count = {}
+    left = 0
+    max_freq = 0  # Frequency of the most common char in current window
+    result = 0
+    
+    for right in range(len(s)):
+        count[s[right]] = count.get(s[right], 0) + 1
+        max_freq = max(max_freq, count[s[right]])
+        
+        # Window size - max_freq = characters to replace
+        # If > k, shrink window
+        while (right - left + 1) - max_freq > k:
+            count[s[left]] -= 1
+            left += 1
+        
+        result = max(result, right - left + 1)
+    
+    return result
+```
+
+**Time:** O(n) | **Space:** O(1) (at most 26 characters)
+
+Note: `max_freq` is never decremented when shrinking. This is correct because we only care about the maximum window size, and a smaller max_freq cannot produce a larger valid window.
+
+### Subarrays with K Different Integers (LC 992)
+
+Use the "at most K" trick: `exactly(K) = atMost(K) - atMost(K-1)`.
+
+```python
+def subarraysWithKDistinct(nums: List[int], k: int) -> int:
+    def atMost(k):
+        count = {}
+        left = 0
+        result = 0
+        
+        for right in range(len(nums)):
+            count[nums[right]] = count.get(nums[right], 0) + 1
+            
+            while len(count) > k:
+                count[nums[left]] -= 1
+                if count[nums[left]] == 0:
+                    del count[nums[left]]
+                left += 1
+            
+            result += right - left + 1
+        
+        return result
+    
+    return atMost(k) - atMost(k - 1)
+```
+
+**Time:** O(n) | **Space:** O(k)
+
+This trick works for any "exactly K" sliding window problem: convert to two "at most" problems.
 
 ---
 
 ## Pattern 5: Sliding Window with Deque
 
-**When to Use:**
-- Sliding window maximum/minimum
-- Maintaining order within window
+**When to Use:** Sliding window maximum/minimum.
 
-### Problem: Sliding Window Maximum (LC 239) ⭐⭐⭐⭐⭐
+### Sliding Window Maximum (LC 239)
 
 ```python
 from collections import deque
@@ -413,7 +450,7 @@ def maxSlidingWindow(nums: List[int], k: int) -> List[int]:
     if not nums:
         return []
     
-    dq = deque()  # Store indices
+    dq = deque()  # Store indices, values in decreasing order
     result = []
     
     for i in range(len(nums)):
@@ -421,34 +458,30 @@ def maxSlidingWindow(nums: List[int], k: int) -> List[int]:
         while dq and dq[0] < i - k + 1:
             dq.popleft()
         
-        # Remove smaller elements (not useful)
+        # Remove smaller elements (they'll never be the max)
         while dq and nums[dq[-1]] < nums[i]:
             dq.pop()
         
         dq.append(i)
         
-        # Add to result when window is full
         if i >= k - 1:
             result.append(nums[dq[0]])
     
     return result
 ```
 
-**Complexity:** O(n) time, O(k) space
-
-**Key Idea:** Deque maintains indices in decreasing order of values.
+**Time:** O(n) | **Space:** O(k)
 
 ---
 
-## Advanced Patterns
+## Prefix Sum (related technique)
 
-### Pattern 6: Caterpillar Method
+### Subarray Sum Equals K (LC 560)
 
-**Problem: Subarray Sum Equals K (LC 560)**
+Not a sliding window (elements can be negative), but uses prefix sums with a hash map.
 
 ```python
 def subarraySum(nums: List[int], k: int) -> int:
-    # Prefix sum approach
     prefix_sum = {0: 1}
     curr_sum = 0
     count = 0
@@ -456,7 +489,6 @@ def subarraySum(nums: List[int], k: int) -> int:
     for num in nums:
         curr_sum += num
         
-        # Check if (curr_sum - k) exists
         if curr_sum - k in prefix_sum:
             count += prefix_sum[curr_sum - k]
         
@@ -465,163 +497,45 @@ def subarraySum(nums: List[int], k: int) -> int:
     return count
 ```
 
-**Complexity:** O(n) time and space
+**Time:** O(n) | **Space:** O(n)
 
 ---
 
-## Google Interview Patterns
+## Pattern Recognition Table
 
-### 1. When to Use Each Pattern
+| Signal | Pattern |
+|--------|---------|
+| Sorted array, find pair | Two pointers (opposite) |
+| Find triplets | Fix one + two pointers |
+| In-place removal/dedup | Fast/slow pointers |
+| Linked list cycle | Fast/slow pointers |
+| Maximize area between lines | Two pointers (opposite) |
+| Subarray of exact size k | Fixed sliding window |
+| Longest/shortest subarray | Variable sliding window |
+| "At most K distinct" | Variable sliding window |
+| "Exactly K" | atMost(K) - atMost(K-1) |
+| Sliding max/min | Deque (monotonic) |
+| Subarray sum = k (with negatives) | Prefix sum + hash map |
 
-| Problem Type | Pattern | Key Signal |
-|-------------|---------|------------|
-| Pair sum (sorted) | Two pointers opposite | "Sorted array" |
-| Triplet sum | Fix + two pointers | "All triplets" |
-| Remove duplicates | Fast/slow pointers | "In-place" |
-| Cycle detection | Fast/slow pointers | "Linked list cycle" |
-| Max subarray size K | Fixed window | "Exactly K elements" |
-| Longest substring | Variable window | "Longest/shortest" |
-| At most K distinct | Variable window | "At most K" |
-
-### 2. Common Optimizations
-
-**From O(n²) to O(n):**
-```python
-# ❌ O(n²): Nested loop
-def max_subarray_slow(arr, k):
-    max_sum = float('-inf')
-    for i in range(len(arr) - k + 1):
-        window_sum = sum(arr[i:i+k])
-        max_sum = max(max_sum, window_sum)
-    return max_sum
-
-# ✅ O(n): Sliding window
-def max_subarray_fast(arr, k):
-    window_sum = sum(arr[:k])
-    max_sum = window_sum
-    for i in range(k, len(arr)):
-        window_sum += arr[i] - arr[i-k]
-        max_sum = max(max_sum, window_sum)
-    return max_sum
-```
-
----
-
-## Master Checklist
-
-### Two Pointers
-- [ ] Opposite direction (sorted arrays)
-- [ ] Same direction (fast/slow)
-- [ ] Cycle detection (linked lists)
-- [ ] In-place modification
-- [ ] 3Sum and variants
-
-### Sliding Window
-- [ ] Fixed size window
-- [ ] Variable size (longest/shortest)
-- [ ] Window with hash map
-- [ ] Window with deque (max/min)
-- [ ] At most K distinct
-
-### Skills
-- [ ] Identify when to use which pattern
-- [ ] Optimize from O(n²) to O(n)
-- [ ] Handle edge cases (empty, single element)
-- [ ] Explain time/space complexity
-
----
-
-## Practice Roadmap
-
-### Week 1: Two Pointers (10 problems)
-- LC 167, 125, 344 (Opposite direction)
-- LC 26, 27, 283 (Fast/slow)
-- LC 15, 16, 18 (3Sum variants)
-- LC 141, 142 (Cycle detection)
-
-### Week 2: Sliding Window (10 problems)
-- LC 643, 1343 (Fixed window)
-- LC 3, 424, 1004 (Variable window)
-- LC 76, 438, 567 (Minimum window)
-- LC 239, 862 (Deque)
-
-**Total:** 5-6 hours
-
----
-
-## Common Mistakes
-
-1. **Not initializing window correctly**
-   ```python
-   # ❌ Wrong
-   for i in range(len(arr)):
-       window_sum = sum(arr[i:i+k])
-   
-   # ✅ Correct
-   window_sum = sum(arr[:k])
-   for i in range(k, len(arr)):
-       window_sum += arr[i] - arr[i-k]
-   ```
-
-2. **Infinite loop in while**
-   ```python
-   # ❌ Wrong
-   while condition:
-       # Forgot to update pointers
-   
-   # ✅ Correct
-   while condition:
-       left += 1  # or right -= 1
-   ```
-
-3. **Off-by-one in window size**
-   ```python
-   # Window size = right - left + 1
-   max_len = max(max_len, right - left + 1)
-   ```
-
-4. **Not handling edge cases**
-   - Empty array
-   - K > array length
-   - All elements same
-
----
-
-## Time Complexity Reference
+## Complexity Reference
 
 | Pattern | Time | Space |
 |---------|------|-------|
-| Two pointers | O(n) | O(1) |
+| Two pointers (opposite) | O(n) | O(1) |
+| Two pointers (fast/slow) | O(n) | O(1) |
 | Fixed window | O(n) | O(1) |
 | Variable window | O(n) | O(k) for hash map |
 | Window with deque | O(n) | O(k) |
+| Prefix sum | O(n) | O(n) |
 
----
+## Common Mistakes
 
-## Interview Template
+1. **Not initializing window correctly** -- compute the initial window before entering the slide loop.
 
-```python
-def solve_with_sliding_window(arr, condition):
-    left = 0
-    window_state = {}  # or set(), or int
-    result = 0
-    
-    for right in range(len(arr)):
-        # 1. Expand window: add arr[right]
-        # Update window state
-        
-        # 2. Contract window: while invalid
-        while not is_valid(window_state):
-            # Remove arr[left]
-            # Update window state
-            left += 1
-        
-        # 3. Update result
-        result = max(result, right - left + 1)
-    
-    return result
-```
+2. **Infinite loop** -- forgetting to advance pointers inside the while loop.
 
----
+3. **Off-by-one in window size** -- window size is `right - left + 1`.
 
-**Master these patterns, and you'll optimize solutions like a pro!**
+4. **Not handling edge cases** -- empty array, k > array length, all elements same.
+
+5. **Using sliding window with negative numbers** -- variable-size sliding window only works when elements are non-negative (or all positive). For negative numbers, use prefix sum.

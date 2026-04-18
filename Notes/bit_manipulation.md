@@ -1,313 +1,288 @@
-# Bit Manipulation Cheatsheet
+# Bit Manipulation
 
-## **Introduction**
+## Operators & XOR Properties
 
-Bit manipulation involves using bitwise operators to solve problems efficiently by leveraging the binary representation of numbers. Common bitwise operators include:
+### Operator Table
 
-| Operator    | Symbol | Description                     |
-| ----------- | ------ | ------------------------------- |
-| AND         | `&`    | Sets a bit if both bits are 1   |
-| OR          | `\|`   | Sets a bit if at least one is 1 |
-| XOR         | `^`    | Toggles a bit (1 if different)  |
-| NOT         | `~`    | Flips bits                      |
-| Left Shift  | `<<`   | Multiplies by 2 per shift       |
-| Right Shift | `>>`   | Divides by 2 per shift          |
+| Operator | Symbol | Description | Example (5, 3) |
+|---|---|---|---|
+| AND | `&` | 1 if both bits are 1 | `5 & 3 = 1` (101 & 011 = 001) |
+| OR | `\|` | 1 if at least one bit is 1 | `5 \| 3 = 7` (101 \| 011 = 111) |
+| XOR | `^` | 1 if bits differ | `5 ^ 3 = 6` (101 ^ 011 = 110) |
+| NOT | `~` | Flip all bits | `~5 = -6` (in Python) |
+| Left Shift | `<<` | Shift bits left, fill with 0 | `5 << 1 = 10` |
+| Right Shift | `>>` | Shift bits right | `5 >> 1 = 2` |
 
-## **Binary Representation**
+### XOR Properties
 
-### **1. Structure of Binary Numbers**
+These come up constantly. Know them cold.
 
-- Each bit (binary digit) represents a power of 2.
-- Example:
-  - Binary: `1101`
-  - Decimal: \( 1 \times 2^3 + 1 \times 2^2 + 0 \times 2^1 + 1 \times 2^0 = 8 + 4 + 0 + 1 = 13 \)
+| Property | Expression | Why It Matters |
+|---|---|---|
+| Self-inverse | `a ^ a = 0` | Duplicate cancellation |
+| Identity | `a ^ 0 = a` | XOR with 0 is no-op |
+| Commutative | `a ^ b = b ^ a` | Order doesn't matter |
+| Associative | `(a ^ b) ^ c = a ^ (b ^ c)` | Can regroup freely |
 
-### **2. Signed vs Unsigned Numbers**
+Consequence: XOR of a list where every element appears twice except one leaves the unique element.
 
-- **Unsigned Binary Numbers:** Represent only non-negative integers.
-  - Example: `8-bit binary 1101 = 13 (decimal)`.
-- **Signed Binary Numbers:** Use one bit (usually the leftmost) to indicate the sign.
-  - Example: Using Two's Complement, `8-bit binary 11101101 = -19 (decimal)`.
+### Two's Complement
 
-### **3. Two's Complement Representation**
-
-- A common way to represent negative numbers in binary.
-- To calculate the two's complement of a number:
-  1. Invert all bits (1 becomes 0, and 0 becomes 1).
-  2. Add 1 to the result.
-- Example:
-  - Start with `5 (decimal): 00000101`
-  - Invert: `11111010`
-  - Add 1: `11111011` (This is `-5` in 8-bit two's complement).
+Negative numbers are stored as two's complement: `-x` is represented as `~x + 1`.
+This means `x & (-x)` isolates the lowest set bit (see below).
 
 ---
 
-## **Converting Between Representations**
+## Common Tricks
 
-### **1. Binary to Decimal**
+### Check, Set, Clear, Toggle a Bit
 
-- Multiply each bit by its corresponding power of 2 and sum them up.
-- Example:
-  - Binary: `1011`
-  - Decimal: \( 1 \times 2^3 + 0 \times 2^2 + 1 \times 2^1 + 1 \times 2^0 = 8 + 0 + 2 + 1 = 11 \)
+```python
+# Check if i-th bit is set
+(num >> i) & 1
 
-### **2. Decimal to Binary**
+# Set the i-th bit
+num | (1 << i)
 
-- Repeatedly divide the number by 2 and record the remainder. The binary representation is the remainders read from bottom to top.
-- Example:
-  - Decimal: `11`
-  - Steps:
-    - \( 11 \div 2 = 5 \, R: 1 \)
-    - \( 5 \div 2 = 2 \, R: 1 \)
-    - \( 2 \div 2 = 1 \, R: 0 \)
-    - \( 1 \div 2 = 0 \, R: 1 \)
-  - Binary: `1011`
+# Clear the i-th bit
+num & ~(1 << i)
 
-### **3. Binary to Hexadecimal**
+# Toggle the i-th bit
+num ^ (1 << i)
+```
 
-- Group binary digits in sets of 4 (starting from the right) and convert each group to its hexadecimal equivalent.
-- Example:
-  - Binary: `10111001`
-  - Grouped: `1011 1001`
-  - Hex: `B9` (where `1011 = B` and `1001 = 9`).
+### Lowest Set Bit
 
-### **4. Hexadecimal to Binary**
+```python
+# Isolate lowest set bit
+lowest = x & (-x)
+# Example: x = 12 (1100) -> lowest = 4 (0100)
 
-- Replace each hex digit with its 4-bit binary equivalent.
-- Example:
-  - Hex: `B9`
-  - Binary: `1011 1001` (where `B = 1011` and `9 = 1001`).
+# Remove lowest set bit
+x = x & (x - 1)
+# Example: x = 12 (1100) -> 8 (1000)
+```
 
-### **5. Decimal to Hexadecimal**
+`x & (x - 1)` is the foundation of many tricks: counting bits, checking power of 2.
 
-- Repeatedly divide the number by 16 and record the remainder in hexadecimal.
-- Example:
-  - Decimal: `185`
-  - Steps:
-    - \( 185 \div 16 = 11 \, R: 9 \)
-    - \( 11 \div 16 = 0 \, R: B \)
-  - Hex: `B9`.
+### Power of 2
 
-### **6. Hexadecimal to Decimal**
+A power of 2 has exactly one set bit. Removing it gives 0.
 
-- Multiply each hex digit by its corresponding power of 16 and sum them up.
-- Example:
-  - Hex: `B9`
-  - Decimal: \( B \times 16^1 + 9 \times 16^0 = 11 \times 16 + 9 = 185 \).
+```python
+def is_power_of_two(n):
+    return n > 0 and (n & (n - 1)) == 0
+```
+
+**Time:** O(1). **Space:** O(1).
+
+### Check Odd/Even
+
+```python
+is_odd = (num & 1) == 1
+is_even = (num & 1) == 0
+```
+
+### Count Set Bits (Hamming Weight)
+
+```python
+def count_bits(n):
+    count = 0
+    while n:
+        n &= (n - 1)  # remove lowest set bit
+        count += 1
+    return count
+```
+
+**Time:** O(k) where k = number of set bits. **Space:** O(1).
+
+### Swap Without Temp Variable
+
+```python
+a = a ^ b
+b = a ^ b  # now b = original a
+a = a ^ b  # now a = original b
+```
 
 ---
 
-## **Common Bitwise Tricks**
+## Bitmask Subset Enumeration
 
-### **1. Check if a number is odd or even**
+Use an integer as a bitmask to represent a subset of n elements. Bit `i` being set means element `i` is included.
 
-- **Odd:** `num & 1 == 1`
-- **Even:** `num & 1 == 0`
+### Generate All Subsets
 
-### **2. Get the \( i \)-th bit**
+```python
+def subsets(nums):
+    n = len(nums)
+    result = []
+    for mask in range(1 << n):  # 0 to 2^n - 1
+        subset = [nums[i] for i in range(n) if mask & (1 << i)]
+        result.append(subset)
+    return result
+```
 
-- Formula: `(num >> i) & 1`
+**Why it works:** There are 2^n possible subsets. Each integer from 0 to 2^n - 1 has a unique binary representation that maps to a unique subset.
 
-### **3. Set the \( i \)-th bit**
+**Time:** O(n * 2^n). **Space:** O(n) per subset.
 
-- Formula: `num | (1 << i)`
+### Iterate All Submasks of a Mask
 
-### **4. Clear the \( i \)-th bit**
+Given a bitmask `mask`, enumerate all its submasks (subsets of the set bits in `mask`):
 
-- Formula: `num & ~(1 << i)`
+```python
+sub = mask
+while sub > 0:
+    # process sub
+    sub = (sub - 1) & mask
+# don't forget to process sub = 0 (empty set) if needed
+```
 
-### **5. Toggle the \( i \)-th bit**
+This runs in O(2^k) where k is the number of set bits in `mask`. Useful in bitmask DP problems.
 
-- Formula: `num ^ (1 << i)`
+---
 
-### **6. Count the number of 1s (Hamming weight)**
+## Key Problems
 
-- Algorithm:
-  ```python
-  def hammingWeight(n):
-      count = 0
-      while n:
-          n &= (n - 1)  # Remove the lowest set bit
-          count += 1
-      return count
-  ```
+### Single Number (LC 136)
 
-### **7. Check if a number is a power of 2**
+Every element appears twice except one. XOR all -- duplicates cancel.
 
-- Formula: `n > 0 and (n & (n - 1)) == 0`
+```python
+def singleNumber(nums):
+    result = 0
+    for num in nums:
+        result ^= num
+    return result
+```
 
-### **8. Swap two numbers without a temporary variable**
+**Time:** O(n). **Space:** O(1).
 
-- Formula:
-  ```python
-  a = a ^ b
-  b = a ^ b
-  a = a ^ b
-  ```
+### Single Number II (LC 137)
 
-## **Common Bit Manipulation Problems**
+Every element appears three times except one. Track bit counts modulo 3 using two state variables.
 
-### **1. Single Number**
+```python
+def singleNumber(nums):
+    ones, twos = 0, 0
+    for num in nums:
+        ones = (ones ^ num) & ~twos
+        twos = (twos ^ num) & ~ones
+    return ones
+```
 
-- **Problem:** Every element appears twice except one. Find the unique number.
-- **Solution:** XOR all numbers. Duplicate numbers cancel out.
-  ```python
-  def singleNumber(nums):
-      result = 0
-      for num in nums:
-          result ^= num
-      return result
-  ```
+**Time:** O(n). **Space:** O(1).
 
-### **2. Single Number II**
+**Intuition:** `ones` holds bits that have appeared 1 mod 3 times, `twos` holds bits at 2 mod 3. When a bit hits 3, both reset to 0.
 
-- **Problem:** Every element appears three times except one. Find the unique number.
-- **Solution:** Use `ones` and `twos` to track counts modulo 3.
-  ```python
-  def singleNumber(nums):
-      ones, twos = 0, 0
-      for num in nums:
-          ones = (ones ^ num) & ~twos
-          twos = (twos ^ num) & ~ones
-      return ones
-  ```
+### Missing Number (LC 268)
 
-### **3. Subset Generation**
+Array of n numbers from 0..n with one missing. XOR indices with values.
 
-- **Problem:** Generate all subsets of a set.
-- **Solution:** Use bit masking.
-  ```python
-  def subsets(nums):
-      n = len(nums)
-      result = []
-      for mask in range(1 << n):
-          subset = [nums[i] for i in range(n) if mask & (1 << i)]
-          result.append(subset)
-      return result
-  ```
+```python
+def missingNumber(nums):
+    result = len(nums)
+    for i, num in enumerate(nums):
+        result ^= i ^ num
+    return result
+```
 
-### **4. Reverse Bits**
+**Time:** O(n). **Space:** O(1).
 
-- **Problem:** Reverse the bits of a number.
-- **Solution:**
-  ```python
-  def reverseBits(n):
-      result = 0
-      for _ in range(32):
-          result = (result << 1) | (n & 1)
-          n >>= 1
-      return result
-  ```
+### Reverse Bits (LC 190)
 
-### **5. Missing Number**
+Reverse all 32 bits of a number.
 
-- **Problem:** Find the missing number in a range.
-- **Solution:** XOR all indices and numbers. Missing number will remain.
-  ```python
-  def missingNumber(nums):
-      n = len(nums)
-      result = n  # Start with the maximum index
-      for i, num in enumerate(nums):
-          result ^= i ^ num
-      return result
-  ```
+```python
+def reverseBits(n):
+    result = 0
+    for _ in range(32):
+        result = (result << 1) | (n & 1)
+        n >>= 1
+    return result
+```
 
-### **6. Bitwise AND of Numbers Range**
+**Time:** O(1) -- always 32 iterations. **Space:** O(1).
 
-- **Problem:** Find the bitwise AND of all numbers in a range `[m, n]`.
-- **Solution:** Remove the differing lower bits by right-shifting.
-  ```python
-  def rangeBitwiseAnd(m, n):
-      shift = 0
-      while m < n:
-          m >>= 1
-          n >>= 1
-          shift += 1
-      return m << shift
-  ```
+### Find the Difference (LC 389)
 
-### **7. Power of Two**
+String t is string s with one extra character. XOR all characters.
 
-- **Problem:** Check if a number is a power of two.
-- **Solution:**
-  ```python
-  def isPowerOfTwo(n):
-      return n > 0 and (n & (n - 1)) == 0
-  ```
+```python
+def findTheDifference(s, t):
+    result = 0
+    for char in s + t:
+        result ^= ord(char)
+    return chr(result)
+```
 
-### **8. Find the Difference**
+**Time:** O(n). **Space:** O(1).
 
-- **Problem:** Find the added letter in two strings.
-- **Solution:** XOR all characters.
-  ```python
-  def findTheDifference(s, t):
-      result = 0
-      for char in s + t:
-          result ^= ord(char)
-      return chr(result)
-  ```
+### Bitwise AND of Numbers Range (LC 201)
 
-## **Advanced Techniques**
+Find AND of all numbers in [m, n]. Right-shift both until they match -- the common prefix is the answer.
 
-### **1. Modular Arithmetic with Bits**
+```python
+def rangeBitwiseAnd(m, n):
+    shift = 0
+    while m < n:
+        m >>= 1
+        n >>= 1
+        shift += 1
+    return m << shift
+```
 
-- **Use Case:** Handle counts like “numbers appearing three times.”
-- Example for `k = 3`:
-  ```python
-  def singleNumber(nums):
-      ones, twos = 0, 0
-      for num in nums:
-          ones = (ones ^ num) & ~twos
-          twos = (twos ^ num) & ~ones
-      return ones
-  ```
-- **Use Case:** Handle counts like “numbers appearing k times with k odd.”
-- Example for `k = 5`:
+**Time:** O(log n). **Space:** O(1).
 
-  ```python
-  state0, state1, state2 = 0, 0, 0
-  for num in nums:
-      new_state2 = (state2 ^ num) & ~state0 & ~state1
-      new_state1 = (state1 ^ num) & ~state0 & ~state2
-      state0 = (state0 ^ num) & ~state1 & ~state2
-      state2, state1, state0 = new_state2, new_state1, state0
-  # `state0` contains the unique number
-  return state0
+**Intuition:** Any bit position where m and n differ will have both 0 and 1 in the range, so AND produces 0 for that bit. Only the common high-bit prefix survives.
 
-  ```
+### Gray Code (LC 89)
 
-### **2. Gray Code Generation**
+Generate n-bit Gray code sequence where consecutive numbers differ by one bit.
 
-- **Problem:** Generate Gray Code sequence for `n` bits.
-- **Solution:**
-  ```python
-  def grayCode(n):
-      return [i ^ (i >> 1) for i in range(1 << n)]
-  ```
+```python
+def grayCode(n):
+    return [i ^ (i >> 1) for i in range(1 << n)]
+```
 
-## **Practice Problems**
+**Time:** O(2^n). **Space:** O(1) excluding output.
 
-### Easy:
+---
 
-- Number of 1 Bits
-- Power of Two
-- Find the Difference
+## Python-Specific Notes
 
-### Medium:
+1. **Arbitrary precision integers.** Python ints have unlimited bits, so there's no overflow. But this means `~x` returns `-(x+1)`, not a fixed-width complement.
 
-- Subsets
-- Single Number II
-- Missing Number
+2. **No unsigned right shift.** Python's `>>` always does arithmetic shift (sign-extending). To simulate 32-bit unsigned behavior:
+   ```python
+   # Treat as 32-bit unsigned
+   result = n & 0xFFFFFFFF
+   ```
 
-### Hard:
+3. **bin() and bit_count().** `bin(x)` gives the binary string. Python 3.10+ has `int.bit_count()` for popcount:
+   ```python
+   x = 13
+   bin(x)          # '0b1101'
+   x.bit_count()   # 3
+   ```
 
-- Maximum XOR of Two Numbers in an Array
-- Bitwise AND of Numbers Range
-- Reverse Bits
+4. **Negative number masking.** When a problem expects 32-bit integers, mask with `0xFFFFFFFF`:
+   ```python
+   # Convert Python's arbitrary-precision negative to 32-bit representation
+   if result > 0x7FFFFFFF:
+       result -= 0x100000000
+   ```
 
-## **Tips and Tricks**
+---
 
-1. XOR is a powerful tool for toggling and identifying unique values.
-2. Use masks like `1 << i` to isolate specific bits.
-3. Combine bitwise operators with modular arithmetic for advanced counting problems.
-4. Practice problems with edge cases to gain confidence.
+## Complexity Notes
+
+| Operation | Time | Space |
+|---|---|---|
+| Single bitwise op (AND, OR, XOR, shift) | O(1) | O(1) |
+| Count set bits | O(k), k = set bits | O(1) |
+| Enumerate all subsets of n elements | O(n * 2^n) | O(n) |
+| Enumerate submasks of a mask | O(2^k), k = set bits | O(1) |
+| XOR of n elements | O(n) | O(1) |
+
+Bit manipulation solutions typically achieve O(1) space, which is their main advantage over hash-based approaches.

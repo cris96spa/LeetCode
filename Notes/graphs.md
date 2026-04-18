@@ -1,29 +1,6 @@
-# Graphs - Complete Mastery Guide
+# Graphs
 
-**Interview Frequency:** ⭐⭐⭐⭐⭐ (75% of Google interviews)  
-**Google Frequency:** ⭐⭐⭐⭐⭐ (Almost guaranteed in onsite)  
-**Mastery Time:** 10-12 hours
-
-## Why Graphs are Critical for Google
-
-Google's infrastructure is fundamentally graph-based:
-- Web crawling (PageRank)
-- Social networks (YouTube, Google+)
-- Maps and navigation
-- Knowledge graphs
-- Dependency management
-
-Graphs test:
-- **Multiple solution approaches** (DFS vs BFS vs Union Find)
-- **Space-time tradeoffs**
-- **Edge case handling** (cycles, disconnected components)
-- **Code quality** (clean traversal implementation)
-
----
-
-## Graph Fundamentals
-
-### Graph Representations
+## Representations
 
 **1. Adjacency List (Most Common)**
 ```python
@@ -75,19 +52,19 @@ grid = [
 | Representation | Space | Check Edge | Get Neighbors | Use Case |
 |---------------|-------|------------|---------------|----------|
 | Adjacency List | O(V+E) | O(degree) | O(degree) | Sparse graphs (most interviews) |
-| Adjacency Matrix | O(V²) | O(1) | O(V) | Dense graphs, edge queries |
+| Adjacency Matrix | O(V^2) | O(1) | O(V) | Dense graphs, edge queries |
 | Edge List | O(E) | O(E) | O(E) | Simple algorithms (Kruskal's) |
 | Matrix Grid | O(V) | O(1) | O(1) | 2D grid problems |
 
 ---
 
-## Pattern 1: DFS (Depth-First Search)
+## DFS (Depth-First Search)
 
 **When to Use:**
 - Exploring all paths
 - Cycle detection
 - Connected components
-- Topological sort (directed acyclic graphs)
+- Topological sort (DAGs)
 - Backtracking problems
 
 ### Template: Recursive DFS
@@ -123,17 +100,14 @@ def dfs_iterative(graph, start):
         visited.add(node)
         print(node)  # Process
         
-        # Add neighbors to stack
         for neighbor in graph[node]:
             if neighbor not in visited:
                 stack.append(neighbor)
 ```
 
----
+### Number of Islands (LC 200)
 
-### Problem: Number of Islands (LC 200) ⭐⭐⭐⭐⭐
-
-**Problem:** Count connected components of 1s in 2D grid.
+Count connected components of 1s in a 2D grid.
 
 ```python
 def numIslands(grid: List[List[str]]) -> int:
@@ -144,15 +118,12 @@ def numIslands(grid: List[List[str]]) -> int:
     count = 0
     
     def dfs(r, c):
-        # Boundary check and water check
         if (r < 0 or r >= rows or c < 0 or c >= cols or
             grid[r][c] == '0'):
             return
         
-        # Mark as visited
-        grid[r][c] = '0'
+        grid[r][c] = '0'  # Mark visited
         
-        # Explore all 4 directions
         dfs(r + 1, c)
         dfs(r - 1, c)
         dfs(r, c + 1)
@@ -167,16 +138,9 @@ def numIslands(grid: List[List[str]]) -> int:
     return count
 ```
 
-**Complexity:** O(rows × cols) time and space (recursion stack)
+**Time:** O(rows x cols) | **Space:** O(rows x cols) recursion stack worst case
 
-**Variations:**
-- Return area of largest island
-- Count islands with different shapes
-- Return perimeter of islands
-
----
-
-### Problem: Clone Graph (LC 133) ⭐⭐⭐⭐
+### Clone Graph (LC 133)
 
 ```python
 class Node:
@@ -188,18 +152,15 @@ def cloneGraph(node: 'Node') -> 'Node':
     if not node:
         return None
     
-    # Map original node to cloned node
     clones = {}
     
     def dfs(node):
         if node in clones:
             return clones[node]
         
-        # Create clone
         clone = Node(node.val)
         clones[node] = clone
         
-        # Clone neighbors
         for neighbor in node.neighbors:
             clone.neighbors.append(dfs(neighbor))
         
@@ -208,11 +169,11 @@ def cloneGraph(node: 'Node') -> 'Node':
     return dfs(node)
 ```
 
-**Complexity:** O(V + E) time and space
+**Time:** O(V + E) | **Space:** O(V)
 
 ---
 
-## Pattern 2: BFS (Breadth-First Search)
+## BFS (Breadth-First Search)
 
 **When to Use:**
 - Shortest path (unweighted)
@@ -220,7 +181,7 @@ def cloneGraph(node: 'Node') -> 'Node':
 - Minimum steps/moves
 - "What's the closest X?"
 
-### Template: BFS
+### Template: Standard BFS
 
 ```python
 from collections import deque
@@ -256,11 +217,9 @@ def bfs_levels(graph, start):
                 queue.append((neighbor, level + 1))
 ```
 
----
+### Shortest Path in Binary Matrix (LC 1091)
 
-### Problem: Shortest Path in Binary Matrix (LC 1090) ⭐⭐⭐⭐
-
-**Problem:** Find shortest path from (0,0) to (n-1,n-1) in 8 directions.
+Find shortest path from (0,0) to (n-1,n-1) using 8 directions.
 
 ```python
 def shortestPathBinaryMatrix(grid: List[List[int]]) -> int:
@@ -272,8 +231,7 @@ def shortestPathBinaryMatrix(grid: List[List[int]]) -> int:
     if n == 1:
         return 1
     
-    # 8 directions
-    directions = [(-1,-1), (-1,0), (-1,1), (0,-1), 
+    directions = [(-1,-1), (-1,0), (-1,1), (0,-1),
                   (0,1), (1,-1), (1,0), (1,1)]
     
     queue = deque([(0, 0, 1)])  # (row, col, distance)
@@ -288,7 +246,7 @@ def shortestPathBinaryMatrix(grid: List[List[int]]) -> int:
             if nr == n-1 and nc == n-1:
                 return dist + 1
             
-            if (0 <= nr < n and 0 <= nc < n and 
+            if (0 <= nr < n and 0 <= nc < n and
                 grid[nr][nc] == 0):
                 grid[nr][nc] = 1  # Mark visited
                 queue.append((nr, nc, dist + 1))
@@ -296,24 +254,64 @@ def shortestPathBinaryMatrix(grid: List[List[int]]) -> int:
     return -1
 ```
 
-**Complexity:** O(n²) time and space
+**Time:** O(n^2) | **Space:** O(n^2)
 
-**Key Pattern:** BFS guarantees shortest path in unweighted graphs
+BFS guarantees shortest path in unweighted graphs.
+
+### Multi-source BFS / Rotting Oranges (LC 994)
+
+Start BFS from all sources simultaneously. Add all starting nodes to the queue before processing.
+
+```python
+def orangesRotting(grid: List[List[int]]) -> int:
+    rows, cols = len(grid), len(grid[0])
+    queue = deque()
+    fresh = 0
+    
+    # Add all rotten oranges to queue at once
+    for r in range(rows):
+        for c in range(cols):
+            if grid[r][c] == 2:
+                queue.append((r, c))
+            elif grid[r][c] == 1:
+                fresh += 1
+    
+    if fresh == 0:
+        return 0
+    
+    minutes = 0
+    directions = [(0,1), (1,0), (0,-1), (-1,0)]
+    
+    while queue:
+        minutes += 1
+        for _ in range(len(queue)):
+            r, c = queue.popleft()
+            for dr, dc in directions:
+                nr, nc = r + dr, c + dc
+                if (0 <= nr < rows and 0 <= nc < cols and
+                    grid[nr][nc] == 1):
+                    grid[nr][nc] = 2
+                    fresh -= 1
+                    queue.append((nr, nc))
+    
+    return minutes - 1 if fresh == 0 else -1
+```
+
+**Time:** O(rows x cols) | **Space:** O(rows x cols)
 
 ---
 
-## Pattern 3: Topological Sort
+## Topological Sort
 
 **When to Use:**
 - Dependency resolution (courses, build systems)
 - Task scheduling with prerequisites
 - Directed acyclic graphs (DAG)
 
-### Method 1: Kahn's Algorithm (BFS-based)
+### Kahn's Algorithm (BFS-based)
 
 ```python
 def topological_sort_kahn(n, edges):
-    # Build graph and in-degree count
     graph = {i: [] for i in range(n)}
     in_degree = [0] * n
     
@@ -321,7 +319,6 @@ def topological_sort_kahn(n, edges):
         graph[src].append(dst)
         in_degree[dst] += 1
     
-    # Start with nodes having in-degree 0
     queue = deque([i for i in range(n) if in_degree[i] == 0])
     result = []
     
@@ -334,21 +331,17 @@ def topological_sort_kahn(n, edges):
             if in_degree[neighbor] == 0:
                 queue.append(neighbor)
     
-    # If all nodes processed, no cycle
-    return result if len(result) == n else []
+    return result if len(result) == n else []  # Empty = cycle detected
 ```
 
-**Complexity:** O(V + E) time, O(V) space
+**Time:** O(V + E) | **Space:** O(V)
 
----
+### Course Schedule (LC 207)
 
-### Problem: Course Schedule (LC 207) ⭐⭐⭐⭐⭐
-
-**Problem:** Can finish all courses given prerequisites?
+Can you finish all courses given prerequisites?
 
 ```python
 def canFinish(numCourses: int, prerequisites: List[List[int]]) -> bool:
-    # Build graph
     graph = {i: [] for i in range(numCourses)}
     in_degree = [0] * numCourses
     
@@ -356,7 +349,6 @@ def canFinish(numCourses: int, prerequisites: List[List[int]]) -> bool:
         graph[prereq].append(course)
         in_degree[course] += 1
     
-    # Kahn's algorithm
     queue = deque([i for i in range(numCourses) if in_degree[i] == 0])
     count = 0
     
@@ -372,11 +364,11 @@ def canFinish(numCourses: int, prerequisites: List[List[int]]) -> bool:
     return count == numCourses
 ```
 
-**Complexity:** O(V + E) time, O(V) space
+**Time:** O(V + E) | **Space:** O(V)
 
----
+### Course Schedule II (LC 210)
 
-### Problem: Course Schedule II (LC 210) ⭐⭐⭐⭐⭐
+Return a valid ordering (or empty if impossible).
 
 ```python
 def findOrder(numCourses: int, prerequisites: List[List[int]]) -> List[int]:
@@ -404,9 +396,9 @@ def findOrder(numCourses: int, prerequisites: List[List[int]]) -> List[int]:
 
 ---
 
-## Pattern 4: Cycle Detection
+## Cycle Detection
 
-### Undirected Graph - DFS
+### Undirected Graph (DFS with parent)
 
 ```python
 def has_cycle_undirected(graph):
@@ -432,11 +424,11 @@ def has_cycle_undirected(graph):
     return False
 ```
 
-### Directed Graph - DFS with Colors
+### Directed Graph (DFS with colors)
 
 ```python
 def has_cycle_directed(graph):
-    # 0: white (unvisited), 1: gray (visiting), 2: black (done)
+    # 0: unvisited, 1: in current path, 2: fully processed
     color = {node: 0 for node in graph}
     
     def dfs(node):
@@ -445,7 +437,7 @@ def has_cycle_directed(graph):
         if color[node] == 2:  # Already processed
             return False
         
-        color[node] = 1  # Mark as visiting
+        color[node] = 1  # Mark as in-progress
         
         for neighbor in graph[node]:
             if dfs(neighbor):
@@ -464,69 +456,11 @@ def has_cycle_directed(graph):
 
 ---
 
-## Pattern 5: Union Find (Disjoint Set)
+## Shortest Path Algorithms
 
-**When to Use:**
-- Dynamic connectivity
-- Cycle detection (undirected graphs)
-- Minimum spanning tree (Kruskal's)
-- Connected components
+### Dijkstra's Algorithm (non-negative weights)
 
-### Implementation with Path Compression & Union by Rank
-
-```python
-class UnionFind:
-    def __init__(self, n):
-        self.parent = list(range(n))
-        self.rank = [1] * n
-        self.components = n
-    
-    def find(self, x):
-        # Path compression
-        if self.parent[x] != x:
-            self.parent[x] = self.find(self.parent[x])
-        return self.parent[x]
-    
-    def union(self, x, y):
-        px, py = self.find(x), self.find(y)
-        
-        if px == py:
-            return False  # Already connected
-        
-        # Union by rank
-        if self.rank[px] < self.rank[py]:
-            px, py = py, px
-        
-        self.parent[py] = px
-        self.rank[px] += self.rank[py]
-        self.components -= 1
-        return True
-    
-    def connected(self, x, y):
-        return self.find(x) == self.find(y)
-```
-
-**Complexity:** O(α(n)) ≈ O(1) amortized per operation
-
----
-
-### Problem: Number of Connected Components (LC 323) ⭐⭐⭐⭐
-
-```python
-def countComponents(n: int, edges: List[List[int]]) -> int:
-    uf = UnionFind(n)
-    
-    for a, b in edges:
-        uf.union(a, b)
-    
-    return uf.components
-```
-
----
-
-## Pattern 6: Shortest Path Algorithms
-
-### Dijkstra's Algorithm (Weighted, Non-negative)
+Use when all edge weights are non-negative.
 
 ```python
 import heapq
@@ -536,14 +470,13 @@ def dijkstra(graph, start):
     distances = {node: float('inf') for node in graph}
     distances[start] = 0
     
-    # Min heap: (distance, node)
-    pq = [(0, start)]
+    pq = [(0, start)]  # (distance, node)
     
     while pq:
         curr_dist, node = heapq.heappop(pq)
         
         if curr_dist > distances[node]:
-            continue
+            continue  # Already found a shorter path
         
         for neighbor, weight in graph[node]:
             distance = curr_dist + weight
@@ -555,15 +488,81 @@ def dijkstra(graph, start):
     return distances
 ```
 
-**Complexity:** O((V + E) log V) with binary heap
+**Time:** O((V + E) log V) with binary heap | **Space:** O(V)
+
+### Bellman-Ford (handles negative weights)
+
+Use when edges can have negative weights. Also detects negative cycles.
+
+```python
+def bellman_ford(n, edges, start):
+    """
+    n: number of vertices
+    edges: list of (u, v, weight)
+    start: source vertex
+    Returns distances dict, or None if negative cycle exists.
+    """
+    dist = [float('inf')] * n
+    dist[start] = 0
+    
+    # Relax all edges V-1 times
+    for _ in range(n - 1):
+        for u, v, w in edges:
+            if dist[u] != float('inf') and dist[u] + w < dist[v]:
+                dist[v] = dist[u] + w
+    
+    # Check for negative cycles (one more pass)
+    for u, v, w in edges:
+        if dist[u] != float('inf') and dist[u] + w < dist[v]:
+            return None  # Negative cycle detected
+    
+    return dist
+```
+
+**Time:** O(V * E) | **Space:** O(V)
+
+**Dijkstra vs Bellman-Ford:**
+- Dijkstra: faster, but requires non-negative weights
+- Bellman-Ford: slower, but handles negative weights and detects negative cycles
 
 ---
 
-## Google Interview Patterns
+## Bipartite Graph Check (LC 785)
 
-### 1. Matrix as Graph (Very Common)
+A graph is bipartite if nodes can be colored with 2 colors such that no adjacent nodes share a color. Use BFS coloring.
 
-**4-directional movement:**
+```python
+def isBipartite(graph: List[List[int]]) -> bool:
+    n = len(graph)
+    color = [-1] * n  # -1 = uncolored
+    
+    for start in range(n):
+        if color[start] != -1:
+            continue
+        
+        queue = deque([start])
+        color[start] = 0
+        
+        while queue:
+            node = queue.popleft()
+            for neighbor in graph[node]:
+                if color[neighbor] == -1:
+                    color[neighbor] = 1 - color[node]
+                    queue.append(neighbor)
+                elif color[neighbor] == color[node]:
+                    return False  # Same color on adjacent nodes
+    
+    return True
+```
+
+**Time:** O(V + E) | **Space:** O(V)
+
+---
+
+## Grid Patterns
+
+### 4-directional / 8-directional movement
+
 ```python
 def solve_grid(grid):
     rows, cols = len(grid), len(grid[0])
@@ -582,15 +581,14 @@ def solve_grid(grid):
             dfs(r + dr, c + dc)
 ```
 
-**8-directional movement:**
+**8-directional:**
 ```python
-directions = [(-1,-1), (-1,0), (-1,1), (0,-1), 
+directions = [(-1,-1), (-1,0), (-1,1), (0,-1),
               (0,1), (1,-1), (1,0), (1,1)]
 ```
 
-### 2. Boundary Problems
+### Boundary Problems / Surrounded Regions (LC 130)
 
-**Problem: Surrounded Regions (LC 130)**
 ```python
 def solve(board: List[List[str]]) -> None:
     if not board:
@@ -626,81 +624,55 @@ def solve(board: List[List[str]]) -> None:
                 board[r][c] = 'O'
 ```
 
----
-
-## Master Checklist
-
-### Fundamental Skills
-- [ ] Implement DFS (recursive & iterative)
-- [ ] Implement BFS with queue
-- [ ] Build graph from edge list
-- [ ] Detect cycles (directed & undirected)
-- [ ] Topological sort (Kahn's & DFS)
-
-### Advanced Skills
-- [ ] Union Find with optimizations
-- [ ] Dijkstra's algorithm
-- [ ] Matrix traversal patterns
-- [ ] Bipartite graph check
-- [ ] Strongly connected components
-
-### Problem Recognition
-- [ ] Shortest path → BFS (unweighted) or Dijkstra
-- [ ] All paths/combinations → DFS + backtracking
-- [ ] Prerequisites/dependencies → Topological sort
-- [ ] Connected components → DFS/BFS or Union Find
-- [ ] Minimum spanning tree → Kruskal's or Prim's
+**Time:** O(rows x cols) | **Space:** O(rows x cols)
 
 ---
 
-## Practice Roadmap
+## Union Find
 
-### Week 1: Fundamentals (12 problems)
-- LC 200, 695 (Islands - DFS on matrix)
-- LC 133, 797 (Clone, All Paths - DFS)
-- LC 207, 210 (Course Schedule - Topo sort)
-- LC 323, 547 (Connected Components)
-
-### Week 2: Advanced (12 problems)
-- LC 130, 417 (Boundary problems)
-- LC 1091, 286 (BFS shortest path)
-- LC 684, 685 (Redundant Connection - Union Find)
-- LC 743, 787 (Dijkstra variations)
-
-**Total:** ~10-12 hours
+For Union Find (disjoint set) data structure, implementations, and problems, see [trie_union_find.md](trie_union_find.md).
 
 ---
 
-## Common Mistakes
+## Pattern Recognition Table
 
-1. **Not marking nodes as visited**
-   - Causes infinite loops
-   - Mark when adding to queue (BFS) or at start (DFS)
+| Signal | Pattern |
+|--------|---------|
+| "Shortest path" (unweighted) | BFS |
+| "Shortest path" (weighted, non-negative) | Dijkstra |
+| "Shortest path" (negative weights) | Bellman-Ford |
+| "All paths" / "combinations" | DFS + backtracking |
+| Prerequisites / dependencies | Topological sort |
+| Connected components | DFS/BFS or Union Find |
+| Cycle detection (undirected) | DFS with parent or Union Find |
+| Cycle detection (directed) | DFS with colors |
+| 2-colorable / bipartite | BFS coloring |
+| Level-by-level | BFS |
+| Grid traversal | DFS/BFS with directions array |
+| Boundary-connected regions | DFS/BFS from edges |
+| Multi-source spread | Multi-source BFS |
 
-2. **Wrong graph representation**
-   - Directed vs undirected
-   - Check if edge is bidirectional
-
-3. **Modifying input carelessly**
-   - Ask if you can modify grid
-   - Use extra space if needed
-
-4. **Forgetting disconnected components**
-   - Loop through all nodes, not just start
-
-5. **Stack overflow in DFS**
-   - Large graphs may need iterative approach
-
----
-
-**Time Complexity Cheat Sheet:**
+## Complexity Reference Table
 
 | Algorithm | Time | Space |
 |-----------|------|-------|
 | DFS | O(V + E) | O(V) |
 | BFS | O(V + E) | O(V) |
 | Topological Sort | O(V + E) | O(V) |
-| Union Find | O(α(V)) per op | O(V) |
-| Dijkstra | O((V+E) log V) | O(V) |
+| Dijkstra (binary heap) | O((V+E) log V) | O(V) |
+| Bellman-Ford | O(V * E) | O(V) |
+| Union Find (per op) | O(a(V)) ~= O(1) | O(V) |
 
-**Master these patterns, and graphs will become your strength!**
+## Common Mistakes
+
+1. **Not marking nodes as visited** -- causes infinite loops. Mark when adding to queue (BFS) or at start of visit (DFS).
+
+2. **Wrong graph representation** -- directed vs undirected. Check if edges are bidirectional.
+
+3. **Modifying input carelessly** -- ask if you can modify the grid. Use extra space if needed.
+
+4. **Forgetting disconnected components** -- loop through all nodes, not just one start node.
+
+5. **Stack overflow in DFS** -- large graphs may need iterative approach.
+
+6. **Using DFS for shortest path** -- BFS gives shortest path in unweighted graphs, not DFS.

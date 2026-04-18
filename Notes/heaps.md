@@ -1,61 +1,41 @@
-# Heaps & Priority Queues - Complete Guide
+# Heaps & Priority Queues
 
-**Interview Frequency:** ⭐⭐⭐⭐ (55% of FAANG interviews)  
-**Google Frequency:** ⭐⭐⭐⭐ (Common in system design context)  
-**Mastery Time:** 4-5 hours
+## Python heapq Module
 
-## What is a Heap?
-
-A **heap** is a complete binary tree that satisfies the heap property:
-- **Min Heap:** Parent ≤ Children (smallest at root)
-- **Max Heap:** Parent ≥ Children (largest at root)
-
-**Key Properties:**
-- **Complete binary tree:** All levels filled except possibly last (filled left-to-right)
-- **Efficient operations:** Insert and extract in O(log n)
-- **Array representation:** Parent at `i`, children at `2i+1` and `2i+2`
-
----
-
-## Python's `heapq` Module
-
-Python only provides **min heap** by default.
-
-### Basic Operations
+Python only provides a **min heap**.
 
 ```python
 import heapq
 
-# Create heap from list (in-place)
 nums = [3, 1, 4, 1, 5, 9, 2, 6]
-heapq.heapify(nums)  # O(n)
+heapq.heapify(nums)            # O(n) - in-place
 
-# Push element
-heapq.heappush(nums, 7)  # O(log n)
-
-# Pop smallest
-smallest = heapq.heappop(nums)  # O(log n)
-
-# Peek smallest (without removing)
-smallest = nums[0]  # O(1)
+heapq.heappush(nums, 7)        # O(log n)
+smallest = heapq.heappop(nums) # O(log n)
+smallest = nums[0]             # O(1) - peek
 
 # Push and pop in one operation
 result = heapq.heappushpop(nums, 8)  # O(log n)
-
-# Pop and push (slightly more efficient than separate)
-result = heapq.heapreplace(nums, 8)  # O(log n)
+result = heapq.heapreplace(nums, 8)  # O(log n) - pop then push
 
 # Get n smallest/largest
-smallest_3 = heapq.nsmallest(3, nums)  # O(n log k)
-largest_3 = heapq.nlargest(3, nums)   # O(n log k)
+heapq.nsmallest(3, nums)  # O(n log k)
+heapq.nlargest(3, nums)   # O(n log k)
 ```
 
-### Max Heap Trick
+| Operation | Time |
+|-----------|------|
+| heapify | O(n) |
+| heappush | O(log n) |
+| heappop | O(log n) |
+| peek (heap[0]) | O(1) |
+| nsmallest(k) | O(n log k) |
 
-**Negate values** to simulate max heap:
+## Max Heap Trick
+
+Negate values to simulate a max heap:
 
 ```python
-# Max heap
 max_heap = []
 heapq.heappush(max_heap, -5)
 heapq.heappush(max_heap, -3)
@@ -64,15 +44,14 @@ heapq.heappush(max_heap, -7)
 max_val = -heapq.heappop(max_heap)  # 7
 ```
 
-### Heap with Custom Objects
+## Custom Objects in Heap
 
 ```python
-# Using tuples (compared by first element)
+# Tuples compared element by element
 heap = []
 heapq.heappush(heap, (priority, item))
-priority, item = heapq.heappop(heap)
 
-# Using dataclass with comparison
+# Dataclass with ordering
 from dataclasses import dataclass, field
 from typing import Any
 
@@ -80,54 +59,45 @@ from typing import Any
 class PrioritizedItem:
     priority: int
     item: Any = field(compare=False)
-
-heap = []
-heapq.heappush(heap, PrioritizedItem(5, "task"))
 ```
 
 ---
 
-## Pattern 1: K-th Largest/Smallest Element
+## Pattern 1: K-th Largest/Smallest Element (LC 215)
 
-### K-th Largest Element (LC 215) ⭐⭐⭐⭐⭐
+**Approach 1: Min heap of size k** -- keep k largest elements, root is k-th largest.
 
-**Approach 1: Min Heap of size K**
 ```python
 def findKthLargest(nums: List[int], k: int) -> int:
-    # Maintain min heap of k largest elements
-    # Root of heap is k-th largest
-    
     heap = []
     
     for num in nums:
         heapq.heappush(heap, num)
-        
-        # Keep only k largest
         if len(heap) > k:
             heapq.heappop(heap)
     
     return heap[0]
 ```
 
-**Complexity:** O(n log k) time, O(k) space
+**Time:** O(n log k) | **Space:** O(k)
 
-**Approach 2: Heapify (faster for large k)**
+**Approach 2: Heapify** -- faster when k is close to n.
+
 ```python
 def findKthLargest(nums: List[int], k: int) -> int:
-    # Negate for max heap
     nums = [-num for num in nums]
     heapq.heapify(nums)
     
-    # Pop k-1 times
     for _ in range(k - 1):
         heapq.heappop(nums)
     
     return -heapq.heappop(nums)
 ```
 
-**Complexity:** O(n + k log n) time, O(1) space
+**Time:** O(n + k log n) | **Space:** O(1) if mutating input
 
-**Approach 3: QuickSelect (Optimal but not heap-based)**
+**Approach 3: QuickSelect** -- optimal average case.
+
 ```python
 def findKthLargest(nums: List[int], k: int) -> int:
     k = len(nums) - k  # Convert to k-th smallest
@@ -153,60 +123,41 @@ def findKthLargest(nums: List[int], k: int) -> int:
     return quickselect(0, len(nums) - 1)
 ```
 
-**Complexity:** O(n) average, O(n²) worst case
+**Time:** O(n) average, O(n^2) worst | **Space:** O(1)
 
 ---
 
-## Pattern 2: Top K Frequent Elements
+## Pattern 2: Top K Frequent Elements (LC 347)
 
-### Top K Frequent Elements (LC 347) ⭐⭐⭐⭐⭐
-
-**Approach: Heap**
+**Heap approach:**
 ```python
 def topKFrequent(nums: List[int], k: int) -> List[int]:
     from collections import Counter
     
-    # Count frequencies
     count = Counter(nums)
     
-    # Use heap to find k most frequent
-    # Negate frequency for max heap behavior
-    return [num for num, freq in count.most_common(k)]
-
-# Manual heap implementation
-def topKFrequent(nums: List[int], k: int) -> List[int]:
-    from collections import Counter
-    
-    count = Counter(nums)
-    
-    # Min heap of size k (by frequency)
     heap = []
-    
     for num, freq in count.items():
         heapq.heappush(heap, (freq, num))
-        
         if len(heap) > k:
             heapq.heappop(heap)
     
     return [num for freq, num in heap]
 ```
 
-**Complexity:** O(n log k) time, O(n) space
+**Time:** O(n log k) | **Space:** O(n)
 
-**Bucket Sort Approach (Optimal):**
+**Bucket sort approach (optimal):**
 ```python
 def topKFrequent(nums: List[int], k: int) -> List[int]:
     from collections import Counter
     
     count = Counter(nums)
     
-    # Bucket sort by frequency
     buckets = [[] for _ in range(len(nums) + 1)]
-    
     for num, freq in count.items():
         buckets[freq].append(num)
     
-    # Collect k most frequent
     result = []
     for i in range(len(buckets) - 1, 0, -1):
         result.extend(buckets[i])
@@ -214,28 +165,42 @@ def topKFrequent(nums: List[int], k: int) -> List[int]:
             return result[:k]
 ```
 
-**Complexity:** O(n) time and space
+**Time:** O(n) | **Space:** O(n)
 
 ---
 
-## Pattern 3: K-Way Merge
+## Pattern 3: K Closest Points to Origin (LC 973)
 
-### Merge K Sorted Lists (LC 23) ⭐⭐⭐⭐⭐
+Use a max heap of size k. If a new point is closer than the farthest in the heap, swap it in.
 
 ```python
-class ListNode:
-    def __init__(self, val=0, next=None):
-        self.val = val
-        self.next = next
-
-def mergeKLists(lists: List[ListNode]) -> ListNode:
-    # Heap to track smallest element from each list
+def kClosest(points: List[List[int]], k: int) -> List[List[int]]:
+    # Max heap of size k (negate distance)
     heap = []
     
-    # Initialize heap with first node from each list
+    for x, y in points:
+        dist = -(x * x + y * y)  # Negate for max heap
+        
+        if len(heap) < k:
+            heapq.heappush(heap, (dist, x, y))
+        elif dist > heap[0][0]:
+            heapq.heapreplace(heap, (dist, x, y))
+    
+    return [[x, y] for _, x, y in heap]
+```
+
+**Time:** O(n log k) | **Space:** O(k)
+
+---
+
+## Pattern 4: K-Way Merge / Merge K Sorted Lists (LC 23)
+
+```python
+def mergeKLists(lists: List[ListNode]) -> ListNode:
+    heap = []
+    
     for i, node in enumerate(lists):
         if node:
-            # Use index as tiebreaker (nodes can't be compared)
             heapq.heappush(heap, (node.val, i, node))
     
     dummy = ListNode(0)
@@ -243,7 +208,6 @@ def mergeKLists(lists: List[ListNode]) -> ListNode:
     
     while heap:
         val, i, node = heapq.heappop(heap)
-        
         current.next = node
         current = current.next
         
@@ -253,36 +217,32 @@ def mergeKLists(lists: List[ListNode]) -> ListNode:
     return dummy.next
 ```
 
-**Complexity:** O(n log k) where n = total nodes, k = number of lists
+**Time:** O(n log k) where n = total nodes, k = number of lists | **Space:** O(k)
 
-**Space:** O(k) for heap
+The index `i` serves as a tiebreaker since ListNode objects are not comparable.
 
 ---
 
-## Pattern 4: Running Median
+## Pattern 5: Running Median (LC 295)
 
-### Find Median from Data Stream (LC 295) ⭐⭐⭐⭐⭐
+Two heaps: max heap for the smaller half, min heap for the larger half.
 
-**Two Heap Approach:**
 ```python
 class MedianFinder:
     def __init__(self):
-        # Max heap for smaller half (negate values)
-        self.small = []
-        # Min heap for larger half
-        self.large = []
+        self.small = []  # Max heap (negated)
+        self.large = []  # Min heap
     
     def addNum(self, num: int) -> None:
-        # Add to small (max heap)
         heapq.heappush(self.small, -num)
         
-        # Balance: largest in small <= smallest in large
+        # Ensure max of small <= min of large
         if (self.small and self.large and
             -self.small[0] > self.large[0]):
             val = -heapq.heappop(self.small)
             heapq.heappush(self.large, val)
         
-        # Keep sizes balanced (small can have 1 more)
+        # Balance sizes (small can have 1 more)
         if len(self.small) > len(self.large) + 1:
             val = -heapq.heappop(self.small)
             heapq.heappush(self.large, val)
@@ -293,49 +253,16 @@ class MedianFinder:
     def findMedian(self) -> float:
         if len(self.small) > len(self.large):
             return -self.small[0]
-        
         return (-self.small[0] + self.large[0]) / 2
 ```
 
-**Complexity:** O(log n) per add, O(1) per median query
+**Time:** O(log n) per add, O(1) per findMedian | **Space:** O(n)
 
 ---
 
-## Pattern 5: Meeting Rooms / Timeline Problems
+## Pattern 6: Reorganize / Rearrange (LC 767)
 
-### Meeting Rooms II (LC 253) ⭐⭐⭐⭐⭐
-
-**Heap Approach:**
-```python
-def minMeetingRooms(intervals: List[List[int]]) -> int:
-    if not intervals:
-        return 0
-    
-    # Sort by start time
-    intervals.sort(key=lambda x: x[0])
-    
-    # Min heap to track end times of ongoing meetings
-    rooms = []
-    heapq.heappush(rooms, intervals[0][1])
-    
-    for i in range(1, len(intervals)):
-        # If earliest meeting ended, reuse room
-        if rooms[0] <= intervals[i][0]:
-            heapq.heappop(rooms)
-        
-        # Add current meeting's end time
-        heapq.heappush(rooms, intervals[i][1])
-    
-    return len(rooms)
-```
-
-**Complexity:** O(n log n) time, O(n) space
-
----
-
-## Pattern 6: Distant Barcodes / Reorganization
-
-### Reorganize String (LC 767) ⭐⭐⭐⭐
+Place most frequent characters first, ensuring no two adjacent characters are the same.
 
 ```python
 def reorganizeString(s: str) -> str:
@@ -343,7 +270,6 @@ def reorganizeString(s: str) -> str:
     
     count = Counter(s)
     
-    # Max heap by frequency
     max_heap = [(-freq, char) for char, freq in count.items()]
     heapq.heapify(max_heap)
     
@@ -354,141 +280,140 @@ def reorganizeString(s: str) -> str:
         freq, char = heapq.heappop(max_heap)
         result.append(char)
         
-        # Add previous back if still has count
         if prev_freq < 0:
             heapq.heappush(max_heap, (prev_freq, prev_char))
         
-        # Update previous
-        prev_freq, prev_char = freq + 1, char
+        prev_freq, prev_char = freq + 1, char  # freq is negative
     
     result_str = ''.join(result)
-    
-    # Check if valid (length should match)
     return result_str if len(result_str) == len(s) else ""
 ```
 
-**Complexity:** O(n log k) where k = unique characters
+**Time:** O(n log k) where k = unique characters | **Space:** O(k)
 
 ---
 
-## Advanced Patterns
+## Pattern 7: Task Scheduler (LC 621)
+
+Schedule tasks with cooldown period n between same tasks. Greedy: always pick the task with the highest remaining count.
+
+```python
+def leastInterval(tasks: List[str], n: int) -> int:
+    from collections import Counter
+    
+    count = Counter(tasks)
+    max_heap = [-freq for freq in count.values()]
+    heapq.heapify(max_heap)
+    
+    time = 0
+    cooldown = deque()  # (available_time, neg_count)
+    
+    while max_heap or cooldown:
+        time += 1
+        
+        if max_heap:
+            freq = heapq.heappop(max_heap) + 1  # Execute one (freq is negative)
+            if freq < 0:
+                cooldown.append((time + n, freq))
+        
+        if cooldown and cooldown[0][0] == time:
+            heapq.heappush(max_heap, cooldown.popleft()[1])
+    
+    return time
+```
+
+**Time:** O(n * k) where k = unique tasks | **Space:** O(k)
+
+For the heap-free formula approach: `result = max(len(tasks), (max_freq - 1) * (n + 1) + count_of_max_freq)`.
+
+---
+
+## Advanced
 
 ### Smallest Range Covering K Lists (LC 632)
 
 ```python
 def smallestRange(nums: List[List[int]]) -> List[int]:
-    # Heap: (value, list_index, element_index)
     heap = [(row[0], i, 0) for i, row in enumerate(nums)]
     heapq.heapify(heap)
     
-    # Track current maximum
     curr_max = max(row[0] for row in nums)
     best_range = [float('-inf'), float('inf')]
     
     while heap:
         curr_min, list_idx, elem_idx = heapq.heappop(heap)
         
-        # Update best range
         if curr_max - curr_min < best_range[1] - best_range[0]:
             best_range = [curr_min, curr_max]
         
-        # Move to next element in this list
         if elem_idx + 1 < len(nums[list_idx]):
             next_val = nums[list_idx][elem_idx + 1]
             heapq.heappush(heap, (next_val, list_idx, elem_idx + 1))
             curr_max = max(curr_max, next_val)
         else:
-            break  # Can't move forward
+            break  # One list exhausted, can't cover all
     
     return best_range
 ```
 
----
+**Time:** O(n log k) where n = total elements, k = number of lists | **Space:** O(k)
 
-## Google Interview Tips
+### Lazy Deletion Pattern
 
-1. **Always clarify:** Min or max heap? K largest or smallest?
+When you cannot efficiently update entries already in the heap (e.g., changing priorities), use lazy deletion: mark entries as invalid and skip them when popped.
 
-2. **Consider multiple approaches:**
-   - Heap: O(n log k)
-   - QuickSelect: O(n) average
-   - Bucket sort: O(n) if range is small
+```python
+class LazyHeap:
+    def __init__(self):
+        self.heap = []
+        self.deleted = set()
+    
+    def push(self, item):
+        heapq.heappush(self.heap, item)
+    
+    def remove(self, item):
+        self.deleted.add(item)
+    
+    def pop(self):
+        while self.heap:
+            item = heapq.heappop(self.heap)
+            if item not in self.deleted:
+                return item
+            self.deleted.discard(item)
+        return None
+    
+    def peek(self):
+        while self.heap and self.heap[0] in self.deleted:
+            self.deleted.discard(heapq.heappop(self.heap))
+        return self.heap[0] if self.heap else None
+```
 
-3. **Watch for edge cases:**
-   - Empty input
-   - K = 1 or K = n
-   - Duplicate elements
+This is useful for problems like Sliding Window Median where you need to remove arbitrary elements from a heap.
 
-4. **Space optimization:**
-   - Use heap of size k instead of size n
-
----
-
-## Master Checklist
-
-- [ ] Understand heap property and operations
-- [ ] Implement max heap using negation
-- [ ] Solve k-th element problems
-- [ ] Master two-heap running median
-- [ ] Handle k-way merge scenarios
-- [ ] Reorganize/reorder with heap
-
----
-
-## Practice Problems (Priority Order)
-
-1. LC 215 - Kth Largest Element ⭐⭐⭐⭐⭐
-2. LC 347 - Top K Frequent ⭐⭐⭐⭐⭐
-3. LC 23 - Merge K Sorted Lists ⭐⭐⭐⭐⭐
-4. LC 295 - Find Median ⭐⭐⭐⭐⭐
-5. LC 253 - Meeting Rooms II ⭐⭐⭐⭐⭐
-6. LC 767 - Reorganize String ⭐⭐⭐⭐
-7. LC 973 - K Closest Points ⭐⭐⭐⭐
-8. LC 1046 - Last Stone Weight ⭐⭐⭐
-9. LC 632 - Smallest Range ⭐⭐⭐⭐
-10. LC 239 - Sliding Window Maximum ⭐⭐⭐⭐
-
-**Total Time:** 4-5 hours
+**Note:** For interval scheduling problems using heaps (e.g., Meeting Rooms II / LC 253), see [intervals.md](intervals.md).
 
 ---
+
+## Complexity Reference
+
+| Pattern | Time | Space |
+|---------|------|-------|
+| K-th element (heap of size k) | O(n log k) | O(k) |
+| K-th element (quickselect) | O(n) avg | O(1) |
+| Top K frequent (heap) | O(n log k) | O(n) |
+| Top K frequent (bucket sort) | O(n) | O(n) |
+| K-way merge | O(n log k) | O(k) |
+| Running median | O(log n) per add | O(n) |
+| Task scheduler | O(n) | O(k) |
 
 ## Common Mistakes
 
-1. **Forgetting to heapify**
-   ```python
-   # ❌ Wrong
-   heap = [3, 1, 4, 1, 5]
-   smallest = heapq.heappop(heap)
-   
-   # ✅ Correct
-   heap = [3, 1, 4, 1, 5]
-   heapq.heapify(heap)
-   smallest = heapq.heappop(heap)
-   ```
+1. **Forgetting to heapify** -- pushing to an unsorted list and then popping gives wrong results. Always `heapify` first or build via `heappush`.
 
-2. **Confusing k largest vs k smallest**
-   - K largest: Use min heap of size k
-   - K smallest: Use max heap of size k
+2. **Confusing k largest vs k smallest** -- K largest: use min heap of size k. K smallest: use max heap of size k.
 
-3. **Not using tuple comparison carefully**
-   ```python
-   # Python compares tuples element by element
-   heapq.heappush(heap, (priority, data))
-   ```
+3. **Tuple comparison issues** -- Python compares tuples element by element. If priorities tie and the second element is not comparable (e.g., ListNode), add a tiebreaker index.
 
-4. **Modifying heap directly**
-   - Use heapq functions, don't modify list directly
+4. **Modifying heap directly** -- never insert/remove from the list directly. Always use `heapq` functions.
 
----
-
-**Time Complexity Reference:**
-
-| Operation | Time |
-|-----------|------|
-| heapify | O(n) |
-| heappush | O(log n) |
-| heappop | O(log n) |
-| peek (heap[0]) | O(1) |
-| nsmallest(k) | O(n log k) |
-
-**Master heaps, and you'll handle all Top-K problems with ease!**
+5. **Using max heap without negation** -- Python has no built-in max heap. Always negate values.

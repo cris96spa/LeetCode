@@ -1,75 +1,48 @@
-# Trie (Prefix Tree) & Union Find - Complete Guide
+# Trie & Union Find
 
 ## Part 1: Trie (Prefix Tree)
 
-**Interview Frequency:** ⭐⭐⭐ (35% of FAANG interviews)  
-**Google Frequency:** ⭐⭐⭐⭐ (System design, autocomplete questions)  
-**Mastery Time:** 3-4 hours
+### What is a Trie
 
-### What is a Trie?
+A trie (pronounced "try") is a tree where each node represents a character, and paths from root to nodes form strings. Efficient for prefix-based operations: autocomplete, spell checking, IP routing, word games.
 
-A **Trie** (pronounced "try") is a tree data structure for storing strings where:
-- Each node represents a character
-- Paths from root to nodes form strings
-- Efficient for prefix-based operations
-
-**Use Cases:**
-- Autocomplete systems
-- Spell checkers
-- IP routing (longest prefix matching)
-- Phone dictionaries
-- Word games (Boggle, Scrabble)
-
----
-
-### Trie Implementation
+### Implementation (TrieNode class)
 
 ```python
 class TrieNode:
     def __init__(self):
         self.children = {}  # char -> TrieNode
         self.is_end_of_word = False
-        # Optional: store word, frequency, etc.
 
 class Trie:
     def __init__(self):
         self.root = TrieNode()
     
     def insert(self, word: str) -> None:
-        \"\"\"Insert word into trie. O(m) where m = len(word)\"\"\"
         node = self.root
-        
         for char in word:
             if char not in node.children:
                 node.children[char] = TrieNode()
             node = node.children[char]
-        
         node.is_end_of_word = True
     
     def search(self, word: str) -> bool:
-        \"\"\"Search for exact word. O(m)\"\"\"
         node = self.root
-        
         for char in word:
             if char not in node.children:
                 return False
             node = node.children[char]
-        
         return node.is_end_of_word
     
     def startsWith(self, prefix: str) -> bool:
-        \"\"\"Check if any word starts with prefix. O(m)\"\"\"
         node = self.root
-        
         for char in prefix:
             if char not in node.children:
                 return False
             node = node.children[char]
-        
         return True
     
     def delete(self, word: str) -> bool:
-        \"\"\"Delete word from trie. O(m)\"\"\"
         def _delete(node, word, index):
             if index == len(word):
                 if not node.is_end_of_word:
@@ -93,14 +66,12 @@ class Trie:
 ```
 
 **Complexity:**
-- Insert: O(m) time, O(m) space
+- Insert: O(m) time, O(m) space where m = word length
 - Search: O(m) time, O(1) space
-- Prefix: O(m) time, O(1) space
-- Space: O(ALPHABET_SIZE × N × M) worst case
+- Prefix check: O(m) time, O(1) space
+- Total space: O(ALPHABET_SIZE x N x M) worst case
 
----
-
-### Problem: Implement Trie (LC 208) ⭐⭐⭐⭐⭐
+### Compact Implementation (dict-based)
 
 ```python
 class Trie:
@@ -132,17 +103,57 @@ class Trie:
         return True
 ```
 
----
+### Implement Trie (LC 208)
 
-### Problem: Word Search II (LC 212) ⭐⭐⭐⭐⭐
+Solved by either implementation above.
 
-**Problem:** Find all words from dictionary in 2D board.
+### Add and Search Words (LC 211)
+
+Supports wildcard `.` matching any single character. Use DFS when encountering `.`.
+
+```python
+class WordDictionary:
+    def __init__(self):
+        self.root = TrieNode()
+    
+    def addWord(self, word: str) -> None:
+        node = self.root
+        for char in word:
+            if char not in node.children:
+                node.children[char] = TrieNode()
+            node = node.children[char]
+        node.is_end_of_word = True
+    
+    def search(self, word: str) -> bool:
+        def dfs(node, i):
+            if i == len(word):
+                return node.is_end_of_word
+            
+            if word[i] == '.':
+                # Try all children
+                for child in node.children.values():
+                    if dfs(child, i + 1):
+                        return True
+                return False
+            else:
+                if word[i] not in node.children:
+                    return False
+                return dfs(node.children[word[i]], i + 1)
+        
+        return dfs(self.root, 0)
+```
+
+**Time:** O(m) for addWord, O(26^m) worst case for search with all dots (typically much better) | **Space:** O(m)
+
+### Word Search II (LC 212)
+
+Find all words from a dictionary in a 2D board.
 
 ```python
 class TrieNode:
     def __init__(self):
         self.children = {}
-        self.word = None  # Store complete word
+        self.word = None  # Store complete word at end node
 
 def findWords(board: List[List[str]], words: List[str]) -> List[str]:
     # Build trie
@@ -166,28 +177,23 @@ def findWords(board: List[List[str]], words: List[str]) -> List[str]:
         
         next_node = node.children[char]
         
-        # Found word
         if next_node.word:
             result.append(next_node.word)
             next_node.word = None  # Avoid duplicates
         
-        # Mark visited
-        board[r][c] = '#'
+        board[r][c] = '#'  # Mark visited
         
-        # Explore neighbors
         for dr, dc in [(0,1), (1,0), (0,-1), (-1,0)]:
             nr, nc = r + dr, c + dc
             if 0 <= nr < rows and 0 <= nc < cols and board[nr][nc] != '#':
                 dfs(nr, nc, next_node)
         
-        # Restore
-        board[r][c] = char
+        board[r][c] = char  # Restore
         
         # Prune trie (optimization)
         if not next_node.children:
             del node.children[char]
     
-    # Start DFS from each cell
     for r in range(rows):
         for c in range(cols):
             dfs(r, c, root)
@@ -195,13 +201,9 @@ def findWords(board: List[List[str]], words: List[str]) -> List[str]:
     return result
 ```
 
-**Complexity:** O(M × N × 4^L) where L = max word length
+**Time:** O(M x N x 4^L) where M x N = board size, L = max word length | **Space:** O(total characters in all words)
 
-**Key Optimization:** Prune trie nodes as words are found.
-
----
-
-### Advanced: Autocomplete System
+### Autocomplete System
 
 ```python
 class AutocompleteSystem:
@@ -210,7 +212,6 @@ class AutocompleteSystem:
         self.current = self.trie
         self.current_sentence = ""
         
-        # Build trie with frequencies
         for sentence, count in zip(sentences, times):
             self._add(sentence, count)
     
@@ -220,14 +221,11 @@ class AutocompleteSystem:
             if char not in node:
                 node[char] = {'#': {}}
             node = node[char]
-        
-        # Store frequency
         node['#']['count'] = node['#'].get('count', 0) + count
         node['#']['sentence'] = sentence
     
     def input(self, c: str) -> List[str]:
         if c == '#':
-            # Save sentence
             self._add(self.current_sentence, 1)
             self.current = self.trie
             self.current_sentence = ""
@@ -242,13 +240,11 @@ class AutocompleteSystem:
         
         self.current = self.current[c]
         
-        # Collect all sentences with this prefix
         results = []
         
         def dfs(node):
             if '#' in node and 'sentence' in node['#']:
                 results.append((node['#']['count'], node['#']['sentence']))
-            
             for char in node:
                 if char != '#':
                     dfs(node[char])
@@ -257,58 +253,44 @@ class AutocompleteSystem:
         
         # Sort by frequency (desc), then lexicographically
         results.sort(key=lambda x: (-x[0], x[1]))
-        
         return [sentence for _, sentence in results[:3]]
 ```
 
 ---
 
-## Part 2: Union Find (Disjoint Set Union)
+## Part 2: Union Find (Disjoint Set)
 
-**Interview Frequency:** ⭐⭐⭐⭐ (40% of Google interviews)  
-**Google Frequency:** ⭐⭐⭐⭐⭐ (Graph connectivity, MST)  
-**Mastery Time:** 3-4 hours
+### What is Union Find
 
-### What is Union Find?
-
-**Union Find** tracks disjoint sets and supports:
+Union Find tracks disjoint sets and supports:
 - **Union:** Merge two sets
 - **Find:** Determine which set an element belongs to
-- **Connected:** Check if two elements are in same set
+- **Connected:** Check if two elements are in the same set
 
-**Use Cases:**
-- Network connectivity
-- Kruskal's MST algorithm
-- Cycle detection in undirected graphs
-- Image processing (connected components)
-- Social network friend groups
+Use cases: network connectivity, cycle detection in undirected graphs, connected components, Kruskal's MST.
 
----
-
-### Basic Implementation
+### Implementation (path compression + union by rank)
 
 ```python
 class UnionFind:
     def __init__(self, n):
-        self.parent = list(range(n))  # Each node is its own parent
-        self.rank = [1] * n           # Tree height for union by rank
-        self.components = n           # Number of disjoint sets
+        self.parent = list(range(n))
+        self.rank = [1] * n
+        self.components = n
     
     def find(self, x):
-        \"\"\"Find root of x with path compression. O(α(n))\"\"\"
         if self.parent[x] != x:
             self.parent[x] = self.find(self.parent[x])  # Path compression
         return self.parent[x]
     
     def union(self, x, y):
-        \"\"\"Union sets containing x and y. O(α(n))\"\"\"
         root_x = self.find(x)
         root_y = self.find(y)
         
         if root_x == root_y:
             return False  # Already in same set
         
-        # Union by rank: attach smaller tree to larger
+        # Union by rank
         if self.rank[root_x] < self.rank[root_y]:
             self.parent[root_x] = root_y
             self.rank[root_y] += self.rank[root_x]
@@ -320,134 +302,17 @@ class UnionFind:
         return True
     
     def connected(self, x, y):
-        \"\"\"Check if x and y are in same set. O(α(n))\"\"\"
         return self.find(x) == self.find(y)
     
     def count(self):
-        \"\"\"Return number of disjoint sets. O(1)\"\"\"
         return self.components
 ```
 
-**Complexity:** O(α(n)) ≈ O(1) amortized per operation, where α is inverse Ackermann function
+**Time:** O(a(n)) per operation, where a = inverse Ackermann function (effectively O(1) amortized)
 
-**Why α(n)?**
-- Path compression flattens tree
-- Union by rank keeps trees balanced
-- Combined: nearly constant time
+**Space:** O(n)
 
----
-
-### Problem: Number of Connected Components (LC 323) ⭐⭐⭐⭐⭐
-
-```python
-def countComponents(n: int, edges: List[List[int]]) -> int:
-    uf = UnionFind(n)
-    
-    for a, b in edges:
-        uf.union(a, b)
-    
-    return uf.count()
-```
-
-**Complexity:** O(E × α(V)) ≈ O(E)
-
----
-
-### Problem: Redundant Connection (LC 684) ⭐⭐⭐⭐⭐
-
-**Problem:** Find edge that creates cycle in undirected graph.
-
-```python
-def findRedundantConnection(edges: List[List[int]]) -> List[int]:
-    uf = UnionFind(len(edges) + 1)
-    
-    for a, b in edges:
-        # If already connected, this edge creates cycle
-        if not uf.union(a, b):
-            return [a, b]
-    
-    return []
-```
-
-**Complexity:** O(E × α(V))
-
----
-
-### Problem: Number of Islands (LC 200) with Union Find
-
-```python
-def numIslands(grid: List[List[str]]) -> int:
-    if not grid:
-        return 0
-    
-    rows, cols = len(grid), len(grid[0])
-    
-    # Map 2D to 1D
-    def index(r, c):
-        return r * cols + c
-    
-    uf = UnionFind(rows * cols)
-    
-    # Count water cells to subtract
-    water = 0
-    
-    for r in range(rows):
-        for c in range(cols):
-            if grid[r][c] == '0':
-                water += 1
-            else:
-                # Connect to adjacent land cells
-                for dr, dc in [(0,1), (1,0)]:
-                    nr, nc = r + dr, c + dc
-                    if (0 <= nr < rows and 0 <= nc < cols and
-                        grid[nr][nc] == '1'):
-                        uf.union(index(r, c), index(nr, nc))
-    
-    return uf.count() - water
-```
-
----
-
-### Problem: Accounts Merge (LC 721) ⭐⭐⭐⭐⭐
-
-**Problem:** Merge accounts with common emails.
-
-```python
-def accountsMerge(accounts: List[List[str]]) -> List[List[str]]:
-    # Map email to account index
-    email_to_id = {}
-    uf = UnionFind(len(accounts))
-    
-    # Union accounts with common emails
-    for i, account in enumerate(accounts):
-        for email in account[1:]:
-            if email in email_to_id:
-                uf.union(i, email_to_id[email])
-            else:
-                email_to_id[email] = i
-    
-    # Group emails by root account
-    root_to_emails = {}
-    for email, acc_id in email_to_id.items():
-        root = uf.find(acc_id)
-        if root not in root_to_emails:
-            root_to_emails[root] = []
-        root_to_emails[root].append(email)
-    
-    # Format result
-    result = []
-    for root, emails in root_to_emails.items():
-        name = accounts[root][0]
-        result.append([name] + sorted(emails))
-    
-    return result
-```
-
-**Complexity:** O(N × K × α(N)) where K = avg emails per account
-
----
-
-### Advanced: Union Find with Size Tracking
+### Size Tracking Variant
 
 ```python
 class UnionFindWithSize:
@@ -462,7 +327,6 @@ class UnionFindWithSize:
     
     def union(self, x, y):
         root_x, root_y = self.find(x), self.find(y)
-        
         if root_x == root_y:
             return False
         
@@ -478,106 +342,195 @@ class UnionFindWithSize:
         return self.size[self.find(x)]
 ```
 
+### Connected Components (LC 323)
+
+```python
+def countComponents(n: int, edges: List[List[int]]) -> int:
+    uf = UnionFind(n)
+    
+    for a, b in edges:
+        uf.union(a, b)
+    
+    return uf.count()
+```
+
+**Time:** O(E x a(V)) ~= O(E) | **Space:** O(V)
+
+### Redundant Connection (LC 684)
+
+Find the edge that creates a cycle in an undirected graph.
+
+```python
+def findRedundantConnection(edges: List[List[int]]) -> List[int]:
+    uf = UnionFind(len(edges) + 1)
+    
+    for a, b in edges:
+        if not uf.union(a, b):
+            return [a, b]  # Already connected = cycle
+    
+    return []
+```
+
+**Time:** O(E x a(V)) | **Space:** O(V)
+
+### Graph Valid Tree (LC 261)
+
+A graph is a valid tree if it has exactly n-1 edges and no cycles (equivalently: n-1 edges and all nodes connected).
+
+```python
+def validTree(n: int, edges: List[List[int]]) -> bool:
+    if len(edges) != n - 1:
+        return False
+    
+    uf = UnionFind(n)
+    
+    for a, b in edges:
+        if not uf.union(a, b):
+            return False  # Cycle detected
+    
+    return True
+```
+
+**Time:** O(E x a(V)) | **Space:** O(V)
+
+### Accounts Merge (LC 721)
+
+Merge accounts that share common emails.
+
+```python
+def accountsMerge(accounts: List[List[str]]) -> List[List[str]]:
+    email_to_id = {}
+    uf = UnionFind(len(accounts))
+    
+    for i, account in enumerate(accounts):
+        for email in account[1:]:
+            if email in email_to_id:
+                uf.union(i, email_to_id[email])
+            else:
+                email_to_id[email] = i
+    
+    # Group emails by root account
+    root_to_emails = {}
+    for email, acc_id in email_to_id.items():
+        root = uf.find(acc_id)
+        if root not in root_to_emails:
+            root_to_emails[root] = []
+        root_to_emails[root].append(email)
+    
+    result = []
+    for root, emails in root_to_emails.items():
+        name = accounts[root][0]
+        result.append([name] + sorted(emails))
+    
+    return result
+```
+
+**Time:** O(N x K x a(N)) where K = avg emails per account | **Space:** O(N x K)
+
+### Number of Islands with Union Find (LC 200)
+
+```python
+def numIslands(grid: List[List[str]]) -> int:
+    if not grid:
+        return 0
+    
+    rows, cols = len(grid), len(grid[0])
+    
+    def index(r, c):
+        return r * cols + c
+    
+    uf = UnionFind(rows * cols)
+    water = 0
+    
+    for r in range(rows):
+        for c in range(cols):
+            if grid[r][c] == '0':
+                water += 1
+            else:
+                for dr, dc in [(0,1), (1,0)]:
+                    nr, nc = r + dr, c + dc
+                    if (0 <= nr < rows and 0 <= nc < cols and
+                        grid[nr][nc] == '1'):
+                        uf.union(index(r, c), index(nr, nc))
+    
+    return uf.count() - water
+```
+
+**Time:** O(M x N x a(M x N)) | **Space:** O(M x N)
+
+### Kruskal's MST
+
+Minimum Spanning Tree using Union Find: sort edges by weight, greedily add edges that don't form cycles.
+
+```python
+def kruskal_mst(n, edges):
+    """
+    n: number of vertices
+    edges: list of (weight, u, v)
+    Returns: (total_weight, mst_edges)
+    """
+    edges.sort()  # Sort by weight
+    uf = UnionFind(n)
+    
+    total_weight = 0
+    mst_edges = []
+    
+    for weight, u, v in edges:
+        if uf.union(u, v):
+            total_weight += weight
+            mst_edges.append((u, v, weight))
+            
+            if len(mst_edges) == n - 1:
+                break  # MST complete
+    
+    # Check if MST spans all vertices
+    if len(mst_edges) != n - 1:
+        return None  # Graph is not connected
+    
+    return total_weight, mst_edges
+```
+
+**Time:** O(E log E) for sorting + O(E x a(V)) for unions ~= O(E log E) | **Space:** O(V)
+
 ---
 
-## Comparison: When to Use What
+## Complexity Reference
 
-| Problem Type | Trie | Union Find |
-|-------------|------|------------|
-| Prefix search | ✅ | ❌ |
-| Autocomplete | ✅ | ❌ |
-| Connected components | ❌ | ✅ |
-| Cycle detection | ❌ | ✅ |
-| String matching | ✅ | ❌ |
-| Dynamic connectivity | ❌ | ✅ |
-
----
-
-## Master Checklist
-
-### Trie
-- [ ] Implement basic Trie (insert, search, prefix)
-- [ ] Solve Word Search II
-- [ ] Understand space-time tradeoffs
-- [ ] Handle deletion correctly
-- [ ] Implement autocomplete
-
-### Union Find
-- [ ] Implement with path compression
-- [ ] Implement with union by rank/size
-- [ ] Detect cycles
-- [ ] Count components
-- [ ] Solve MST with Kruskal's
-
----
-
-## Practice Problems
-
-### Trie (8 problems)
-1. LC 208 - Implement Trie ⭐⭐⭐⭐⭐
-2. LC 212 - Word Search II ⭐⭐⭐⭐⭐
-3. LC 211 - Add and Search Word ⭐⭐⭐⭐
-4. LC 648 - Replace Words ⭐⭐⭐
-5. LC 677 - Map Sum Pairs ⭐⭐⭐
-6. LC 720 - Longest Word ⭐⭐⭐
-7. LC 1804 - Implement Trie II ⭐⭐⭐⭐
-8. LC 1268 - Search Suggestions ⭐⭐⭐⭐
-
-### Union Find (10 problems)
-1. LC 323 - Number of Components ⭐⭐⭐⭐⭐
-2. LC 684 - Redundant Connection ⭐⭐⭐⭐⭐
-3. LC 685 - Redundant Connection II ⭐⭐⭐⭐⭐
-4. LC 547 - Number of Provinces ⭐⭐⭐⭐
-5. LC 721 - Accounts Merge ⭐⭐⭐⭐⭐
-6. LC 737 - Sentence Similarity II ⭐⭐⭐⭐
-7. LC 990 - Satisfiability ⭐⭐⭐⭐
-8. LC 1101 - Earliest Connection ⭐⭐⭐⭐
-9. LC 1579 - Remove Max Edges ⭐⭐⭐⭐⭐
-10. LC 1584 - Min Cost to Connect Points ⭐⭐⭐⭐⭐
-
-**Total Time:** 6-8 hours combined
-
----
+| Operation | Time | Space |
+|-----------|------|-------|
+| Trie insert | O(m) | O(m) |
+| Trie search / prefix | O(m) | O(1) |
+| Trie delete | O(m) | O(m) recursion |
+| Union Find (find/union) | O(a(n)) ~= O(1) | O(n) total |
+| Kruskal's MST | O(E log E) | O(V) |
 
 ## Common Mistakes
 
 ### Trie
-1. **Forgetting end marker**
-   ```python
-   # ❌ Wrong: "cat" in trie but searching "ca" returns True
-   
-   # ✅ Correct: Use is_end_of_word flag
-   ```
 
-2. **Not handling empty strings**
+1. **Forgetting end marker** -- searching "ca" in a trie containing "cat" should return False. Always check `is_end_of_word` or the `$` marker.
 
-3. **Memory leaks from not pruning**
+2. **Not handling empty strings** -- decide upfront whether empty string is valid input.
+
+3. **Memory leaks from not pruning** -- after deleting words, remove empty nodes to save space.
 
 ### Union Find
-1. **Not using path compression**
+
+1. **Not using path compression** -- without it, find is O(n) worst case instead of O(a(n)).
    ```python
-   # ❌ O(n) per find
+   # Wrong: O(n) per find
    def find(self, x):
        while self.parent[x] != x:
            x = self.parent[x]
        return x
    
-   # ✅ O(α(n)) per find
+   # Correct: O(a(n)) per find
    def find(self, x):
        if self.parent[x] != x:
            self.parent[x] = self.find(self.parent[x])
        return self.parent[x]
    ```
 
-2. **Forgetting to check if already connected**
-   ```python
-   def union(self, x, y):
-       root_x, root_y = self.find(x), self.find(y)
-       if root_x == root_y:
-           return False  # Important!
-       # ... rest of union
-   ```
+2. **Forgetting to check if already connected** -- `union` should return False when elements are already in the same set. This is critical for cycle detection.
 
----
-
-**Master these data structures for specialized problem domains!**
+3. **Off-by-one with node numbering** -- if nodes are 1-indexed, initialize UnionFind with `n+1`.

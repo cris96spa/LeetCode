@@ -1,156 +1,143 @@
-# Dynamic Programming - Complete Mastery Guide
+# Dynamic Programming
 
-**Interview Frequency:** ⭐⭐⭐⭐⭐ (70% of Google interviews)  
-**Difficulty Level:** High  
-**Mastery Time:** 15-20 hours
+## Recognizing DP Problems
 
-## Why DP is Critical for Google
+A problem is likely DP if it has both:
 
-Dynamic Programming is the ultimate pattern recognition test. Google uses DP to evaluate:
-- **Problem decomposition** - breaking complex problems into subproblems
-- **State design** - identifying what information matters
-- **Optimization thinking** - space/time tradeoffs
-- **Code quality** - clean, readable recursive/iterative solutions
+1. **Optimal substructure** -- the optimal solution contains optimal solutions to subproblems.
+2. **Overlapping subproblems** -- the same subproblems are solved multiple times in a naive recursive approach.
 
-**Key Insight:** Most DP problems follow 10-15 core patterns. Master these, and you can solve 80%+ of DP questions.
+**DP vs Greedy:** Greedy makes one locally optimal choice and never reconsiders. DP considers all choices and picks the best. If a greedy counterexample exists (a local choice leads to a globally suboptimal result), you need DP.
+
+**DP vs Divide and Conquer:** Both decompose problems. The difference is overlap -- divide and conquer subproblems are independent (merge sort), DP subproblems recur (Fibonacci).
+
+Common signals: "minimum/maximum," "count the number of ways," "is it possible," "longest/shortest."
 
 ---
 
 ## The DP Framework (SRTBOT)
 
-Every DP problem can be solved with this systematic approach:
-
-### **S - State Definition**
-What does `dp[i]` or `dp[i][j]` represent?
-
-### **R - Recurrence Relation**
-How does `dp[i]` relate to previous states?
-
-### **T - Base Cases**
-What are the simplest cases we can solve directly?
-
-### **B - Bottom-up or Top-down**
-Which implementation approach to use?
-
-### **O - Optimization**
-Can we reduce space complexity?
-
-### **T - Testing**
-Verify with small examples
+| Step | Question | Example (House Robber) |
+|------|----------|----------------------|
+| **S**tate | What does `dp[i]` represent? | Max money robbing houses `0..i` |
+| **R**ecurrence | How does it relate to prior states? | `dp[i] = max(dp[i-1], dp[i-2] + nums[i])` |
+| **T**opo order | What order to fill the table? | Left to right, `i = 0..n-1` |
+| **B**ase case | Simplest cases? | `dp[0] = nums[0]`, `dp[1] = max(nums[0], nums[1])` |
+| **O**ptimize | Can we reduce space? | Only need `dp[i-1]` and `dp[i-2]` -> O(1) |
+| **T**est | Verify on small input | `[2,7,9,3,1]` -> 12 |
 
 ---
 
-## Pattern 1: Linear DP (1D)
+## Pattern 1: Linear DP
 
-**Characteristics:**
-- Single array `dp[i]`
-- Current state depends on previous states
-- Often Fibonacci-like recurrence
+Current state depends on a small window of previous states. Often Fibonacci-like.
 
-### **Problem: Climbing Stairs** (LC 70) ⭐⭐⭐⭐⭐
+### Climbing Stairs (LC 70)
 
-**Problem:** n stairs, can climb 1 or 2 steps. How many ways to reach top?
-
-**Solution:**
 ```python
 def climbStairs(n: int) -> int:
-    # State: dp[i] = ways to reach step i
-    # Base: dp[0] = 1, dp[1] = 1
-    # Recurrence: dp[i] = dp[i-1] + dp[i-2]
-    
     if n <= 1:
         return 1
-    
     prev2, prev1 = 1, 1
-    
     for i in range(2, n + 1):
         current = prev1 + prev2
         prev2 = prev1
         prev1 = current
-    
     return prev1
 ```
 
-**Complexity:** O(n) time, O(1) space (optimized from O(n))
+**Time:** O(n) -- **Space:** O(1)
 
-**Related:** Fibonacci, House Robber, Decode Ways
-
----
-
-### **Problem: House Robber** (LC 198) ⭐⭐⭐⭐⭐
-
-**Problem:** Rob houses in line, can't rob adjacent. Maximize money.
+### House Robber (LC 198)
 
 ```python
 def rob(nums: List[int]) -> int:
-    # State: dp[i] = max money robbing houses 0..i
-    # Recurrence: dp[i] = max(dp[i-1], dp[i-2] + nums[i])
-    #   Choice: rob house i (add to i-2) or skip (take i-1)
-    
     if not nums:
         return 0
     if len(nums) == 1:
         return nums[0]
-    
+
     prev2 = nums[0]
     prev1 = max(nums[0], nums[1])
-    
+
     for i in range(2, len(nums)):
         current = max(prev1, prev2 + nums[i])
         prev2 = prev1
         prev1 = current
-    
+
     return prev1
 ```
 
-**Complexity:** O(n) time, O(1) space
-
-**Variants:**
-- LC 213: House Robber II (circular array)
-- LC 337: House Robber III (binary tree)
+**Time:** O(n) -- **Space:** O(1)
 
 ---
 
-## Pattern 2: Grid DP (2D)
+## Pattern 2: Kadane's Algorithm
 
-**Characteristics:**
-- 2D grid `dp[i][j]`
-- Movement constraints (usually down/right)
-- Path counting or optimization
+Sliding window DP for contiguous subarray problems. Track the best ending at the current position.
 
-### **Problem: Unique Paths** (LC 62) ⭐⭐⭐⭐
+### Maximum Subarray (LC 53)
 
-**Problem:** m×n grid, move only right/down. Count paths from top-left to bottom-right.
+```python
+def maxSubArray(nums: List[int]) -> int:
+    max_sum = curr_sum = nums[0]
+
+    for num in nums[1:]:
+        curr_sum = max(num, curr_sum + num)
+        max_sum = max(max_sum, curr_sum)
+
+    return max_sum
+```
+
+**Time:** O(n) -- **Space:** O(1)
+
+The key insight: at each position, either extend the current subarray or start fresh. If `curr_sum` drops below the current element, starting over is better.
+
+### Maximum Product Subarray (LC 152)
+
+Track both max and min at each position because a negative times a negative can become the max.
+
+```python
+def maxProduct(nums: List[int]) -> int:
+    result = max_prod = min_prod = nums[0]
+
+    for num in nums[1:]:
+        if num < 0:
+            max_prod, min_prod = min_prod, max_prod
+
+        max_prod = max(num, max_prod * num)
+        min_prod = min(num, min_prod * num)
+        result = max(result, max_prod)
+
+    return result
+```
+
+**Time:** O(n) -- **Space:** O(1)
+
+---
+
+## Pattern 3: Grid DP
+
+2D grid, usually moving right/down. State: `dp[i][j]` = answer at cell `(i, j)`.
+
+### Unique Paths (LC 62)
 
 ```python
 def uniquePaths(m: int, n: int) -> int:
-    # State: dp[i][j] = paths to cell (i,j)
-    # Base: dp[0][j] = 1, dp[i][0] = 1 (single path along edges)
-    # Recurrence: dp[i][j] = dp[i-1][j] + dp[i][j-1]
-    
-    # Space optimized: only need previous row
     dp = [1] * n
-    
     for i in range(1, m):
         for j in range(1, n):
-            dp[j] += dp[j-1]  # dp[j] already has dp[i-1][j]
-    
+            dp[j] += dp[j-1]
     return dp[-1]
 ```
 
-**Complexity:** O(m×n) time, O(n) space (optimized from O(m×n))
+**Time:** O(m * n) -- **Space:** O(n) (rolling array)
 
-**Pattern Recognition:** Any "count paths in grid" → grid DP
-
----
-
-### **Problem: Minimum Path Sum** (LC 64) ⭐⭐⭐⭐
+### Minimum Path Sum (LC 64)
 
 ```python
 def minPathSum(grid: List[List[int]]) -> int:
     m, n = len(grid), len(grid[0])
-    
-    # Can modify grid in-place to save space
     for i in range(m):
         for j in range(n):
             if i == 0 and j == 0:
@@ -161,56 +148,24 @@ def minPathSum(grid: List[List[int]]) -> int:
                 grid[i][j] += grid[i-1][j]
             else:
                 grid[i][j] += min(grid[i-1][j], grid[i][j-1])
-    
     return grid[-1][-1]
 ```
 
-**Complexity:** O(m×n) time, O(1) space
+**Time:** O(m * n) -- **Space:** O(1) (modifies input in place)
 
 ---
 
-## Pattern 3: String DP
+## Pattern 4: String DP
 
-**Characteristics:**
-- Compare/match strings
-- Often 2D DP with two strings
-- Subsequence vs substring distinction
+Two strings -> 2D table where `dp[i][j]` relates prefixes `s1[0:i]` and `s2[0:j]`.
 
-### **Problem: Longest Common Subsequence** (LC 1143) ⭐⭐⭐⭐⭐
-
-**Problem:** Find length of longest common subsequence.
+### Longest Common Subsequence (LC 1143)
 
 ```python
 def longestCommonSubsequence(text1: str, text2: str) -> int:
     m, n = len(text1), len(text2)
-    
-    # State: dp[i][j] = LCS length of text1[0:i] and text2[0:j]
-    # Recurrence:
-    #   if text1[i-1] == text2[j-1]: dp[i][j] = dp[i-1][j-1] + 1
-    #   else: dp[i][j] = max(dp[i-1][j], dp[i][j-1])
-    
-    dp = [[0] * (n + 1) for _ in range(m + 1)]
-    
-    for i in range(1, m + 1):
-        for j in range(1, n + 1):
-            if text1[i-1] == text2[j-1]:
-                dp[i][j] = dp[i-1][j-1] + 1
-            else:
-                dp[i][j] = max(dp[i-1][j], dp[i][j-1])
-    
-    return dp[m][n]
-```
-
-**Complexity:** O(m×n) time, O(m×n) space (can optimize to O(n))
-
-**Space Optimization:**
-```python
-def longestCommonSubsequence(text1: str, text2: str) -> int:
-    m, n = len(text1), len(text2)
-    
-    # Only need current and previous row
     prev = [0] * (n + 1)
-    
+
     for i in range(1, m + 1):
         curr = [0] * (n + 1)
         for j in range(1, n + 1):
@@ -219,367 +174,317 @@ def longestCommonSubsequence(text1: str, text2: str) -> int:
             else:
                 curr[j] = max(prev[j], curr[j-1])
         prev = curr
-    
+
     return prev[n]
 ```
 
-**Complexity:** O(m×n) time, O(n) space
+**Time:** O(m * n) -- **Space:** O(n)
 
----
-
-### **Problem: Edit Distance** (LC 72) ⭐⭐⭐⭐⭐
-
-**Problem:** Minimum operations (insert, delete, replace) to convert word1 to word2.
+### Edit Distance (LC 72)
 
 ```python
 def minDistance(word1: str, word2: str) -> int:
     m, n = len(word1), len(word2)
-    
-    # State: dp[i][j] = min ops to convert word1[0:i] to word2[0:j]
     dp = [[0] * (n + 1) for _ in range(m + 1)]
-    
-    # Base cases
+
     for i in range(m + 1):
-        dp[i][0] = i  # Delete all characters
+        dp[i][0] = i
     for j in range(n + 1):
-        dp[0][j] = j  # Insert all characters
-    
+        dp[0][j] = j
+
     for i in range(1, m + 1):
         for j in range(1, n + 1):
             if word1[i-1] == word2[j-1]:
-                dp[i][j] = dp[i-1][j-1]  # No operation needed
+                dp[i][j] = dp[i-1][j-1]
             else:
                 dp[i][j] = 1 + min(
-                    dp[i-1][j],     # Delete from word1
-                    dp[i][j-1],     # Insert into word1
-                    dp[i-1][j-1]    # Replace
+                    dp[i-1][j],      # delete
+                    dp[i][j-1],      # insert
+                    dp[i-1][j-1]     # replace
                 )
-    
+
     return dp[m][n]
 ```
 
-**Complexity:** O(m×n) time, O(m×n) space
-
-**Google Follow-up:** "Reconstruct the actual operations needed."
+**Time:** O(m * n) -- **Space:** O(m * n) (can optimize to O(n) with rolling row)
 
 ---
 
-## Pattern 4: Knapsack Problems
+## Pattern 5: Knapsack
 
-**Characteristics:**
-- Items with weight/value
-- Capacity constraint
-- Maximize value or count combinations
+### 0/1 Knapsack (Classic)
 
-### **Problem: 0/1 Knapsack** (Classic)
+Each item used at most once. Space-optimized: iterate capacity backwards.
 
-```python
-def knapsack(weights, values, capacity):
-    n = len(weights)
-    
-    # State: dp[i][w] = max value using items 0..i with capacity w
-    dp = [[0] * (capacity + 1) for _ in range(n + 1)]
-    
-    for i in range(1, n + 1):
-        for w in range(capacity + 1):
-            # Don't take item i-1
-            dp[i][w] = dp[i-1][w]
-            
-            # Take item i-1 if fits
-            if weights[i-1] <= w:
-                dp[i][w] = max(dp[i][w], 
-                              dp[i-1][w - weights[i-1]] + values[i-1])
-    
-    return dp[n][capacity]
-```
-
-**Space Optimized:**
 ```python
 def knapsack(weights, values, capacity):
     dp = [0] * (capacity + 1)
-    
     for i in range(len(weights)):
-        # Traverse backwards to avoid using same item twice
         for w in range(capacity, weights[i] - 1, -1):
             dp[w] = max(dp[w], dp[w - weights[i]] + values[i])
-    
     return dp[capacity]
 ```
 
-**Complexity:** O(n×capacity) time, O(capacity) space
+**Time:** O(n * capacity) -- **Space:** O(capacity)
 
----
+### Coin Change (LC 322)
 
-### **Problem: Coin Change** (LC 322) ⭐⭐⭐⭐⭐
-
-**Problem:** Minimum coins to make amount (unbounded knapsack).
+Unbounded knapsack (each coin reusable). Iterate capacity forwards.
 
 ```python
 def coinChange(coins: List[int], amount: int) -> int:
-    # State: dp[i] = min coins to make amount i
-    # Recurrence: dp[i] = min(dp[i - coin] + 1) for all coins
-    
     dp = [float('inf')] * (amount + 1)
-    dp[0] = 0  # 0 coins for amount 0
-    
+    dp[0] = 0
+
     for i in range(1, amount + 1):
         for coin in coins:
             if coin <= i:
                 dp[i] = min(dp[i], dp[i - coin] + 1)
-    
+
     return dp[amount] if dp[amount] != float('inf') else -1
 ```
 
-**Complexity:** O(amount × coins) time, O(amount) space
+**Time:** O(amount * len(coins)) -- **Space:** O(amount)
 
-**Variant - Coin Change II (LC 518):** Count number of combinations
+### Coin Change II (LC 518)
+
+Count number of combinations (not permutations). Outer loop over coins, inner over amounts.
+
+```python
+def change(amount: int, coins: List[int]) -> int:
+    dp = [0] * (amount + 1)
+    dp[0] = 1
+
+    for coin in coins:           # iterate coins first to avoid counting permutations
+        for x in range(coin, amount + 1):
+            dp[x] += dp[x - coin]
+
+    return dp[amount]
+```
+
+**Time:** O(amount * len(coins)) -- **Space:** O(amount)
+
+The loop order matters: coins-first counts combinations `{1,1,2}`, amounts-first would also count `{1,2,1}` and `{2,1,1}`.
 
 ---
 
-## Pattern 5: Longest Increasing Subsequence (LIS)
+## Pattern 6: Longest Increasing Subsequence
 
-### **Problem: LIS** (LC 300) ⭐⭐⭐⭐⭐
+### LIS (LC 300)
 
-**Approach 1: DP - O(n²)**
+**O(n^2) DP:**
+
 ```python
 def lengthOfLIS(nums: List[int]) -> int:
-    if not nums:
-        return 0
-    
-    # dp[i] = length of LIS ending at index i
     dp = [1] * len(nums)
-    
     for i in range(1, len(nums)):
         for j in range(i):
             if nums[j] < nums[i]:
                 dp[i] = max(dp[i], dp[j] + 1)
-    
     return max(dp)
 ```
 
-**Approach 2: Binary Search - O(n log n)** (Google Expects This)
+**O(n log n) with binary search:**
+
+Maintain `tails` where `tails[i]` is the smallest tail element for an increasing subsequence of length `i+1`.
+
 ```python
+from bisect import bisect_left
+
 def lengthOfLIS(nums: List[int]) -> int:
-    from bisect import bisect_left
-    
-    # tails[i] = smallest tail element for LIS of length i+1
     tails = []
-    
     for num in nums:
         pos = bisect_left(tails, num)
         if pos == len(tails):
             tails.append(num)
         else:
             tails[pos] = num
-    
     return len(tails)
 ```
 
-**Complexity:** O(n log n) time, O(n) space
+**Time:** O(n log n) -- **Space:** O(n)
 
 ---
 
-## Pattern 6: State Machine DP
+## Pattern 7: State Machine DP
 
-**Characteristics:**
-- Finite states (buy, sell, cooldown)
-- Transitions between states
-- Often stock problems
+Finite states with defined transitions. Common in stock problems.
 
-### **Problem: Best Time to Buy/Sell Stock** (LC 121, 122, 123, 188, 309)
+### Best Time to Buy and Sell Stock with Cooldown (LC 309)
 
-**LC 122: Multiple Transactions**
-```python
-def maxProfit(prices: List[int]) -> int:
-    # State machine: hold stock or not
-    # cash = max profit when not holding stock
-    # hold = max profit when holding stock
-    
-    cash, hold = 0, -prices[0]
-    
-    for i in range(1, len(prices)):
-        cash = max(cash, hold + prices[i])  # Sell
-        hold = max(hold, cash - prices[i])  # Buy
-    
-    return cash
-```
+Three states: `hold` (holding stock), `sold` (just sold), `rest` (cooldown/idle).
 
-**LC 309: With Cooldown**
 ```python
 def maxProfit(prices: List[int]) -> int:
     if len(prices) <= 1:
         return 0
-    
-    # Three states: hold, sold (just sold), rest (cooldown)
+
     hold = -prices[0]
     sold = 0
     rest = 0
-    
+
     for i in range(1, len(prices)):
-        prev_hold = hold
-        prev_sold = sold
-        prev_rest = rest
-        
+        prev_hold, prev_sold, prev_rest = hold, sold, rest
         hold = max(prev_hold, prev_rest - prices[i])
         sold = prev_hold + prices[i]
         rest = max(prev_rest, prev_sold)
-    
+
     return max(sold, rest)
 ```
 
+**Time:** O(n) -- **Space:** O(1)
+
+### Multiple Transactions (LC 122)
+
+```python
+def maxProfit(prices: List[int]) -> int:
+    cash, hold = 0, -prices[0]
+    for i in range(1, len(prices)):
+        cash = max(cash, hold + prices[i])
+        hold = max(hold, cash - prices[i])
+    return cash
+```
+
+**Time:** O(n) -- **Space:** O(1)
+
 ---
 
-## Pattern 7: Interval DP
+## Pattern 8: Interval DP
 
-**Characteristics:**
-- Process intervals/subarrays
-- Combine solutions from subintervals
-- Often polynomial time
+Process subarrays/substrings of increasing length. State: `dp[i][j]` for substring `s[i..j]`.
 
-### **Problem: Longest Palindromic Substring** (LC 5) ⭐⭐⭐⭐⭐
+### Longest Palindromic Substring (LC 5)
 
 ```python
 def longestPalindrome(s: str) -> str:
     n = len(s)
     if n < 2:
         return s
-    
-    # dp[i][j] = is s[i:j+1] palindrome?
+
     dp = [[False] * n for _ in range(n)]
     start, max_len = 0, 1
-    
-    # Base: single characters
+
     for i in range(n):
         dp[i][i] = True
-    
-    # Length 2
+
     for i in range(n - 1):
         if s[i] == s[i + 1]:
             dp[i][i + 1] = True
             start, max_len = i, 2
-    
-    # Length 3+
+
     for length in range(3, n + 1):
         for i in range(n - length + 1):
             j = i + length - 1
             if s[i] == s[j] and dp[i + 1][j - 1]:
                 dp[i][j] = True
                 start, max_len = i, length
-    
+
     return s[start:start + max_len]
 ```
 
-**Complexity:** O(n²) time and space
+**Time:** O(n^2) -- **Space:** O(n^2)
 
 ---
 
-## Master Checklist
+## Pattern 9: Tree DP
 
-### Fundamental Patterns (Must Know)
-- [ ] 1D DP (Fibonacci, House Robber)
-- [ ] 2D Grid DP (Unique Paths, Min Path Sum)
-- [ ] String DP (LCS, Edit Distance)
-- [ ] Knapsack (0/1, Unbounded)
-- [ ] LIS (both O(n²) and O(n log n))
+DP on tree structures. Each node returns information to its parent. Typically post-order traversal.
 
-### Advanced Patterns
-- [ ] State Machine DP
-- [ ] Interval DP
-- [ ] Tree DP
-- [ ] Digit DP
-- [ ] Bitmask DP
+### House Robber III (LC 337)
 
-### Skills
-- [ ] Identify DP problems in <2 minutes
-- [ ] Define state correctly first time
-- [ ] Write recurrence relation
-- [ ] Optimize space complexity
-- [ ] Handle edge cases
+Each node returns a pair: `(max if robbed, max if not robbed)`.
 
----
+```python
+def rob(root: TreeNode) -> int:
+    def dfs(node):
+        if not node:
+            return (0, 0)  # (rob_this, skip_this)
 
-## Common Mistakes to Avoid
+        left = dfs(node.left)
+        right = dfs(node.right)
 
-1. **Wrong State Definition**
-   - ❌ `dp[i] = answer at index i` (too vague)
-   - ✅ `dp[i] = max profit using first i items`
+        # Rob this node: can't rob children
+        rob_this = node.val + left[1] + right[1]
+        # Skip this node: take best of each child
+        skip_this = max(left) + max(right)
 
-2. **Off-by-One Errors**
-   - Be careful with 0-indexed vs 1-indexed
-   - Use `len(dp) = n + 1` for cleaner base cases
+        return (rob_this, skip_this)
 
-3. **Space Optimization Too Early**
-   - First solve with full DP table
-   - Then optimize to rolling array
+    return max(dfs(root))
+```
 
-4. **Forgetting Base Cases**
-   - Always initialize `dp[0]`, `dp[1]`
-   - Check empty input, single element
-
-5. **Iterating in Wrong Order**
-   - For 0/1 knapsack optimization: iterate backwards
-   - For dependencies: ensure previous states computed first
+**Time:** O(n) -- **Space:** O(h) where h is tree height (call stack)
 
 ---
 
-## Google Interview Tips
+## Space Optimization Techniques
 
-1. **Always Start with Brute Force**
-   - State the recursive solution first
-   - Identify overlapping subproblems
-   - Transition to DP
+### Rolling Array
 
-2. **Communicate State Design**
-   - "Let dp[i] represent..."
-   - "This depends on dp[i-1] because..."
+When `dp[i]` only depends on `dp[i-1]` (and maybe `dp[i-2]`), keep only the needed rows.
 
-3. **Draw Small Examples**
-   - Use 3×3 grid or length-4 array
-   - Walk through DP table filling
+```python
+# Full table: O(m*n) space
+dp = [[0] * (n+1) for _ in range(m+1)]
 
-4. **Discuss Optimizations**
-   - Mention space optimization
-   - Compare bottom-up vs top-down
+# Rolling: O(n) space
+prev = [0] * (n+1)
+for i in range(1, m+1):
+    curr = [0] * (n+1)
+    # fill curr using prev
+    prev = curr
+```
 
-5. **Handle Follow-ups**
-   - "How to reconstruct solution?"
-   - "What if constraints change?"
+### Two Variables
+
+When only `dp[i-1]` and `dp[i-2]` are needed:
+
+```python
+prev2, prev1 = base0, base1
+for i in range(2, n+1):
+    current = f(prev1, prev2)
+    prev2 = prev1
+    prev1 = current
+```
+
+### 1D Knapsack Trick
+
+For 0/1 knapsack, iterate capacity backwards to prevent reusing items:
+```python
+for w in range(capacity, weight - 1, -1):  # backwards = 0/1
+```
+
+For unbounded knapsack, iterate forwards:
+```python
+for w in range(weight, capacity + 1):       # forwards = unbounded
+```
 
 ---
 
-## Practice Roadmap
+## Complexity Reference Table
 
-### Week 1: Foundations (15 problems)
-- LC 70, 198, 213, 746 (1D DP)
-- LC 62, 63, 64 (Grid DP)
-- LC 139, 300 (Classic patterns)
-
-### Week 2: Strings & Knapsack (15 problems)
-- LC 1143, 72, 5, 516 (String DP)
-- LC 322, 518, 416, 494 (Knapsack)
-
-### Week 3: Advanced (15 problems)
-- LC 121, 122, 123, 309, 188 (Stock problems)
-- LC 53, 152, 1567 (Kadane variants)
-- LC 10, 44, 97 (Pattern matching)
-
-### Total: 45 problems, ~15-20 hours
-
----
-
-## Time Complexity Quick Reference
-
-| Pattern | Typical Complexity | Space |
-|---------|-------------------|-------|
-| 1D DP | O(n) | O(1) optimized |
-| 2D Grid | O(m×n) | O(n) optimized |
-| String (2 strings) | O(m×n) | O(n) optimized |
-| Knapsack | O(n×W) | O(W) optimized |
+| Pattern | Typical Time | Optimized Space |
+|---------|-------------|----------------|
+| Linear DP | O(n) | O(1) |
+| Kadane's | O(n) | O(1) |
+| Grid DP | O(m * n) | O(n) or O(1) in-place |
+| String DP (2 strings) | O(m * n) | O(n) |
+| 0/1 Knapsack | O(n * W) | O(W) |
 | LIS | O(n log n) | O(n) |
-| Interval DP | O(n²) - O(n³) | O(n²) |
+| State Machine | O(n * k) | O(k) states |
+| Interval DP | O(n^2) to O(n^3) | O(n^2) |
+| Tree DP | O(n) | O(h) call stack |
 
----
+## Common Mistakes
 
-**Key Takeaway:** DP is pattern recognition. Master these 7 patterns, and you can solve any DP problem Google gives you.
+1. **Wrong state definition.** `dp[i] = answer at index i` is too vague. Be precise: `dp[i] = max profit using items 0..i` or `dp[i] = number of ways to reach step i`.
 
-*Practice consistently, and DP will become your strongest skill.*
+2. **Off-by-one errors.** Use `dp` of size `n + 1` for cleaner base cases. Be careful with 0-indexed vs 1-indexed.
+
+3. **Optimizing space too early.** First get the full DP table working, then reduce to rolling array.
+
+4. **Forgetting base cases.** Always initialize `dp[0]` (and `dp[1]` if needed). Check empty input and single element.
+
+5. **Wrong iteration order.** 0/1 knapsack space-optimized: iterate capacity backwards. Dependencies must be computed before they are used.
+
+6. **Confusing combinations vs permutations in counting DP.** Coin Change II: loop coins outside, amounts inside for combinations. Reverse gives permutations.

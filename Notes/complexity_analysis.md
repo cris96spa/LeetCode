@@ -1,443 +1,89 @@
-# Complexity Analysis - Master Big O
+# Complexity Analysis
 
-**Why This Matters:** Understanding complexity is crucial for:
-- Choosing optimal algorithms
-- Passing Google's efficiency bar
-- Scaling solutions to production
-- Communicating tradeoffs clearly
+## Big O Fundamentals
 
----
+Big O describes the growth rate of time or space as input size (n) approaches infinity.
 
-## Big O Notation Fundamentals
-
-**Big O describes growth rate** as input size (n) approaches infinity.
-
-### Common Complexities (Best to Worst)
+### Common Complexities
 
 | Big O | Name | Example |
 |-------|------|---------|
 | O(1) | Constant | Array access, hash lookup |
 | O(log n) | Logarithmic | Binary search |
 | O(n) | Linear | Array traversal |
-| O(n log n) | Linearithmic | Merge sort, heap sort |
-| O(n²) | Quadratic | Nested loops, bubble sort |
-| O(n³) | Cubic | 3 nested loops |
-| O(2ⁿ) | Exponential | Recursive Fibonacci |
+| O(n log n) | Linearithmic | Merge sort |
+| O(n^2) | Quadratic | Nested loops |
+| O(2^n) | Exponential | Subsets, naive Fibonacci |
 | O(n!) | Factorial | Permutations |
 
-### Visual Growth Comparison
+### Growth Comparison
 
-```
-n = 10:
-O(1) = 1
-O(log n) = 3
-O(n) = 10
-O(n log n) = 30
-O(n²) = 100
-O(2ⁿ) = 1,024
-O(n!) = 3,628,800
-
-n = 100:
-O(1) = 1
-O(log n) = 7
-O(n) = 100
-O(n log n) = 664
-O(n²) = 10,000
-O(2ⁿ) = 1.27 × 10³⁰
-O(n!) = 9.33 × 10¹⁵⁷
-```
+| n | O(log n) | O(n) | O(n log n) | O(n^2) | O(2^n) |
+|---|----------|------|------------|--------|--------|
+| 10 | 3 | 10 | 33 | 100 | 1,024 |
+| 100 | 7 | 100 | 664 | 10,000 | 1.27 x 10^30 |
+| 1,000 | 10 | 1,000 | 9,966 | 10^6 | -- |
 
 ---
 
-## Rules for Calculating Time Complexity
+## Calculation Rules
 
-### Rule 1: Drop Constants
+### Drop Constants
 
-```python
-# O(2n) → O(n)
-for i in range(n):
-    print(i)
-for i in range(n):
-    print(i)
+`O(2n)` -> `O(n)`. Two sequential loops over `n` is still `O(n)`.
 
-# O(n + 1000) → O(n)
-for i in range(n):
-    print(i)
-for i in range(1000):
-    print(i)
-```
+### Drop Non-Dominant Terms
 
-### Rule 2: Drop Non-Dominant Terms
+`O(n^2 + n)` -> `O(n^2)`. The fastest-growing term dominates.
+
+### Different Inputs = Different Variables
 
 ```python
-# O(n² + n) → O(n²)
-for i in range(n):
-    for j in range(n):
-        print(i, j)
-for i in range(n):
+# O(a + b), NOT O(n)
+for i in range(len(a)):
     print(i)
-
-# O(n log n + n) → O(n log n)
-```
-
-### Rule 3: Different Inputs → Different Variables
-
-```python
-# O(a + b) NOT O(n)
-for i in range(len(array_a)):
-    print(i)
-for j in range(len(array_b)):
+for j in range(len(b)):
     print(j)
 
-# O(a * b) NOT O(n²)
-for i in range(len(array_a)):
-    for j in range(len(array_b)):
+# O(a * b), NOT O(n^2)
+for i in range(len(a)):
+    for j in range(len(b)):
         print(i, j)
 ```
 
-### Rule 4: Amortized Analysis
-
-```python
-# Dynamic array append: O(1) amortized
-# Occasional O(n) resize, but average is O(1)
-arr = []
-for i in range(n):
-    arr.append(i)  # O(1) amortized, total O(n)
-```
-
 ---
 
-## Common Time Complexities Explained
+## Time Complexity by Pattern
 
-### O(1) - Constant Time
+### O(1) - Constant
 
-**Operations that don't depend on input size:**
-
-```python
-# Array/dict access
-value = arr[5]
-value = hash_map['key']
-
-# Math operations
-result = a + b
-result = a * b
-
-# Comparison
-if a > b:
-    pass
-```
-
-**Real Interview Example:**
 ```python
 def get_middle(arr):
-    return arr[len(arr) // 2]  # O(1)
+    return arr[len(arr) // 2]
 ```
 
----
+### O(log n) - Logarithmic
 
-### O(log n) - Logarithmic Time
-
-**Halving search space each iteration:**
+Halving the search space each step. `n -> n/2 -> n/4 -> ... -> 1` takes `log2(n)` steps.
 
 ```python
-# Binary search
 def binary_search(arr, target):
     left, right = 0, len(arr) - 1
-    
-    while left <= right:  # O(log n) iterations
+    while left <= right:
         mid = (left + right) // 2
-        
         if arr[mid] == target:
             return mid
         elif arr[mid] < target:
             left = mid + 1
         else:
             right = mid - 1
-    
     return -1
 ```
 
-**Why log n?** 
-- Each iteration cuts problem in half
-- n → n/2 → n/4 → ... → 1
-- Number of steps = log₂(n)
+### O(n) - Linear
 
-**Other O(log n) operations:**
-- Binary tree height (balanced)
-- Heap operations
-- Balanced BST operations
-
----
-
-### O(n) - Linear Time
-
-**Iterate through data once:**
-
-```python
-# Single loop
-def find_max(arr):
-    max_val = arr[0]
-    for num in arr:  # O(n)
-        max_val = max(max_val, num)
-    return max_val
-
-# Multiple loops (still O(n))
-def process(arr):
-    # O(n + n + n) = O(3n) = O(n)
-    sum_val = sum(arr)
-    max_val = max(arr)
-    min_val = min(arr)
-    return sum_val, max_val, min_val
-```
-
-**Real Interview Example:**
 ```python
 def two_sum(nums, target):
-    seen = {}
-    for i, num in enumerate(nums):  # O(n)
-        if target - num in seen:
-            return [seen[target - num], i]
-        seen[num] = i
-    return []
-```
-
----
-
-### O(n log n) - Linearithmic Time
-
-**Optimal sorting complexity:**
-
-```python
-# Merge sort
-def merge_sort(arr):
-    if len(arr) <= 1:
-        return arr
-    
-    mid = len(arr) // 2
-    left = merge_sort(arr[:mid])   # T(n/2)
-    right = merge_sort(arr[mid:])  # T(n/2)
-    
-    return merge(left, right)      # O(n)
-
-# Recurrence: T(n) = 2T(n/2) + O(n) = O(n log n)
-```
-
-**Why n log n?**
-- log n levels of recursion
-- O(n) work per level
-- Total: O(n) × O(log n) = O(n log n)
-
-**Common O(n log n) scenarios:**
-- Sorting: merge sort, heap sort, quick sort (average)
-- Building heap from unsorted array
-- Divide and conquer with linear merge
-
----
-
-### O(n²) - Quadratic Time
-
-**Nested loops over same input:**
-
-```python
-# Checking all pairs
-def has_duplicate_pairs(arr):
-    for i in range(len(arr)):      # O(n)
-        for j in range(i + 1, len(arr)):  # O(n)
-            if arr[i] == arr[j]:
-                return True
-    return False
-
-# Total: O(n²)
-```
-
-**Optimizing to O(n):**
-```python
-def has_duplicate_pairs(arr):
-    seen = set()
-    for num in arr:  # O(n)
-        if num in seen:
-            return True
-        seen.add(num)
-    return False
-```
-
----
-
-### O(2ⁿ) - Exponential Time
-
-**Branching recursion without memoization:**
-
-```python
-# Naive Fibonacci
-def fib(n):
-    if n <= 1:
-        return n
-    return fib(n - 1) + fib(n - 2)  # Two recursive calls
-
-# Call tree for fib(5):
-#           fib(5)
-#          /      \
-#      fib(4)    fib(3)
-#      /   \      /   \
-#   fib(3) fib(2) ...
-```
-
-**Optimization to O(n):**
-```python
-def fib(n, memo={}):
-    if n in memo:
-        return memo[n]
-    if n <= 1:
-        return n
-    
-    memo[n] = fib(n - 1, memo) + fib(n - 2, memo)
-    return memo[n]
-```
-
----
-
-## Space Complexity Analysis
-
-**Space = Memory used beyond input**
-
-### O(1) Space - Constant
-
-```python
-def swap(arr, i, j):
-    arr[i], arr[j] = arr[j], arr[i]  # Only temp variables
-
-def reverse(arr):
-    left, right = 0, len(arr) - 1
-    while left < right:
-        arr[left], arr[right] = arr[right], arr[left]
-        left += 1
-        right -= 1
-```
-
-### O(n) Space - Linear
-
-```python
-# Creating new array
-def double(arr):
-    return [x * 2 for x in arr]  # O(n) space
-
-# Hash map
-def count_freq(arr):
-    freq = {}  # O(n) space worst case
-    for num in arr:
-        freq[num] = freq.get(num, 0) + 1
-    return freq
-```
-
-### O(log n) Space - Logarithmic
-
-```python
-# Binary search recursion (call stack)
-def binary_search(arr, target, left, right):
-    if left > right:
-        return -1
-    
-    mid = (left + right) // 2
-    
-    if arr[mid] == target:
-        return mid
-    elif arr[mid] < target:
-        return binary_search(arr, target, mid + 1, right)
-    else:
-        return binary_search(arr, target, left, mid - 1)
-
-# Call stack depth: O(log n)
-```
-
-### Recursive Call Stack
-
-```python
-# O(n) space from recursion
-def factorial(n):
-    if n <= 1:
-        return 1
-    return n * factorial(n - 1)  # n recursive calls
-
-# Call stack:
-# factorial(5)
-#   factorial(4)
-#     factorial(3)
-#       factorial(2)
-#         factorial(1)
-```
-
----
-
-## Complexity Analysis Strategies
-
-### Strategy 1: Count Loops
-
-```python
-# Single loop = O(n)
-for i in range(n):
-    pass
-
-# Nested loops (same input) = O(n²)
-for i in range(n):
-    for j in range(n):
-        pass
-
-# Independent loops = O(n + m)
-for i in range(n):
-    pass
-for j in range(m):
-    pass
-```
-
-### Strategy 2: Identify Recursive Pattern
-
-**Master Theorem** for divide and conquer:
-```
-T(n) = aT(n/b) + O(n^d)
-
-If a > b^d: O(n^log_b(a))
-If a = b^d: O(n^d log n)
-If a < b^d: O(n^d)
-```
-
-**Examples:**
-```python
-# Merge Sort: T(n) = 2T(n/2) + O(n)
-# a=2, b=2, d=1 → a = b^d → O(n log n)
-
-# Binary Search: T(n) = T(n/2) + O(1)
-# a=1, b=2, d=0 → a = b^d → O(log n)
-```
-
-### Strategy 3: Analyze Data Structures
-
-| Data Structure | Access | Search | Insert | Delete |
-|---------------|--------|--------|--------|--------|
-| Array | O(1) | O(n) | O(n) | O(n) |
-| Sorted Array | O(1) | O(log n) | O(n) | O(n) |
-| Hash Map | O(1) | O(1) | O(1) | O(1) |
-| Linked List | O(n) | O(n) | O(1) | O(1) |
-| Binary Heap | O(1) | O(n) | O(log n) | O(log n) |
-| BST (balanced) | O(log n) | O(log n) | O(log n) | O(log n) |
-
----
-
-## Common Interview Patterns
-
-### Pattern 1: Trading Space for Time
-
-**Problem: Two Sum**
-
-```python
-# O(n²) time, O(1) space
-def two_sum_slow(nums, target):
-    for i in range(len(nums)):
-        for j in range(i + 1, len(nums)):
-            if nums[i] + nums[j] == target:
-                return [i, j]
-
-# O(n) time, O(n) space
-def two_sum_fast(nums, target):
     seen = {}
     for i, num in enumerate(nums):
         if target - num in seen:
@@ -445,132 +91,207 @@ def two_sum_fast(nums, target):
         seen[num] = i
 ```
 
-### Pattern 2: Amortized Analysis
+### O(n log n) - Linearithmic
 
-**Dynamic Array Doubling:**
+Divide into `log n` levels, `O(n)` work per level.
+
+```python
+def merge_sort(arr):
+    if len(arr) <= 1:
+        return arr
+    mid = len(arr) // 2
+    left = merge_sort(arr[:mid])
+    right = merge_sort(arr[mid:])
+    return merge(left, right)  # merge is O(n)
 ```
-Insertions: n
-Resizes: 1 + 2 + 4 + 8 + ... + n/2 = 2n
-Total cost: 3n
-Amortized per insertion: O(1)
+
+### O(n^2) - Quadratic
+
+```python
+def has_duplicate_brute(arr):
+    for i in range(len(arr)):
+        for j in range(i + 1, len(arr)):
+            if arr[i] == arr[j]:
+                return True
+    return False
 ```
 
-### Pattern 3: Best, Average, Worst Case
+### O(2^n) - Exponential
 
-**Quick Sort:**
-- Best: O(n log n) - balanced partitions
-- Average: O(n log n)
-- Worst: O(n²) - already sorted
+```python
+def fib_naive(n):
+    if n <= 1:
+        return n
+    return fib_naive(n - 1) + fib_naive(n - 2)
+```
 
-**Hash Map:**
-- Average: O(1) - good hash function
-- Worst: O(n) - all collisions
+Two branches per call, `n` levels deep. Memoization reduces this to O(n).
+
+### O(n!) - Factorial
+
+```python
+def permutations(arr, path=[]):
+    if not arr:
+        print(path)
+        return
+    for i in range(len(arr)):
+        permutations(arr[:i] + arr[i+1:], path + [arr[i]])
+```
 
 ---
 
-## Google Interview Tips
+## Space Complexity
 
-### 1. Always State Complexity
+### Stack Frames
 
-**Template:**
-```
-"My solution has O(n log n) time complexity due to sorting,
-and O(n) space complexity for the hash map."
-```
+Every recursive call adds a frame to the call stack.
 
-### 2. Discuss Tradeoffs
-
-```
-"We can optimize from O(n²) to O(n log n) by sorting first,
-which costs O(n log n) time but reduces the nested loop."
+```python
+def factorial(n):          # O(n) space from call stack
+    if n <= 1:
+        return 1
+    return n * factorial(n - 1)
 ```
 
-### 3. Consider Input Constraints
+Iterative binary search: O(1) space. Recursive binary search: O(log n) space from the call stack.
 
-```
-If n ≤ 100: O(n³) is acceptable
-If n ≤ 10,000: O(n²) is acceptable
-If n ≤ 1,000,000: O(n log n) required
-If n ≤ 10⁹: O(n) or O(log n) required
-```
+### Auxiliary Space vs Total Space
 
-### 4. Optimize Step by Step
+- **Auxiliary space:** extra space beyond the input.
+- **Total space:** input + auxiliary.
 
-1. Brute force → state complexity
-2. Identify bottleneck
-3. Apply data structure or algorithm
-4. Analyze new complexity
+When people say "O(1) space," they usually mean auxiliary space.
+
+### In-place Algorithms
+
+Modify the input directly instead of creating new data structures. Examples: in-place quicksort, reversing an array with two pointers.
 
 ---
 
-## Practice Problems by Complexity
+## Analysis Techniques
 
-### O(log n)
-- LC 33 - Search in Rotated Array
-- LC 153 - Find Minimum in Rotated Array
-- LC 875 - Koko Eating Bananas
+### Counting Loops
 
-### O(n)
-- LC 1 - Two Sum
-- LC 121 - Best Time to Buy Stock
-- LC 3 - Longest Substring Without Repeating
+```python
+# Single loop = O(n)
+for i in range(n): pass
 
-### O(n log n)
-- LC 56 - Merge Intervals
-- LC 15 - 3Sum
-- LC 347 - Top K Frequent
+# Nested loops, same input = O(n^2)
+for i in range(n):
+    for j in range(n): pass
 
-### O(n²)
-- LC 15 - 3Sum (optimized from O(n³))
-- LC 200 - Number of Islands
+# Inner loop depends on outer = O(n^2/2) = O(n^2)
+for i in range(n):
+    for j in range(i, n): pass
+
+# Multiplicative shrinking = O(log n)
+i = n
+while i > 0:
+    i //= 2
+```
+
+### Master Theorem
+
+For divide-and-conquer recurrences `T(n) = aT(n/b) + O(n^d)`:
+
+| Condition | Result |
+|-----------|--------|
+| a > b^d | O(n^(log_b(a))) |
+| a = b^d | O(n^d * log n) |
+| a < b^d | O(n^d) |
+
+**Examples:**
+
+| Algorithm | Recurrence | a, b, d | Complexity |
+|-----------|-----------|---------|------------|
+| Binary Search | T(n) = T(n/2) + O(1) | 1, 2, 0 | O(log n) |
+| Merge Sort | T(n) = 2T(n/2) + O(n) | 2, 2, 1 | O(n log n) |
+| Strassen | T(n) = 7T(n/2) + O(n^2) | 7, 2, 2 | O(n^2.81) |
+
+### Amortized Analysis
+
+**Amortized cost** = total cost of all operations / number of operations.
+
+Individual operations may be expensive, but the average over a sequence is cheap.
+
+**Dynamic array (e.g., Python list.append):**
+- Most appends: O(1) -- just write to preallocated space.
+- Occasional resize: copy all n elements -> O(n).
+- Resizes happen at sizes 1, 2, 4, 8, ..., n. Total copy cost: `1 + 2 + 4 + ... + n = 2n`.
+- Over n appends, total cost is ~3n. Amortized per append: **O(1)**.
+
+**Accounting method intuition:** "charge" each cheap operation a little extra (e.g., 3 units instead of 1). The surplus pays for the rare expensive operation. If the account never goes negative, the amortized cost is the charge per operation.
 
 ---
+
+## Data Structure Operations
+
+| Data Structure | Access | Search | Insert | Delete | Notes |
+|---------------|--------|--------|--------|--------|-------|
+| Array | O(1) | O(n) | O(n) | O(n) | Insert/delete shift elements |
+| Sorted Array | O(1) | O(log n) | O(n) | O(n) | Binary search for lookup |
+| Hash Map | O(1)* | O(1)* | O(1)* | O(1)* | *Average case |
+| Linked List | O(n) | O(n) | O(1) | O(1) | Insert/delete at known position |
+| Binary Heap | O(1) top | O(n) | O(log n) | O(log n) | Min/max at top |
+| BST (balanced) | O(log n) | O(log n) | O(log n) | O(log n) | AVL, Red-Black |
+| Trie | -- | O(k) | O(k) | O(k) | k = key length |
+
+**Hash table collision note:** Average O(1) assumes a good hash function with low collision rate. Worst case is O(n) when all keys hash to the same bucket (e.g., adversarial input). Python dicts use open addressing with perturbation, making pathological cases rare but not impossible. In interviews, state "O(1) average, O(n) worst case" when precision matters.
+
+## Sorting Algorithms Comparison
+
+| Algorithm | Best | Average | Worst | Space | Stable | Notes |
+|-----------|------|---------|-------|-------|--------|-------|
+| Merge Sort | O(n log n) | O(n log n) | O(n log n) | O(n) | Yes | Predictable, good for linked lists |
+| Quick Sort | O(n log n) | O(n log n) | O(n^2) | O(log n) | No | Fastest in practice (cache-friendly) |
+| Heap Sort | O(n log n) | O(n log n) | O(n log n) | O(1) | No | In-place, guaranteed O(n log n) |
+| Counting Sort | O(n + k) | O(n + k) | O(n + k) | O(k) | Yes | k = range of values; integers only |
+| Radix Sort | O(nk) | O(nk) | O(nk) | O(n + k) | Yes | k = number of digits |
+| Timsort | O(n) | O(n log n) | O(n log n) | O(n) | Yes | Python's built-in `sorted()` |
+
+**When to use which:**
+- Default: use the language's built-in sort (Timsort in Python, O(n log n)).
+- Need O(1) space: heap sort.
+- Need stability: merge sort.
+- Integer keys in small range: counting sort.
+
+## Input Size -> Acceptable Complexity
+
+| n | Max Complexity | Typical Approach |
+|---|---------------|-----------------|
+| n <= 10 | O(n!) | Brute force, permutations |
+| n <= 20 | O(2^n) | Bitmask DP, backtracking |
+| n <= 500 | O(n^3) | Floyd-Warshall, interval DP |
+| n <= 5,000 | O(n^2) | DP, nested loops |
+| n <= 100,000 | O(n log n) | Sorting, heaps, balanced BST |
+| n <= 10^6 | O(n) | Linear scan, hash map |
+| n <= 10^9 | O(log n) or O(1) | Binary search, math |
 
 ## Common Mistakes
 
-1. **Confusing O(n) loops with O(log n)**
+1. **Confusing O(n) with O(log n).**
    ```python
-   # This is O(n), not O(log n)
+   # O(n) -- linear increment
    while i < n:
-       i += 1  # Linear increment
-   
-   # This is O(log n)
+       i += 1
+
+   # O(log n) -- multiplicative increment
    while i < n:
-       i *= 2  # Exponential increment
+       i *= 2
    ```
 
-2. **Forgetting space complexity of recursion**
-   ```python
-   def sum_array(arr):
-       if not arr:
-           return 0
-       return arr[0] + sum_array(arr[1:])
-   
-   # Time: O(n), Space: O(n) from call stack
-   ```
+2. **Forgetting space from recursion.** A recursive function with depth `d` uses O(d) stack space even if no extra data structures are allocated.
 
-3. **Missing hidden complexity**
+3. **Hidden O(n) operations inside loops.**
    ```python
    for i in range(n):
-       arr.pop(0)  # O(n) operation!
-   
-   # Total: O(n²), not O(n)
+       arr.pop(0)    # O(n) shift! Total: O(n^2)
+
+   for i in range(n):
+       if x in my_list:  # O(n) search! Total: O(n^2)
+           pass
    ```
 
----
+4. **String concatenation in a loop.** In Python, `s += char` inside a loop is O(n) per concatenation (creates a new string). Total: O(n^2). Use `"".join(parts)` instead.
 
-## Quick Reference Table
-
-| n size | Max acceptable complexity |
-|--------|--------------------------|
-| n ≤ 10 | O(n!) |
-| n ≤ 20 | O(2ⁿ) |
-| n ≤ 500 | O(n³) |
-| n ≤ 5,000 | O(n²) |
-| n ≤ 100,000 | O(n log n) |
-| n ≤ 1,000,000 | O(n) |
-| n ≤ 10⁹ | O(log n) or O(1) |
-
----
-
-**Master complexity analysis, and you'll write efficient code from the start!**
+5. **Ignoring the cost of slicing.** `arr[1:]` creates a copy in O(n). Passing slices in recursion can silently add O(n) per level.
