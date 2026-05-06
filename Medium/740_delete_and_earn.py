@@ -34,47 +34,47 @@ Two strategies are implemented and selected at runtime:
 The heuristic `k <= 2n` picks bucket DP when the range is compact,
 falling back to sparse DP otherwise.
 """
+
 from collections import Counter
+
+
 class Solution:
-    def deleteAndEarn(self, nums: list[int]) -> int:        
+    def deleteAndEarn(self, nums: list[int]) -> int:
         count = Counter(nums)
         n = len(nums)
         k = max(nums)
         u = len(count)
-        
+
         # Heuristic: choose strategy based on density
         # If value range is not too large -> bucket DP
         if k <= n * 2:
             prev_2 = 0
             prev_1 = count[1] * 1
-            
+
             for i in range(2, k + 1):
-                curr = max(
-                    prev_1,
-                    prev_2 + count[i] * i
-                )
+                curr = max(prev_1, prev_2 + count[i] * i)
                 prev_2 = prev_1
                 prev_1 = curr
-            
+
             return prev_1
-        
+
         # Otherwise -> sparse DP using sorted keys
         keys = sorted(count.keys())
-        
+
         prev_2 = 0
         prev_1 = 0
         prev_key = None
-        
+
         for key in keys:
             curr_value = key * count[key]
-            
+
             if prev_key is not None and key == prev_key + 1:
                 curr = max(prev_1, prev_2 + curr_value)
             else:
                 curr = prev_1 + curr_value
-            
+
             prev_2 = prev_1
             prev_1 = curr
             prev_key = key
-        
+
         return prev_1

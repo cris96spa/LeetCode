@@ -1,5 +1,5 @@
-from heapq import heappush, heappop, heapify
 from collections import Counter, deque
+from heapq import heapify, heappop, heappush
 from typing import List
 
 

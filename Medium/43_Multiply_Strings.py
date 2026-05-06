@@ -1,11 +1,12 @@
 # Problem: Multiply two non-negative integers represented as strings and return the result as a string.
 # Note: We must not use any built-in BigInteger library or convert the inputs directly to integers.
 
+
 class Solution:
     def multiply(self, num1: str, num2: str) -> str:
         # Initialize integer representations of the two numbers
         x = 0
-        
+
         # Loop through each digit of num1, starting from the least significant digit
         # Simulate integer conversion by multiplying the digit by its positional value (10^i)
         for i, num in enumerate(reversed(num1)):
@@ -33,10 +34,10 @@ if __name__ == "__main__":
     # Test cases
     num1 = "123"
     num2 = "456"
-    
+
     # Output the product of num1 and num2 as a string
     print(f"The product of {num1} and {num2} is: {solution.multiply(num1, num2)}")
-    
+
     # Another test case
     num1 = "2"
     num2 = "3"

@@ -30,7 +30,7 @@ class Solution:
         1. **Sort the intervals by their start time**:
            Sorting allows us to arrange the intervals such that overlapping intervals are adjacent
            to each other. This makes the merging process easier.
-           
+
         2. **Iterate through the sorted intervals**:
            Compare each interval with the last added interval in the result list. If the current interval
            overlaps with the last one, merge them by updating the end time. If it does not overlap,
@@ -51,7 +51,9 @@ class Solution:
         for i in range(1, len(intervals)):
             # If the current interval overlaps with the last one in results, merge them
             if intervals[i][0] <= results[-1][1]:
-                results[-1][1] = max(results[-1][1], intervals[i][1])  # Update the end time
+                results[-1][1] = max(
+                    results[-1][1], intervals[i][1]
+                )  # Update the end time
             else:
                 # If they don't overlap, add the current interval to the results
                 results.append(intervals[i])

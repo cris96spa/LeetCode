@@ -91,11 +91,12 @@ class Solution:
         Time:  O(n)
         Space: O(1)
     """
+
     def maxProfit(self, prices: list[int]) -> int:
         n = len(prices)
 
         hold_prev = -prices[0]
-        sold_prev = float('-inf')
+        sold_prev = float("-inf")
         rest_prev = 0
 
         for i in range(1, n):

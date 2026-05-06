@@ -8,7 +8,7 @@ LRUCache(int capacity) Initializes the LRU cache with a positive size capacity.
 int get(int key) Returns the value of the key if the key exists, otherwise returns -1.
 void put(int key, int value) Updates the value of the key if the key exists. Otherwise, adds the key-value pair to the cache.
   If the number of keys exceeds the capacity from this operation, evict the least recently used key.
-  
+
 The functions get and put must each run in O(1) average time complexity.
 
 Example:
@@ -34,7 +34,7 @@ lRUCache.get(4);    // returns 4
 
 Solution:
 The LRU Cache is implemented using a combination of a double-linked list and a hash map (dictionary).
-The dictionary stores the key-to-node mapping, and the double-linked list maintains the order of usage. 
+The dictionary stores the key-to-node mapping, and the double-linked list maintains the order of usage.
 The head of the list represents the most recently used item, while the tail holds the least recently used.
 
 The 'get' operation:
@@ -55,18 +55,21 @@ Constraints:
 - At most 2 * 10^5 calls will be made to get and put.
 
 """
+
 from typing import Dict
+
 
 class Node:
     """A Node in a double linked list"""
+
     def __init__(self, key: int, value: int):
         self.key = key
         self.value = value
         self.prev = None
         self.next = None
 
-class LRUCache:
 
+class LRUCache:
     def __init__(self, capacity: int):
         """
         Initialize the LRUCache with the given capacity.
@@ -75,8 +78,12 @@ class LRUCache:
         assert capacity > 0, "The LRU Capacity must be > 0"
         self.capacity = capacity
         self.cache: Dict[int, Node] = {}  # This holds the key-to-node mappings
-        self.head = Node(0, 0)  # Dummy head of the double-linked list (most recently used node)
-        self.tail = Node(0, 0)  # Dummy tail of the double-linked list (least recently used node)
+        self.head = Node(
+            0, 0
+        )  # Dummy head of the double-linked list (most recently used node)
+        self.tail = Node(
+            0, 0
+        )  # Dummy tail of the double-linked list (least recently used node)
         self.head.next = self.tail
         self.tail.prev = self.head
 
@@ -121,7 +128,7 @@ class LRUCache:
         """
         node.prev.next = node.next
         node.next.prev = node.prev
-    
+
     def _add(self, node: Node) -> None:
         """
         Add a node right after the head of the list (mark it as the most recently used).

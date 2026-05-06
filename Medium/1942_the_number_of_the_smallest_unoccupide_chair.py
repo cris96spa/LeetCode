@@ -1,5 +1,7 @@
-from heapq import heappush, heappop
+from heapq import heappop, heappush
 from typing import List
+
+
 class Solution:
     """
     This solution solves the problem of assigning a chair to a friend at a party based on their arrival time.
@@ -7,27 +9,27 @@ class Solution:
     chair when they arrive, and when they leave, their chair becomes available again.
 
     Given a 2D integer array `times` where each element `times[i] = [arrival_i, leaving_i]` represents the arrival
-    and leaving times of the i-th friend, and an integer `targetFriend`, the task is to determine which chair the 
+    and leaving times of the i-th friend, and an integer `targetFriend`, the task is to determine which chair the
     `targetFriend` will sit on.
 
     The approach follows these steps:
-    
-    1. **Sort by Arrival Times**: The input array `times` is first sorted based on the arrival times of each friend. 
+
+    1. **Sort by Arrival Times**: The input array `times` is first sorted based on the arrival times of each friend.
        This ensures that friends are processed in the order of their arrival.
 
-    2. **Track Available Chairs**: A min-heap (`min_free`) is used to keep track of available chairs. Initially, all 
-       chairs from 0 to n-1 (where n is the number of friends) are available. The heap allows efficient extraction 
+    2. **Track Available Chairs**: A min-heap (`min_free`) is used to keep track of available chairs. Initially, all
+       chairs from 0 to n-1 (where n is the number of friends) are available. The heap allows efficient extraction
        of the smallest available chair at any given time.
 
-    3. **Manage Chair Releases**: A second min-heap (`leavings`) is used to manage when friends leave. Each time a 
-       friend leaves, their chair becomes available, and it is pushed back into the `min_free` heap to be reused by 
+    3. **Manage Chair Releases**: A second min-heap (`leavings`) is used to manage when friends leave. Each time a
+       friend leaves, their chair becomes available, and it is pushed back into the `min_free` heap to be reused by
        another friend.
 
-    4. **Assign Chairs**: For each friend (processed in order of their arrival), we pop the smallest available chair 
-       from the `min_free` heap and assign it to them. We also track when the friend will leave and push their leaving 
+    4. **Assign Chairs**: For each friend (processed in order of their arrival), we pop the smallest available chair
+       from the `min_free` heap and assign it to them. We also track when the friend will leave and push their leaving
        time and chair into the `leavings` heap.
 
-    5. **Identify Target Friend's Chair**: As soon as the target friend arrives, the assigned chair is returned, which 
+    5. **Identify Target Friend's Chair**: As soon as the target friend arrives, the assigned chair is returned, which
        is the final answer.
 
     Time Complexity:
@@ -64,13 +66,14 @@ class Solution:
     - 0 <= targetFriend <= n - 1
     - Each arrival time is distinct.
     """
+
     def smallestChair(self, times: List[List[int]], targetFriend: int) -> int:
         # Get the target friend's arrival time
         target_arrival = times[targetFriend][0]
 
         # Sort friends by arrival time
         sorted_times = sorted(times, key=lambda x: x[0])
-        
+
         # Min-heap to track available chairs, initially all chairs from 0 to n-1
         min_free = []
         for i in range(len(times)):
@@ -87,12 +90,12 @@ class Solution:
 
             # Get current free position
             assigned_chair = heappop(min_free)
-            
+
             # If this is the target friend's arrival, return their chair
             if arrival == target_arrival:
                 return assigned_chair
-            
+
             # Add leaving time to leavings
             heappush(leavings, (leaving, assigned_chair))
-        
+
         return -1  # This should never be reached given the constraints

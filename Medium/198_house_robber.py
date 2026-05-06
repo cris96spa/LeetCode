@@ -51,10 +51,10 @@ class Solution:
 
         prev_2 = nums[0]
         prev_1 = max(nums[:2])
-        
+
         for i in range(2, n):
             curr = max(nums[i] + prev_2, prev_1)
             prev_2 = prev_1
             prev_1 = curr
-        
+
         return max(prev_2, prev_1)

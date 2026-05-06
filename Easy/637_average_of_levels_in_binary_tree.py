@@ -1,5 +1,5 @@
-from typing import List, Optional
 from statistics import mean
+from typing import List, Optional
 
 
 # Definition for a binary tree node.

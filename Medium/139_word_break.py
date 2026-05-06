@@ -58,7 +58,7 @@ class Solution:
         for i in range(1, len(s) + 1):
             for word in wordDict:
                 L = len(word)
-                if i >= L and dp[i - L] and s[i - L:i] == word:
+                if i >= L and dp[i - L] and s[i - L : i] == word:
                     dp[i] = True
                     break
 

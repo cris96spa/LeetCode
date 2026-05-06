@@ -1,24 +1,23 @@
-
 class Solution:
     def minCostClimbingStairs(self, cost: list[int]) -> int:
         """
-            Use dynamic programming with space optimization.
+        Use dynamic programming with space optimization.
 
-            At each step i, the minimum cost to reach it is:
-                cost[i] + min(cost to reach i-1, cost to reach i-2)
+        At each step i, the minimum cost to reach it is:
+            cost[i] + min(cost to reach i-1, cost to reach i-2)
 
-            We keep only two variables:
-                prev_1 → min cost to reach previous step
-                prev_2 → min cost to reach step before that
+        We keep only two variables:
+            prev_1 → min cost to reach previous step
+            prev_2 → min cost to reach step before that
 
-            Iterate through the array, updating the current cost each time.
+        Iterate through the array, updating the current cost each time.
 
-            Since we can end on either of the last two steps to reach the top,
-            the result is:
-                min(prev_1, prev_2)
+        Since we can end on either of the last two steps to reach the top,
+        the result is:
+            min(prev_1, prev_2)
 
-            Time: O(n)
-            Space: O(1)
+        Time: O(n)
+        Space: O(1)
         """
         prev_2 = 0
         prev_1 = cost[0]

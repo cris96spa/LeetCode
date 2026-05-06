@@ -5,6 +5,7 @@ class TreeNode:
         self.left = left
         self.right = right
 
+
 class Solution:
     def inorderTraversal(self, root: TreeNode | None) -> list[int]:
         """
@@ -36,7 +37,7 @@ class Solution:
             Time: O(n), where n is the number of nodes, because each node is
                 pushed and popped at most once.
             Space: O(n) including the output list.
-                O(h) auxiliary space for the stack, where h is the height of the tree. 
+                O(h) auxiliary space for the stack, where h is the height of the tree.
                 In the worst case h = n for a skewed tree.
         """
         result = []

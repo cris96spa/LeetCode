@@ -1,5 +1,5 @@
-from heapq import heappush, heappop
 from collections import defaultdict
+from heapq import heappop, heappush
 from typing import List
 
 

@@ -1,11 +1,11 @@
 """
 Problem Description:
 
-You are given a rotated, sorted array of distinct integers. The array was originally sorted in ascending order, 
-but then rotated at an unknown pivot, meaning part of the array may still be in order, but the overall array is no 
-longer fully sorted. 
+You are given a rotated, sorted array of distinct integers. The array was originally sorted in ascending order,
+but then rotated at an unknown pivot, meaning part of the array may still be in order, but the overall array is no
+longer fully sorted.
 
-Your task is to search for a specific target value within this array and return its index. If the target value is 
+Your task is to search for a specific target value within this array and return its index. If the target value is
 not present in the array, return -1.
 
 ### Example 1:
@@ -30,7 +30,7 @@ Output: -1
 Writeup:
 
 We can solve this problem using a modified version of the binary search algorithm. Although the array is rotated,
-one half of the array (either left or right) will always remain sorted at every step of the search. 
+one half of the array (either left or right) will always remain sorted at every step of the search.
 
 Key steps:
 1. Identify which half of the array is sorted.
@@ -39,11 +39,12 @@ Key steps:
 4. If not, search the other half of the array.
 5. Continue narrowing down the search range until the target is found or the search space is exhausted.
 
-The algorithm efficiently searches for the target in O(log n) time by repeatedly halving the search space, taking 
+The algorithm efficiently searches for the target in O(log n) time by repeatedly halving the search space, taking
 advantage of the sorted sections of the array.
 """
 
 from typing import List
+
 
 class Solution:
     def search(self, nums: List[int], target: int) -> int:
@@ -68,5 +69,5 @@ class Solution:
                     left = mid + 1
                 else:
                     right = mid - 1
-        
+
         return -1

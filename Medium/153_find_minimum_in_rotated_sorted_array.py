@@ -1,10 +1,10 @@
 """
 Problem Description:
 
-You are given an array `nums` of unique integers that is sorted in ascending order and then rotated at an unknown pivot. 
+You are given an array `nums` of unique integers that is sorted in ascending order and then rotated at an unknown pivot.
 Your task is to find the minimum element in this rotated sorted array.
 
-The array was originally sorted in ascending order, and it has been rotated between 1 and `n` times, where `n` is 
+The array was originally sorted in ascending order, and it has been rotated between 1 and `n` times, where `n` is
 the length of the array. The goal is to find the minimum element in this rotated array in O(log n) time complexity.
 
 ### Example 1:
@@ -31,7 +31,7 @@ Explanation: The original array was [11,13,15,17] and rotated 4 times.
 
 Solution:
 
-To solve this problem in O(log n) time complexity, we can modify the binary search algorithm. 
+To solve this problem in O(log n) time complexity, we can modify the binary search algorithm.
 The idea is to find the inflection point in the rotated array where the smallest element resides.
 
 Key Steps:
@@ -46,16 +46,17 @@ By using binary search, we achieve the desired O(log n) time complexity.
 
 from typing import List
 
+
 class Solution:
     def findMin(self, nums: List[int]) -> int:
         # Initialize left and right pointers to represent the bounds of the array
         left, right = 0, len(nums) - 1
-        
+
         # Perform binary search to find the minimum element
         while left < right:
             # Calculate the mid-point of the current search range
             mid = (left + right) // 2
-            
+
             # Compare the mid element with the right element to decide which half to search
             if nums[mid] < nums[right]:
                 # If nums[mid] is less than nums[right], the minimum must be in the left half (including mid)
@@ -63,5 +64,5 @@ class Solution:
             else:
                 # Otherwise, the minimum must be in the right half, so move left to mid + 1
                 left = mid + 1
-    
+
         return nums[left]
