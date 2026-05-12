@@ -1,65 +1,65 @@
-from typing import List
-
-
 class Solution:
     """
-    Problem Statement:
-    ------------------
-    Given a 1-indexed array of integers `numbers` that is already sorted in non-decreasing order,
-    find two numbers such that they add up to a specific target number. Let these two numbers be
-    `numbers[index1]` and `numbers[index2]` where `1 <= index1 < index2 <= numbers.length`.
+    LeetCode 167. Two Sum II - Input Array Is Sorted
 
-    Return the indices of the two numbers, `index1` and `index2`, added by one as an integer array
-    `[index1, index2]` of length 2.
+    Problem:
+        Given a 1-indexed array of integers `numbers` that is already sorted
+        in non-decreasing order, find two numbers such that they add up to
+        a specific `target`.
 
-    The tests are generated such that there is exactly one solution, and the same element cannot be
-    used twice.
+        Return the indices of the two numbers as a list [index1, index2],
+        where index1 and index2 are 1-based.
 
-    Constraints:
-    ------------
-    - 2 <= numbers.length <= 3 * 10^4
-    - -1000 <= numbers[i] <= 1000
-    - `numbers` is sorted in non-decreasing order.
-    - -1000 <= target <= 1000
-    - The tests are guaranteed to have exactly one solution.
+    Key constraints:
+        - Exactly one solution exists.
+        - The same element may not be used twice.
+        - The solution must use only constant extra space.
 
-    Solution:
-    ---------
-    This problem can be solved efficiently using the two-pointer technique because the input array
-    is already sorted.
+    Approach:
+        Since the array is sorted, we can use two pointers:
 
-    Steps:
-    1. Initialize two pointers, `left` at the start of the array and `right` at the end.
-    2. Calculate the sum of the numbers at these two pointers.
-    3. If the sum is greater than the target, decrement the `right` pointer to reduce the sum.
-    4. If the sum is less than the target, increment the `left` pointer to increase the sum.
-    5. If the sum equals the target, return the 1-indexed positions `[left + 1, right + 1]`.
+            left  -> starts at the beginning
+            right -> starts at the end
 
-    This approach ensures \(O(n)\) time complexity with \(O(1)\) extra space.
+        At each step, compute:
+
+            curr_sum = numbers[left] + numbers[right]
+
+        There are three cases:
+
+            1. curr_sum == target:
+                We found the answer.
+
+            2. curr_sum < target:
+                The sum is too small, so we need a larger number.
+                Move `left` one step to the right.
+
+            3. curr_sum > target:
+                The sum is too large, so we need a smaller number.
+                Move `right` one step to the left.
+
+        This works because the array is sorted.
+
+    Complexity:
+        Time:
+            O(n), because each pointer moves at most n times.
+
+        Space:
+            O(1), because we only store a few variables.
     """
 
-    def twoSum(self, numbers: List[int], target: int) -> List[int]:
-        """
-        Finds two numbers in the sorted array `numbers` that add up to the `target`.
-
-        Args:
-            numbers (List[int]): A sorted array of integers.
-            target (int): The target sum to achieve.
-
-        Returns:
-            List[int]: A 1-indexed list of the indices of the two numbers that add up to the target.
-        """
+    def twoSum(self, numbers: list[int], target: int) -> list[int]:
         left, right = 0, len(numbers) - 1
 
         while left < right:
-            _sum = numbers[left] + numbers[right]
+            curr_sum = numbers[left] + numbers[right]
 
-            if _sum > target:
-                right -= 1
-            elif _sum < target:
+            if curr_sum == target:
+                return [left + 1, right + 1]
+
+            if curr_sum < target:
                 left += 1
             else:
-                return [left + 1, right + 1]  # 1-indexed result
+                right -= 1
 
-        # Guaranteed to have a solution; this line should never be reached.
         return []
