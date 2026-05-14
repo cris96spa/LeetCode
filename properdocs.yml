@@ -39,6 +39,8 @@ markdown_extensions:
       custom_fences:
         - name: mermaid
           class: mermaid
+  - pymdownx.arithmatex:
+      generic: true
   - pymdownx.highlight:
       anchor_linenums: true
   - pymdownx.inlinehilite
@@ -57,6 +59,7 @@ markdown_extensions:
 # Plugins
 plugins:
   - search
+  - callouts
   - gen-files:
       scripts:
         - utils/build_api_docs.py
@@ -81,6 +84,10 @@ extra:
       link: https://gitlab.com/artificialy1/internal/artifieval
     - icon: fontawesome/solid/globe
       link: https://www.artificialy.com
+
+extra_javascript:
+  - javascripts/mathjax.js
+  - https://unpkg.com/mathjax@3/es5/tex-mml-chtml.js
 
 # Custom CSS
 extra_css:
