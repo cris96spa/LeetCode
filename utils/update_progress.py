@@ -1,24 +1,25 @@
-"""Update progress dashboard in README.md and docs/index.md.
-
-Run automatically via pre-commit, or manually: uv run python utils/update_progress.py
-"""
-
 import json
+import logging
 import re
 import subprocess
 from collections import defaultdict
 from pathlib import Path
+from typing import NamedTuple
 
-ROOT = Path(__file__).parent.parent
-LEETCODE_DIR = ROOT / "leetcode"
-NEETCODE_MAP = ROOT / "utils" / "neetcode250.json"
-README = ROOT / "README.md"
-DOCS_INDEX = ROOT / "docs" / "index.md"
+legger = logging.getLogger(__name__)
 
-DIFFICULTIES = ["Easy", "Medium", "Hard"]
+_ROOT = Path(__file__).parent.parent
+_NEETCODE_MAP = _ROOT / "utils" / "neetcode250.json"
+_README = _ROOT / "README.md"
+_DOCS_INDEX = _ROOT / "docs" / "index.md"
 
-# Canonical order matching the Neetcode roadmap
-NC250_PATTERN_ORDER = [
+_README_MARKERS = ("<!-- PROGRESS:START -->", "<!-- PROGRESS:END -->")
+_DOCS_MARKERS = ("<!-- DASHBOARD:START -->", "<!-- DASHBOARD:END -->")
+
+_DIFFICULTIES = ("Easy", "Medium", "Hard")
+_DIFF_EMOJI = {"Easy": "🟢", "Medium": "🟡", "Hard": "🔴"}
+
+_NC250_PATTERN_ORDER = (
     "Arrays & Hashing",
     "Two Pointers",
     "Sliding Window",
@@ -37,202 +38,186 @@ NC250_PATTERN_ORDER = [
     "2-D Dynamic Programming",
     "Bit Manipulation",
     "Math & Geometry",
-]
+)
 
 
-def get_solved_files() -> dict[str, list[tuple[int, str, Path]]]:
-    """Scan difficulty folders and return {difficulty: [(number, slug, path)]}."""
-    solved: dict[str, list[tuple[int, str, Path]]] = {}
-    for diff in DIFFICULTIES:
-        folder = LEETCODE_DIR / diff
-        files: list[tuple[int, str, Path]] = []
-        if folder.exists():
-            for f in sorted(folder.glob("*.py")):
-                if f.name == "__init__.py":
-                    continue
-                parts = f.stem.split("_", 1)
-                if len(parts) == 2 and parts[0].isdigit():
-                    files.append((int(parts[0]), parts[1], f))
-        solved[diff] = files
-    return solved
+class _SolvedFile(NamedTuple):
+    number: int
+    slug: str
+    path: Path
+    difficulty: str
 
 
-def slug_to_name(slug: str) -> str:
-    """Convert a snake_case filename slug to a displayable title."""
-    return slug.replace("_", " ").title()
+def _scan() -> list[_SolvedFile]:
+    files: list[_SolvedFile] = []
+    for diff in _DIFFICULTIES:
+        for f in sorted((_ROOT / "leetcode" / diff).glob("*.py")):
+            if f.name == "__init__.py":
+                continue
+            parts = f.stem.split("_", 1)
+            if len(parts) == 2 and parts[0].isdigit():
+                files.append(_SolvedFile(int(parts[0]), parts[1], f, diff))
+    return files
 
 
-def normalize(s: str) -> str:
+def _normalize(s: str) -> str:
     return re.sub(r"\s+", " ", s.lower().strip())
 
 
-def progress_bar_ascii(solved: int, total: int, width: int = 12) -> str:
+def _slug_to_name(slug: str) -> str:
+    return slug.replace("_", " ").title()
+
+
+def _ascii_bar(solved: int, total: int, width: int = 12) -> str:
     filled = round(solved / total * width) if total else 0
     return "█" * filled + "░" * (width - filled)
 
 
-def replace_between_markers(text: str, start: str, end: str, content: str) -> str:
-    pattern = re.compile(
-        rf"({re.escape(start)})(.*?)({re.escape(end)})",
-        re.DOTALL,
-    )
-    result, n = pattern.subn(rf"\1\n{content}\n\3", text)
+def _inject(text: str, start: str, end: str, content: str) -> str:
+    pat = re.compile(rf"({re.escape(start)})(.*?)({re.escape(end)})", re.DOTALL)
+    result, n = pat.subn(rf"\1\n{content}\n\3", text)
     if n == 0:
-        raise ValueError(f"Markers '{start}' / '{end}' not found in file")
+        raise ValueError(f"Markers not found: {start!r} / {end!r}")
     return result
 
 
-def build_progress_data(
-    solved: dict[str, list[tuple[int, str, Path]]],
+def _classify(
+    files: list[_SolvedFile],
     mapping: dict[str, str],
-    nc250_totals: dict[str, int],
-) -> tuple[dict[str, int], dict[str, list[str]]]:
-    """Return (counts_by_diff, solved_names_by_pattern)."""
-    counts = {diff: len(files) for diff, files in solved.items()}
-    lookup = {normalize(k): v for k, v in mapping.items()}
-
+) -> tuple[dict[str, int], dict[str, list[str]], list[_SolvedFile]]:
+    lookup = {_normalize(k): v for k, v in mapping.items()}
+    counts = {d: sum(1 for f in files if f.difficulty == d) for d in _DIFFICULTIES}
     pattern_solved: dict[str, list[str]] = defaultdict(list)
-    for diff, files in solved.items():
-        for _num, slug, _path in files:
-            pretty = slug_to_name(slug)
-            pattern = lookup.get(normalize(pretty))
-            if pattern:
-                pattern_solved[pattern].append(normalize(pretty))
+    unmatched: list[_SolvedFile] = []
 
-    return counts, dict(pattern_solved)
+    for file in files:
+        name = _slug_to_name(file.slug)
+        pattern = lookup.get(_normalize(name))
+        if pattern:
+            pattern_solved[pattern].append(_normalize(name))
+        else:
+            unmatched.append(file)
+
+    return counts, dict(pattern_solved), unmatched
 
 
-# ─── README section ───────────────────────────────────────────────────────────
-
-
-def render_readme_section(
+def _render_readme(
     counts: dict[str, int],
     pattern_solved: dict[str, list[str]],
-    nc250_totals: dict[str, int],
+    totals: dict[str, int],
 ) -> str:
     nc250_count = sum(len(v) for v in pattern_solved.values())
+    header = " | ".join(f"{_DIFF_EMOJI[d]} {d}" for d in _DIFFICULTIES)
+    solved_row = " | ".join(f"**{counts[d]}**" for d in _DIFFICULTIES)
+
     lines = [
-        "| | 🟢 Easy | 🟡 Medium | 🔴 Hard |",
+        f"| | {header} |",
         "|:--:|:--:|:--:|:--:|",
-        f"| **Solved** | **{counts['Easy']}** | **{counts['Medium']}** | **{counts['Hard']}** |",
+        f"| **Solved** | {solved_row} |",
         "",
         f"> **NeetCode 250** &nbsp;·&nbsp; {nc250_count} / 250 problems tracked",
         "",
         "| Pattern | Solved | Total | Progress |",
         "|---------|-------:|------:|:---------|",
     ]
-    for pattern in NC250_PATTERN_ORDER:
+    for pattern in _NC250_PATTERN_ORDER:
         s = len(pattern_solved.get(pattern, []))
-        t = nc250_totals.get(pattern, 0)
-        bar = progress_bar_ascii(s, t)
-        lines.append(f"| {pattern} | {s} | {t} | `{bar}` |")
+        t = totals.get(pattern, 0)
+        pct = round(s / t * 100) if t else 0
+        lines.append(f"| {pattern} | {s} | {t} | `{_ascii_bar(s, t)}` {pct}% |")
     return "\n".join(lines)
 
 
-# ─── docs/index.md section ────────────────────────────────────────────────────
-
-
-def render_docs_section(
+def _render_docs(
     counts: dict[str, int],
     pattern_solved: dict[str, list[str]],
-    nc250_totals: dict[str, int],
+    totals: dict[str, int],
     mapping: dict[str, str],
+    unmatched: list[_SolvedFile],
 ) -> str:
     nc250_count = sum(len(v) for v in pattern_solved.values())
 
-    # Build pattern → sorted problem name list
-    pattern_problems: dict[str, list[str]] = defaultdict(list)
+    by_pattern: dict[str, list[str]] = defaultdict(list)
     for name, pattern in mapping.items():
-        pattern_problems[pattern].append(name)
-    for p in pattern_problems:
-        pattern_problems[p].sort(key=str.lower)
+        by_pattern[pattern].append(name)
+    for problems in by_pattern.values():
+        problems.sort(key=str.lower)
 
     lines: list[str] = [
         '<div class="lc-stats">',
-        f'<div class="lc-stat lc-easy"><span class="lc-num">{counts["Easy"]}</span>'
-        '<span class="lc-label">Easy</span></div>',
-        f'<div class="lc-stat lc-medium"><span class="lc-num">{counts["Medium"]}</span>'
-        '<span class="lc-label">Medium</span></div>',
-        f'<div class="lc-stat lc-hard"><span class="lc-num">{counts["Hard"]}</span>'
-        '<span class="lc-label">Hard</span></div>',
+        *(
+            f'<div class="lc-stat lc-{d.lower()}"><span class="lc-num">{counts[d]}</span>'
+            f'<span class="lc-label">{d}</span></div>'
+            for d in _DIFFICULTIES
+        ),
         "</div>",
         "",
         f"## NeetCode 250 &nbsp;·&nbsp; {nc250_count} / 250",
         "",
     ]
 
-    for pattern in NC250_PATTERN_ORDER:
+    for pattern in _NC250_PATTERN_ORDER:
         solved_set = set(pattern_solved.get(pattern, []))
-        problems = pattern_problems.get(pattern, [])
-        s = len(solved_set)
-        t = nc250_totals.get(pattern, len(problems))
+        problems = by_pattern.get(pattern, [])
+        s, t = len(solved_set), totals.get(pattern, len(problems))
         pct = round(s / t * 100) if t else 0
+        admonition = "success" if s == t > 0 else "note"
 
-        admonition = "success" if s == t and t > 0 else "note"
-        lines.append(
-            f'??? {admonition} "{pattern} &nbsp;·&nbsp; {s} / {t} ({pct}%)"'
-        )
-        lines.append(
+        lines += [
+            f'??? {admonition} "{pattern} &nbsp;·&nbsp; {s} / {t} ({pct}%)"',
             f'    <div class="lc-progress-bar">'
-            f'<div class="lc-progress-fill" style="width:{pct}%"></div></div>'
-        )
-        lines.append("")
-        for name in problems:
-            if normalize(name) in solved_set:
-                lines.append(f"    - [x] {name}")
-            else:
-                lines.append(f"    - [ ] {name}")
-        lines.append("")
+            f'<div class="lc-progress-fill" style="width:{pct}%"></div></div>',
+            "",
+            *(
+                f"    - [{'x' if _normalize(name) in solved_set else ' '}] {name}"
+                for name in problems
+            ),
+            "",
+        ]
+
+    if unmatched:
+        lines += [
+            f"## Other Solutions &nbsp;·&nbsp; {len(unmatched)}",
+            "",
+            f'??? note "Show {len(unmatched)} solutions"',
+            "    | File | Difficulty | Inferred name |",
+            "    |------|:----------:|---------------|",
+            *(
+                f"    | `{f.path.name}` | {f.difficulty} | {_slug_to_name(f.slug)} |"
+                for f in sorted(unmatched, key=lambda f: f.number)
+            ),
+            "",
+        ]
 
     return "\n".join(lines)
 
 
-# ─── Entry point ─────────────────────────────────────────────────────────────
-
-
 def main() -> None:
-    """Update README.md and docs/index.md with current progress."""
-    with open(NEETCODE_MAP) as f:
-        nc250 = json.load(f)
+    """Regenerate progress dashboards and stage the updated files."""
+    logging.basicConfig(format="%(message)s", level=logging.INFO)
 
+    nc250 = json.loads(_NEETCODE_MAP.read_text())
     mapping: dict[str, str] = nc250["mapping"]
-    nc250_totals: dict[str, int] = nc250["patterns"]
+    totals: dict[str, int] = nc250["patterns"]
 
-    solved = get_solved_files()
-    counts, pattern_solved = build_progress_data(solved, mapping, nc250_totals)
+    files = _scan()
+    counts, pattern_solved, unmatched = _classify(files, mapping)
 
-    # README
-    readme_text = README.read_text()
-    readme_text = replace_between_markers(
-        readme_text,
-        "<!-- PROGRESS:START -->",
-        "<!-- PROGRESS:END -->",
-        render_readme_section(counts, pattern_solved, nc250_totals),
-    )
-    README.write_text(readme_text)
+    readme = _render_readme(counts, pattern_solved, totals)
+    docs = _render_docs(counts, pattern_solved, totals, mapping, unmatched)
 
-    # docs/index.md
-    docs_text = DOCS_INDEX.read_text()
-    docs_text = replace_between_markers(
-        docs_text,
-        "<!-- DASHBOARD:START -->",
-        "<!-- DASHBOARD:END -->",
-        render_docs_section(counts, pattern_solved, nc250_totals, mapping),
-    )
-    DOCS_INDEX.write_text(docs_text)
+    _README.write_text(_inject(_README.read_text(), *_README_MARKERS, readme))
+    _DOCS_INDEX.write_text(_inject(_DOCS_INDEX.read_text(), *_DOCS_MARKERS, docs))
 
-    # Stage both files so the commit includes updated dashboards
-    subprocess.run(
-        ["git", "add", str(README), str(DOCS_INDEX)],
-        check=True,
-        cwd=ROOT,
-    )
+    subprocess.run(["git", "add", str(_README), str(_DOCS_INDEX)], check=True, cwd=_ROOT)
 
     nc250_count = sum(len(v) for v in pattern_solved.values())
-    print(
-        f"✓ Progress updated — "
-        f"Easy: {counts['Easy']}, Medium: {counts['Medium']}, Hard: {counts['Hard']}, "
-        f"NC250: {nc250_count}/250"
+    legger.info(
+        "Progress updated — Easy: %d, Medium: %d, Hard: %d, NC250: %d/250",
+        counts["Easy"],
+        counts["Medium"],
+        counts["Hard"],
+        nc250_count,
     )
 
 

@@ -36,4 +36,5 @@ lint-doc: # check the docstring style
 	uv run flake8 $(PROJECT_NAME) utils
 
 doc: # create the project documentation; Build and visualize documentation through a local server
+	uv run python utils/update_progress.py
 	uv run properdocs serve -f properdocs.yml --dev-addr 0.0.0.0:$(DOC_PORT)
