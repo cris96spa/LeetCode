@@ -4,6 +4,11 @@
 
 Welcome to my LeetCode solutions repository! This repository contains my solutions to various LeetCode problems, organized by problem category and difficulty. This repo aims to track my progress, provide a resource for others to learn from, and serve as a reference for myself in the future.
 
+## Progress
+
+<!-- PROGRESS:START -->
+<!-- PROGRESS:END -->
+
 ## Repository Structure
 
 The repository is structured as follows:

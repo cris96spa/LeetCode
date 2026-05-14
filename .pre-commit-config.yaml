@@ -1,0 +1,133 @@
+# See https://pre-commit.com for more information
+# See https://pre-commit.com/hooks.html for more hooks
+default_install_hook_types: [pre-commit, commit-msg, post-checkout]
+default_stages: [pre-commit]
+
+repos:
+  - repo: meta
+    hooks:
+      - id: identity
+
+  - repo: local
+    hooks:
+      - id: uv-lock-update
+        name: Update uv.lock
+        entry: uv lock
+        language: system
+        pass_filenames: false
+        files: "pyproject.toml"
+        stages: [pre-commit]
+      - id: uv-lock-add
+        name: Add uv.lock
+        entry: git add uv.lock
+        language: system
+        pass_filenames: false
+        files: "uv.lock"
+        stages: [pre-commit]
+
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v5.0.0
+    hooks:
+      - id: check-added-large-files
+        args: [--maxkb=500]
+        exclude: ^uv\.lock$
+      - id: check-case-conflict
+      - id: check-docstring-first
+      - id: check-json
+      - id: check-merge-conflict
+      - id: check-symlinks
+      - id: check-toml
+      - id: check-yaml
+        args: [--unsafe]
+      - id: debug-statements
+      - id: no-commit-to-branch
+        args: [--branch, development, --branch, staging, --branch, production]
+      - id: requirements-txt-fixer
+
+  - repo: https://github.com/pre-commit/mirrors-prettier
+    rev: v3.1.0
+    hooks:
+      - id: prettier
+        types_or: [json, yaml]
+
+  - repo: local
+    hooks:
+      - id: lint-notebooks
+        name: clear ipynb output
+        entry: jupyter nbconvert --clear-output --inplace
+        language: system
+        require_serial: true
+        files: '\.ipynb$'
+      - id: lint
+        name: Lint Ruff
+        entry: uv run ruff check
+        language: system
+        require_serial: true
+        types_or: [python]
+        exclude: "docs"
+      - id: format
+        name: Format Ruff
+        entry: uv run ruff format
+        language: system
+        require_serial: true
+        types_or: [python]
+      - id: docstring-lint
+        name: Docstring Lint Flake8
+        entry: make lint-doc
+        language: system
+        require_serial: true
+        types: [python]
+
+  - repo: https://github.com/compilerla/conventional-pre-commit
+    rev: v2.1.1
+    hooks:
+      - id: conventional-pre-commit
+        stages: [commit-msg]
+        args: # list of Conventional Commits types to allow e.g. [feat, fix, ci, chore, test]
+          [
+            feat,
+            fix,
+            chore,
+            build,
+            ci,
+            docs,
+            perf,
+            refactor,
+            revert,
+            style,
+            test,
+            merge,
+          ]
+
+  - repo: local
+    hooks:
+      - id: update-progress
+        name: Update progress dashboard
+        description: Regenerate difficulty counters and NeetCode 250 tracking in README and docs/index.md
+        entry: uv run python utils/update_progress.py
+        language: system
+        pass_filenames: false
+        files: '^leetcode/(Easy|Medium|Hard)/.*\.py$'
+        stages: [pre-commit]
+
+  - repo: local
+    hooks:
+      - id: post-checkout
+        name: Post-checkout script
+        description: Check if pyproject.toml changed and prompt to update dependencies
+        entry: uv run python utils/post_checkout.py
+        language: system
+        stages: [post-checkout]
+        always_run: true
+        pass_filenames: false
+        verbose: true
+
+  - repo: local
+    hooks:
+      - id: check-docs-build
+        name: Check Documentation Build
+        description: Check if the documentation builds successfully, without warnings or errors
+        entry: uv run properdocs build -f properdocs.yml
+        language: system
+        pass_filenames: false
+        verbose: false

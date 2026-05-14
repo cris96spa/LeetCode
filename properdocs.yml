@@ -1,0 +1,109 @@
+site_name: LeetCode Solutions in Python
+
+# Configuration
+theme:
+  name: material
+  language: en
+  palette:
+    # Palette toggle for light mode
+    - scheme: default
+      primary: blue
+      accent: blue
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+    # Palette toggle for dark mode
+    - scheme: slate
+      primary: blue
+      accent: blue
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
+  features:
+    - navigation.tabs
+    - navigation.tabs.sticky
+    - navigation.sections
+    - navigation.expand
+    - navigation.top
+    - navigation.tracking
+    - search.highlight
+    - search.share
+    - content.code.copy
+    - content.code.annotate
+
+# Extensions
+markdown_extensions:
+  - admonition
+  - pymdownx.details
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+  - pymdownx.highlight:
+      anchor_linenums: true
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+  - pymdownx.tabbed:
+      alternate_style: true
+  - pymdownx.tasklist:
+      custom_checkbox: true
+  - toc:
+      permalink: true
+  - tables
+  - footnotes
+  - attr_list
+  - md_in_html
+
+# Plugins
+plugins:
+  - search
+  - gen-files:
+      scripts:
+        - utils/build_api_docs.py
+  - literate-nav:
+  - mkdocstrings:
+      handlers:
+        python:
+          paths: [.]
+          options:
+            docstring_style: google
+            show_source: false
+            show_root_heading: true
+            show_symbol_type_heading: true
+            show_symbol_type_toc: true
+
+# Extra
+extra:
+  version:
+    provider: mike
+  social:
+    - icon: fontawesome/brands/gitlab
+      link: https://gitlab.com/artificialy1/internal/artifieval
+    - icon: fontawesome/solid/globe
+      link: https://www.artificialy.com
+
+# Custom CSS
+extra_css:
+  - stylesheets/extra.css
+
+nav:
+  - "Home": index.md
+  - "Cheat Sheet": LeetCodeCheatSheet.md
+  - "Common Patterns":
+      - "Complexity Analysis": common_patterns/01_complexity_analysis.md
+      - "Binary Search": common_patterns/02_binary_search.md
+      - "Two Pointers & Sliding Window": common_patterns/03_two_pointers_sliding_window.md
+      - "Bit Manipulation": common_patterns/04_bit_manipulation.md
+      - "Sorting": common_patterns/05_sorting.md
+      - "Linked Lists": common_patterns/06_linked_lists.md
+      - "Stacks & Queues": common_patterns/07_stacks_queues.md
+      - "Intervals": common_patterns/08_intervals.md
+      - "Heaps": common_patterns/09_heaps.md
+      - "Trees": common_patterns/10_trees.md
+      - "Graphs": common_patterns/11_graphs.md
+      - "Trie & Union Find": common_patterns/12_trie_union_find.md
+      - "Backtracking": common_patterns/13_backtracking.md
+      - "Greedy": common_patterns/14_greedy.md
+      - "Dynamic Programming": common_patterns/15_dynamic_programming.md
+      - "Combinatorics": common_patterns/16_combinatorial_cheat_sheet.md
+  - "Solutions": api/

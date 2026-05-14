@@ -1,0 +1,73 @@
+/* ── Difficulty stat cards ───────────────────────────────────────────────── */
+.lc-stats {
+  display: flex;
+  gap: 1rem;
+  margin: 1.5rem 0 2rem;
+  flex-wrap: wrap;
+}
+
+.lc-stat {
+  flex: 1;
+  min-width: 120px;
+  border-radius: 0.6rem;
+  padding: 1.4rem 1rem;
+  text-align: center;
+  background: var(--md-default-bg-color);
+  border: 1px solid var(--md-default-fg-color--lightest);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.lc-stat:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+}
+
+.lc-easy   { border-top: 4px solid #4caf50; }
+.lc-medium { border-top: 4px solid #ff9800; }
+.lc-hard   { border-top: 4px solid #f44336; }
+
+.lc-num {
+  display: block;
+  font-size: 2.8rem;
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: -0.02em;
+}
+
+.lc-easy   .lc-num { color: #4caf50; }
+.lc-medium .lc-num { color: #ff9800; }
+.lc-hard   .lc-num { color: #f44336; }
+
+.lc-label {
+  display: block;
+  margin-top: 0.5rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--md-default-fg-color--light);
+}
+
+/* ── Pattern progress bar inside admonitions ─────────────────────────────── */
+.lc-progress-bar {
+  height: 6px;
+  background: var(--md-default-fg-color--lightest);
+  border-radius: 3px;
+  margin: 0.25rem 0 1rem;
+  overflow: hidden;
+}
+
+.lc-progress-fill {
+  height: 100%;
+  background: var(--md-primary-fg-color);
+  border-radius: 3px;
+  transition: width 0.4s ease;
+  min-width: 2px;
+}
+
+/* tint fill for success (100%) admonitions */
+.md-typeset .admonition.success .lc-progress-fill,
+.md-typeset details.success .lc-progress-fill {
+  background: #4caf50;
+}
