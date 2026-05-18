@@ -36,10 +36,7 @@ class Solution:
             self._dfs(rows - 1, col, atlantic, heights, rows, cols, heights[rows - 1][col])
 
         return [
-            [r, c]
-            for r in range(rows)
-            for c in range(cols)
-            if pacific[r][c] and atlantic[r][c]
+            [r, c] for r in range(rows) for c in range(cols) if pacific[r][c] and atlantic[r][c]
         ]
 
     def _dfs(

@@ -39,9 +39,7 @@ class Solution:
         return prev_node
 
     def reverseListRecursive(self, head: ListNode | None) -> ListNode | None:
-        def _reverse(
-            prev_node: ListNode | None, curr_node: ListNode | None
-        ) -> ListNode | None:
+        def _reverse(prev_node: ListNode | None, curr_node: ListNode | None) -> ListNode | None:
             if curr_node is None:
                 return prev_node
 

@@ -1,3 +1,10 @@
+class TreeNode:
+    def __init__(self, val=0, left=None, right=None):
+        self.val = val
+        self.left = left
+        self.right = right
+
+
 class Solution:
     """Determine if a binary tree is height-balanced.
 
@@ -24,9 +31,9 @@ class Solution:
         Space: O(h), where h is the height of the tree, due to recursion stack.
     """
 
-    def isBalanced(self, root: Optional[TreeNode]) -> bool:
+    def isBalanced(self, root: TreeNode | None) -> bool:
 
-        def dfs(node: Optional[TreeNode]) -> int:
+        def dfs(node: TreeNode | None) -> int:
             if not node:
                 return 0
 
