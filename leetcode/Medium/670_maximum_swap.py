@@ -1,9 +1,10 @@
 class Solution:
-    """Description:.
+    """Determine the maximum valued number by swapping two digits at most once.
 
-    You are given an integer `num`. You can swap two digits at most once to get the maximum valued
-    number.
-    The task is to return the maximum valued number you can get by performing at most one swap.
+    Problem Statement:
+        You are given an integer `num`. You can swap two digits at most once to get the maximum
+        valued number. The task is to return the maximum valued number you can get by performing
+        at most one swap.
 
     Example 1:
     Input: num = 2736

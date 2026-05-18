@@ -5,11 +5,11 @@ A collection of LeetCode solutions in Python, organised by difficulty, with note
 <!-- DASHBOARD:START -->
 <div class="lc-stats">
 <div class="lc-stat lc-easy"><span class="lc-num">25</span><span class="lc-label">Easy</span></div>
-<div class="lc-stat lc-medium"><span class="lc-num">75</span><span class="lc-label">Medium</span></div>
+<div class="lc-stat lc-medium"><span class="lc-num">76</span><span class="lc-label">Medium</span></div>
 <div class="lc-stat lc-hard"><span class="lc-num">0</span><span class="lc-label">Hard</span></div>
 </div>
 
-## NeetCode 250 &nbsp;·&nbsp; 80 / 250
+## NeetCode 250 &nbsp;·&nbsp; 81 / 250
 
 ??? note "Arrays & Hashing &nbsp;·&nbsp; 5 / 22 (23%)"
     <div class="lc-progress-bar"><div class="lc-progress-fill" style="width:23%"></div></div>
@@ -121,10 +121,10 @@ A collection of LeetCode solutions in Python, organised by difficulty, with note
     - [ ] Reverse Linked List II
     - [ ] Reverse Nodes In K Group
 
-??? note "Trees &nbsp;·&nbsp; 9 / 23 (39%)"
-    <div class="lc-progress-bar"><div class="lc-progress-fill" style="width:39%"></div></div>
+??? note "Trees &nbsp;·&nbsp; 10 / 23 (43%)"
+    <div class="lc-progress-bar"><div class="lc-progress-fill" style="width:43%"></div></div>
 
-    - [ ] Balanced Binary Tree
+    - [x] Balanced Binary Tree
     - [x] Binary Tree Inorder Traversal
     - [x] Binary Tree Level Order Traversal
     - [ ] Binary Tree Maximum Path Sum

@@ -9,7 +9,7 @@ install: # install requirements without development dependencies
 	uv sync
 
 dev: install-dev  # install requirements with all dependencies that are needed for development
-	uv run pre-commit install
+	uv run pre-commit install --install-hooks
 
 install-uv: # install uv tool
 	curl -LsSf https://astral.sh/uv/install.sh | sh
