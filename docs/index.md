@@ -5,11 +5,11 @@ A collection of LeetCode solutions in Python, organised by difficulty, with note
 <!-- DASHBOARD:START -->
 <div class="lc-stats">
 <div class="lc-stat lc-easy"><span class="lc-num">26</span><span class="lc-label">Easy</span></div>
-<div class="lc-stat lc-medium"><span class="lc-num">75</span><span class="lc-label">Medium</span></div>
+<div class="lc-stat lc-medium"><span class="lc-num">76</span><span class="lc-label">Medium</span></div>
 <div class="lc-stat lc-hard"><span class="lc-num">1</span><span class="lc-label">Hard</span></div>
 </div>
 
-## NeetCode 250 &nbsp;·&nbsp; 82 / 250
+## NeetCode 250 &nbsp;·&nbsp; 83 / 250
 
 ??? note "Arrays & Hashing &nbsp;·&nbsp; 5 / 22 (23%)"
     <div class="lc-progress-bar"><div class="lc-progress-fill" style="width:23%"></div></div>
@@ -121,8 +121,8 @@ A collection of LeetCode solutions in Python, organised by difficulty, with note
     - [ ] Reverse Linked List II
     - [ ] Reverse Nodes In K Group
 
-??? note "Trees &nbsp;·&nbsp; 10 / 23 (43%)"
-    <div class="lc-progress-bar"><div class="lc-progress-fill" style="width:43%"></div></div>
+??? note "Trees &nbsp;·&nbsp; 11 / 23 (48%)"
+    <div class="lc-progress-bar"><div class="lc-progress-fill" style="width:48%"></div></div>
 
     - [x] Balanced Binary Tree
     - [x] Binary Tree Inorder Traversal
@@ -135,7 +135,7 @@ A collection of LeetCode solutions in Python, organised by difficulty, with note
     - [ ] Construct Quad Tree
     - [x] Count Good Nodes In Binary Tree
     - [ ] Delete Leaves With a Given Value
-    - [ ] Delete Node in a BST
+    - [x] Delete Node in a BST
     - [x] Diameter of Binary Tree
     - [ ] House Robber III
     - [x] Insert into a Binary Search Tree
