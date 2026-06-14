@@ -5,7 +5,9 @@ description = "LeetCode solutions in Python"
 authors = [{ name = "Cristian C. Spagnuolo", email = "cristian.c.spagnuolo@gmail.com" }]
 readme = "README.md"
 requires-python = ">=3.10"
-dependencies = []
+dependencies = [
+    "torch-judge>=0.1.1",
+]
 
 [dependency-groups]
 dev = [
