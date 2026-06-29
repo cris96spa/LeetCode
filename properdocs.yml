@@ -80,10 +80,10 @@ extra:
   version:
     provider: mike
   social:
-    - icon: fontawesome/brands/gitlab
-      link: https://gitlab.com/artificialy1/internal/artifieval
-    - icon: fontawesome/solid/globe
-      link: https://www.artificialy.com
+    - icon: fontawesome/brands/github
+      link: https://github.com/cris96spa
+    - icon: fontawesome/brands/linkedin
+      link: https://www.linkedin.com/in/cristian-c-spagnuolo/
 
 extra_javascript:
   - javascripts/mathjax.js
