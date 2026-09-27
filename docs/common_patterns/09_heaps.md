@@ -361,7 +361,7 @@ To "update" a key, push a new entry and mark the old one stale (for example, by 
             i = stack.pop()
             if i < len(heap) and heap[i] < x:
                 count += 1
-                stack.extend((2 * i + 1, 2 * i + 2))
+                stack.extend((2 * i + 1, 2 * i + 2)) # Note: dfs will be performed on right then left children
         return count < k          # fewer than k elements are below x
     ```
 
