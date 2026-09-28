@@ -29,6 +29,21 @@ class MyHeap[T: Comparable]:
         for elem in sequence:
             self.insert_elem(elem)
 
+    def _initialize_heap_heapify(self, sequence: Sequence[T]) -> None:
+        """Optimization: Initialize the heap using the Floyd heapify algorithm.
+
+        Rather than inserting each element individually, builds the heap in place by taking
+        the whole sequence, then fix the heap property by bubbling down each non-leaf node.
+
+        The main rationale is that leaf nodes already dominate their (non-existent) children.
+        The overall complexity is O(n) since
+        """
+        self._heap = list(sequence)
+
+        # Process each non leaf node, in reverse order and bubble down
+        for idx in range(len(self._heap) // 2 - 1, -1, -1):
+            self._bubble_down(idx)
+
     def insert_elem(self, elem: T) -> None:
         """Insert element in the heap, respecting heap properties.
 

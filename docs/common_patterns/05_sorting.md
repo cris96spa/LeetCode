@@ -180,8 +180,10 @@ import random
 def quicksort(a: list[int], lo: int = 0, hi: int | None = None) -> None:
     if hi is None:
         hi = len(a) - 1
+
     if lo >= hi:
         return
+
     p = partition(a, lo, hi)
     quicksort(a, lo, p - 1)
     quicksort(a, p + 1, hi)
@@ -193,6 +195,7 @@ def partition(a: list[int], lo: int, hi: int) -> int:
     a[r], a[hi] = a[hi], a[r]            # move the random pivot to the end
     pivot = a[hi]
     first_high = lo                      # a[lo:first_high] < pivot
+
     for i in range(lo, hi):
         if a[i] < pivot:
             a[i], a[first_high] = a[first_high], a[i]
