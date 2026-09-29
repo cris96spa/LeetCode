@@ -115,7 +115,7 @@ repos:
       - id: post-checkout
         name: Post-checkout script
         description: Check if pyproject.toml changed and prompt to update dependencies
-        entry: uv run python utils/post_checkout.py
+        entry: uv run python -m utils.post_checkout
         language: system
         stages: [post-checkout]
         always_run: true

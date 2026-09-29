@@ -436,6 +436,7 @@ dev = [
     { name = "properdocs" },
     { name = "pydoclint", extra = ["flake8"] },
     { name = "python-semantic-release" },
+    { name = "rich" },
     { name = "ruff" },
 ]
 pytorch = [
@@ -464,6 +465,7 @@ dev = [
     { name = "properdocs", specifier = ">=1.6.1,<2.0.0" },
     { name = "pydoclint", extras = ["flake8"], specifier = ">=0.7.3,<0.9.0" },
     { name = "python-semantic-release", specifier = ">=9.21,<10.0.0" },
+    { name = "rich", specifier = ">=14.0.0,<15.0.0" },
     { name = "ruff", specifier = ">=0.15.11,<0.16.0" },
 ]
 pytorch = [{ name = "torch", specifier = ">=2.12.0" }]
