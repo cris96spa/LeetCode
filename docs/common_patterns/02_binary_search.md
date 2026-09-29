@@ -200,6 +200,11 @@ def find_peak_element(nums: list[int]) -> int:
 
 Here the predicate isn't globally monotone, but the invariant "a peak exists in $[\text{lo}, \text{hi}]$" is preserved by each step, and that is all correctness requires.
 
+!!! note "Why `nums[i + 1]` never goes out of bounds"
+    The search range is `[0, n - 1)`, and `first_true` only evaluates `pred(mid)` with `mid < hi`, so `i ≤ n - 2` and `i + 1 ≤ n - 1` always. The last index is never tested: if no `True` is found, `first_true` returns `hi = n - 1`, which is correct because the array was increasing all the way and $\text{nums}[n] = -\infty$. For `n == 1` the loop doesn't run and the answer is `0`.
+
+    This depends on the half-open `lo < hi` loop. With the closed-interval `lo <= hi` style, `mid` can reach `n - 1`: on `[1, 2]` the second iteration has `lo = hi = mid = 1` and reads `nums[2]`. That loop also never ends once `lo == hi` and `hi = mid` is taken.
+
 ### Search a 2D matrix (LC 74)
 
 If each row is sorted and each row starts after the previous row ends, the matrix *is* a sorted array of length $mn$ stored row by row. Map index $k$ to `matrix[k // n][k % n]` and run the ordinary search in $O(\log mn)$.
