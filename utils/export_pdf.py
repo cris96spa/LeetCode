@@ -70,41 +70,45 @@ def rewrite_links(text: str) -> str:
     return LINK_RE.sub(lambda m: f"]({m.group(1)})" if m.group(1) else "]()", text)
 
 
+def markdown_source() -> str:
+    """Concatenate the exported pages, rewritten into pandoc-friendly markdown."""
+    return "\n\n".join(
+        rewrite_links(convert_admonitions(page.read_text(encoding="utf-8"))) for page in PAGES
+    )
+
+
+def pandoc_command(output: Path) -> list[str]:
+    """Build the pandoc invocation; the output extension selects the format."""
+    return [
+        "pandoc",
+        "--from=markdown+tex_math_dollars+gfm_auto_identifiers-yaml_metadata_block",
+        "--pdf-engine=xelatex",
+        "--top-level-division=chapter",
+        "--toc",
+        "--toc-depth=1",
+        "--syntax-highlighting=tango",
+        f"--lua-filter={STYLE / 'filters.lua'}",
+        f"--include-in-header={STYLE / 'header.tex'}",
+        "--metadata=title:LeetCode Notes",
+        f"--metadata=date:{datetime.date.today():%B %Y}",
+        "--variable=documentclass:report",
+        "--variable=fontsize:10pt",
+        "--variable=geometry:a4paper,margin=2.3cm,headheight=14pt",
+        "--variable=linestretch:1.15",
+        *FONTS,
+        "--variable=colorlinks:true",
+        "--variable=toccolor:ink",
+        f"--output={output}",
+    ]
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     parser.add_argument("--output", type=Path, default=DOCS / "assets" / "leetcode_notes.pdf")
     args = parser.parse_args()
     args.output.parent.mkdir(parents=True, exist_ok=True)
 
-    source = "\n\n".join(
-        rewrite_links(convert_admonitions(page.read_text(encoding="utf-8"))) for page in PAGES
-    )
-    subprocess.run(
-        [
-            "pandoc",
-            "--from=markdown+tex_math_dollars+gfm_auto_identifiers-yaml_metadata_block",
-            "--pdf-engine=xelatex",
-            "--top-level-division=chapter",
-            "--toc",
-            "--toc-depth=1",
-            "--syntax-highlighting=tango",
-            f"--lua-filter={STYLE / 'filters.lua'}",
-            f"--include-in-header={STYLE / 'header.tex'}",
-            "--metadata=title:LeetCode Notes",
-            f"--metadata=date:{datetime.date.today():%B %Y}",
-            "--variable=documentclass:report",
-            "--variable=fontsize:10pt",
-            "--variable=geometry:a4paper,margin=2.3cm,headheight=14pt",
-            "--variable=linestretch:1.15",
-            *FONTS,
-            "--variable=colorlinks:true",
-            "--variable=toccolor:ink",
-            f"--output={args.output}",
-        ],
-        input=source,
-        text=True,
-        check=True,
-    )
+    subprocess.run(pandoc_command(args.output), input=markdown_source(), text=True, check=True)
     print(f"Wrote {args.output}")
 
 

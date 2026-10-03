@@ -1,0 +1,76 @@
+# TeX Live packages needed by utils/export_pdf.py, installed in CI by
+# TeX-Live/setup-texlive-action on top of scheme-basic. tlmgr does not resolve
+# dependencies of individual packages, so this lists every package the build reads
+# (found with `xelatex -recorder`).
+
+scheme-basic
+xetex
+
+# Fonts (loaded by file name in utils/export_pdf.py and utils/pdf/header.tex)
+dejavu
+fira
+fontawesome5
+stix2-otf
+xcharter
+
+# LaTeX packages used by pandoc's template and utils/pdf/header.tex
+amsfonts
+amsmath
+bigintcalc
+bitset
+bookmark
+booktabs
+caption
+colortbl
+environ
+etoolbox
+fancyhdr
+fancyvrb
+fontname
+fontspec
+framed
+fvextra
+geometry
+gettitlestring
+graphics
+graphics-cfg
+graphics-def
+hycolor
+hyperref
+iftex
+infwarerr
+intcalc
+kvdefinekeys
+kvoptions
+kvsetkeys
+l3kernel
+l3packages
+latex
+lineno
+listings
+lm
+ltxcmds
+microtype
+newunicodechar
+parskip
+pdfcol
+pdfescape
+pdftexcmds
+pgf
+refcount
+rerunfilecheck
+setspace
+stringenc
+tcolorbox
+tikzfill
+titlesec
+tocloft
+tools
+trimspaces
+unicode-math
+uniquecounter
+upquote
+url
+xcolor
+xurl
+zapfding

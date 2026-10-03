@@ -109,6 +109,14 @@ repos:
         pass_filenames: false
         files: '^leetcode/(Easy|Medium|Hard)/.*\.py$'
         stages: [pre-commit]
+      - id: check-texlive-packages
+        name: Check TeX Live packages for the PDF export
+        description: Ensure .github/texlive.packages lists every TeX Live package the CI PDF build needs
+        entry: uv run python -m utils.check_texlive_packages
+        language: system
+        pass_filenames: false
+        files: '^(utils/pdf/.*|utils/export_pdf\.py|utils/check_texlive_packages\.py|\.github/texlive\.packages)$'
+        stages: [pre-commit]
 
   - repo: local
     hooks:
