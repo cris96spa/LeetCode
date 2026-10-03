@@ -3,6 +3,7 @@ site_name: LeetCode Solutions in Python
 # Configuration
 theme:
   name: material
+  custom_dir: overrides
   language: en
   palette:
     # Palette toggle for light mode

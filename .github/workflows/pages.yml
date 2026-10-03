@@ -33,6 +33,20 @@ jobs:
       - name: Install dev dependencies
         run: make install-dev
 
+      - name: Install PDF toolchain
+        env:
+          PANDOC_VERSION: "3.12"
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends \
+            texlive-xetex texlive-latex-extra texlive-fonts-extra texlive-science lmodern
+          curl -fsSL -o "$RUNNER_TEMP/pandoc.deb" \
+            "https://github.com/jgm/pandoc/releases/download/${PANDOC_VERSION}/pandoc-${PANDOC_VERSION}-1-amd64.deb"
+          sudo dpkg -i "$RUNNER_TEMP/pandoc.deb"
+
+      - name: Build PDF
+        run: make pdf
+
       - name: Build docs
         run: uv run properdocs build -f properdocs.yml
 

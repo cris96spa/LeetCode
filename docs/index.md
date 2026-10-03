@@ -2,6 +2,8 @@
 
 A collection of LeetCode solutions in Python, organised by difficulty, with notes on common patterns and data structures.
 
+[Download the notes as PDF](assets/leetcode_notes.pdf){ .md-button download }
+
 <!-- DASHBOARD:START -->
 <div class="lc-stats">
 <div class="lc-stat lc-easy"><span class="lc-num">26</span><span class="lc-label">Easy</span></div>

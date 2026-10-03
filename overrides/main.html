@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+
+{#- Download button for the pages bundled into the PDF (see utils/export_pdf.py). -#}
+{% block content %}
+  {% if page.file.src_uri == "LeetCodeCheatSheet.md" or page.file.src_uri.startswith("common_patterns/") %}
+    <a href="{{ base_url }}/assets/leetcode_notes.pdf" class="lc-pdf-button" title="Download the cheat sheet and common patterns as a PDF" download>
+      {% include ".icons/material/file-pdf-box.svg" %}<span>PDF</span>
+    </a>
+  {% endif %}
+  {{ super() }}
+{% endblock %}
