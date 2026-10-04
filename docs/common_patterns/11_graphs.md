@@ -640,7 +640,7 @@ def prim_mst_weight(n: int, graph: list[list[tuple[int, int]]]) -> int:
     return total
 ```
 
-$O(E \log V)$ with a heap. For dense graphs — such as **Min Cost to Connect All Points** (LC 1584), where every pair of points is an edge — a simple $O(V^2)$ array-based Prim is faster, since it never materializes the $V^2$ edges.
+$O(E \log E)$: this is the **lazy** variant, which pushes every edge leaving the tree instead of decreasing keys, so the heap can hold $O(E)$ entries. Since $E < V^2$, $\log E < 2 \log V$, so this matches the $O(E \log V)$ of the decrease-key version. For dense graphs — such as **Min Cost to Connect All Points** (LC 1584), where every pair of points is an edge — a simple $O(V^2)$ array-based Prim is faster, since it never materializes the $V^2$ edges.
 
 ### Kruskal's algorithm
 
@@ -699,7 +699,7 @@ def dijkstra(graph: list[list[tuple[int, int]]], source: int) -> list[float]:
     return dist
 ```
 
-**Time:** $O((V + E) \log V)$. Python's `heapq` can't decrease a key, so this uses **lazy deletion**: push a new entry on every improvement and skip entries that are out of date when popped.
+**Time:** $O((V + E) \log E)$, which is $O((V + E) \log V)$ since $\log E < 2 \log V$. Python's `heapq` can't decrease a key, so this uses **lazy deletion**: push a new entry on every improvement and skip entries that are out of date when popped. The heap can therefore hold up to $O(E)$ entries rather than $V$.
 
 **Why it's correct:** when $u$ is popped with distance $d$, every other path to $u$ must leave the set of finalized vertices through some vertex whose tentative distance is already $\ge d$ (otherwise *it* would have been popped first), and continuing from there can only add more. That argument needs one assumption: **no negative edges**. A negative edge could make a longer-looking detour cheaper after $u$ was already finalized. (If the bank paid you to walk through its lobby, the shortest way to your neighbor's house might involve walking through it forever.)
 
@@ -745,7 +745,7 @@ def floyd_warshall(n: int, edges: list[tuple[int, int, int]]) -> list[list[float
     INF = float("inf")
     dist = [[0 if i == j else INF for j in range(n)] for i in range(n)]
     for u, v, w in edges:
-        dist[u][v] = min(dist[u][v], w)
+        dist[u][v] = min(dist[u][v], w)      # keeps into account multiple edges
     for k in range(n):                       # k MUST be the outermost loop
         for i in range(n):
             for j in range(n):
