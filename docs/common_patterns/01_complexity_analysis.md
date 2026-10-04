@@ -49,7 +49,7 @@ Three numerical functions summarize that distribution:
 The worst case is almost always what we care about. The best case is typically meaningless (every algorithm is fast when the answer is at index 0). The average case is useful but requires assuming a probability distribution over inputs, which is hard to justify. The worst case is a *guarantee*: an adversary cannot make the algorithm slower than this.
 
 !!! note "When average case *does* matter"
-    Two important exceptions: hash tables ($O(1)$ expected, $O(n)$ worst) and randomized quicksort ($O(n \log n)$ expected, $O(n^2)$ worst). In both cases the randomness is inside the *algorithm* (hash function, pivot choice), not assumed about the input, so the expected bound holds for **every** input. That makes it nearly as good as a worst-case guarantee.
+    Two important exceptions: hash tables ($O(1)$ expected, $O(n)$ worst) and randomized quicksort ($O(n \log n)$ expected, $O(n^2)$ worst). When the randomness is inside the *algorithm* (a random pivot, a randomly seeded hash function), not assumed about the input, the expected bound holds for **every** input — nearly as good as a worst-case guarantee. Python randomizes the pivot only if you do, and seeds hashes only for `str` and `bytes`: `hash(5) == 5`, so carefully chosen integer keys can still force collisions.
 
 ---
 
@@ -434,7 +434,7 @@ Each active recursive call holds a stack frame. Recursion depth $d$ costs $O(d)$
 | DFS on a balanced tree | $\log n$ | $O(\log n)$ |
 | DFS on a skewed tree / linked list | $n$ | $O(n)$ |
 | DFS on a graph | up to $V$ | $O(V)$ |
-| Quicksort (recurse on smaller half first) | $\log n$ | $O(\log n)$ |
+| Quicksort (recurse on the smaller side, loop on the larger) | $\log n$ | $O(\log n)$ |
 
 !!! warning "Python's recursion limit"
     CPython's default recursion limit is 1000. A recursive DFS on a path graph or a degenerate tree of 10,000 nodes raises `RecursionError`. Either raise the limit with `sys.setrecursionlimit`, or convert the recursion into an explicit stack — which is always possible and uses the same asymptotic space.
