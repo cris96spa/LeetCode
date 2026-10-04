@@ -7,7 +7,7 @@ A collection of LeetCode solutions in Python, organised by difficulty, with note
 <!-- DASHBOARD:START -->
 <div class="lc-stats">
 <div class="lc-stat lc-easy"><span class="lc-num">26</span><span class="lc-label">Easy</span></div>
-<div class="lc-stat lc-medium"><span class="lc-num">77</span><span class="lc-label">Medium</span></div>
+<div class="lc-stat lc-medium"><span class="lc-num">78</span><span class="lc-label">Medium</span></div>
 <div class="lc-stat lc-hard"><span class="lc-num">1</span><span class="lc-label">Hard</span></div>
 </div>
 
@@ -335,9 +335,9 @@ A collection of LeetCode solutions in Python, organised by difficulty, with note
     - [ ] Spiral Matrix
     - [ ] Transpose Matrix
 
-## Other Solutions &nbsp;·&nbsp; 21
+## Other Solutions &nbsp;·&nbsp; 22
 
-??? note "Show 21 solutions"
+??? note "Show 22 solutions"
     | File | Difficulty | Inferred name |
     |------|:----------:|---------------|
     | `29_divide_two_integers.py` | Medium | Divide Two Integers |
@@ -354,6 +354,7 @@ A collection of LeetCode solutions in Python, organised by difficulty, with note
     | `643_maximum_average_subarray.py` | Easy | Maximum Average Subarray |
     | `670_maximum_swap.py` | Medium | Maximum Swap |
     | `740_delete_and_earn.py` | Medium | Delete And Earn |
+    | `785_is_graph_bipartite.py` | Medium | Is Graph Bipartite |
     | `797_all_path_from_source_to_target.py` | Medium | All Path From Source To Target |
     | `1090_shortest_path_in_binary_matrix.py` | Medium | Shortest Path In Binary Matrix |
     | `1123_lowest_common_anchestor_of_deepest_leaves.py` | Medium | Lowest Common Anchestor Of Deepest Leaves |
