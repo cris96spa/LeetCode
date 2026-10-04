@@ -42,7 +42,7 @@ In Python, an adjacency list is a `list` of lists (vertices numbered $0 \dots n 
 from collections import defaultdict
 
 
-def build_graph(n: int, edges: list[list[int]], directed: bool = False) -> list[list[int]]:
+def build_adjacency_list(n: int, edges: list[list[int]], directed: bool = False) -> list[list[int]]:
     graph: list[list[int]] = [[] for _ in range(n)]
     for u, v in edges:
         graph[u].append(v)
@@ -83,7 +83,7 @@ Visiting every vertex and edge systematically is the foundation of nearly every 
 
 Keep the discovered-but-unprocessed vertices in a container. Repeatedly take a vertex out, and for each edge leading to an undiscovered vertex, mark that vertex discovered and add it to the container.
 
-Why does this visit everything reachable? Suppose some reachable vertex $u$ is never visited. Then some neighbor $v$ of $u$ on the path from the start *was* visited — but when $v$ was processed, it would have discovered $u$. Contradiction.
+Why does this visit everything reachable? Suppose some reachable vertex is never visited, and let $u$ be the **first** unvisited vertex on a path from the start. Its predecessor $v$ on that path *was* visited — but when $v$ was processed, it would have discovered $u$. Contradiction.
 
 **Every traversal takes $O(V + E)$ time**: each vertex enters the container once, and each edge is examined once from each endpoint. That's optimal — you can't even *read* the graph faster. Anything you can do with one or two traversals is linear time.
 
@@ -283,31 +283,182 @@ def num_islands(grid: list[list[str]]) -> int:
 
 ### Cycle detection
 
-**Undirected graphs:** a cycle exists iff DFS finds a back edge — an edge to an already-visited vertex *other than the parent* (the edge we came in on is not a cycle).
+A lot depends on whether a graph has cycles. A topological order exists only in a DAG, a tree is a connected graph with no cycle, and a cycle in a "waits for" graph is a deadlock. Directed and undirected graphs use the same test: **a graph has a cycle iff DFS finds a back edge**. The only difference is how you recognize a back edge.
 
-**Directed graphs:** a cycle exists iff DFS finds an edge to a vertex that is **discovered but not yet processed** — an ancestor still on the recursion stack. An edge to a fully processed vertex is harmless (a forward or cross edge). Three colors track this:
+**Undirected graphs.** An undirected DFS has no cross edges (see above), so every edge that doesn't discover a new vertex leads to an ancestor. A cycle therefore exists iff DFS reaches an **already-visited vertex other than its parent**. The parent is excluded because every undirected edge appears in both adjacency lists. From $v$ you always see the edge back to the $u$ that discovered it, but that's the tree edge you just walked, not a cycle. The test is correct in both directions:
+
+- **Back edge ⇒ cycle.** If $(u, v)$ is a back edge, $v$ is an ancestor of $u$. The tree path $v \to \dots \to u$ plus the edge $(u, v)$ forms a cycle.
+- **No back edge ⇒ no cycle.** If every edge is a tree edge, the graph is a forest.
 
 ```python
-WHITE, GRAY, BLACK = 0, 1, 2       # undiscovered, on the stack, processed
+def has_cycle_undirected(graph: list[list[int]]) -> bool:
+    visited = [False] * len(graph)
 
-
-def has_cycle_directed(graph: list[list[int]]) -> bool:
-    color = [WHITE] * len(graph)
-
-    def dfs(u: int) -> bool:
-        color[u] = GRAY
-        for v in graph[u]:
-            if color[v] == GRAY:                 # back edge to an ancestor
+    def dfs(current: int, parent: int) -> bool:
+        visited[current] = True
+        for neighbor in graph[current]:
+            if neighbor == parent:
+                continue                         # the tree edge we arrived on
+            if visited[neighbor]:
+                return True                      # back edge to an ancestor
+            if dfs(neighbor, current):
                 return True
-            if color[v] == WHITE and dfs(v):
-                return True
-        color[u] = BLACK
         return False
 
-    return any(color[u] == WHITE and dfs(u) for u in range(len(graph)))
+    for start in range(len(graph)):              # the graph may be disconnected
+        if not visited[start] and dfs(start, -1):
+            return True
+    return False
 ```
 
-Using just a `visited` set for directed graphs is a classic bug: in the graph $a \to b$, $a \to c$, $c \to b$, reaching $b$ a second time is not a cycle.
+The test skips the parent by **vertex**, which assumes a simple graph. In a multigraph, two parallel edges between $u$ and $v$ form a cycle of length 2, but `neighbor == parent` skips both copies. If the input can contain duplicate edges, skip the parent only once, or identify edges by index instead of by endpoint. Self-loops are caught: $u$ is visited and isn't its own parent.
+
+Two shortcuts avoid writing a DFS at all:
+
+- **Counting.** A forest with $V$ vertices and $C$ components has exactly $V - C$ edges, and any additional edge closes a cycle. So a simple undirected graph has a cycle iff $E > V - C$. **Graph Valid Tree** (LC 261) reduces to "$E = V - 1$ and the graph is connected."
+- **Union-find.** When edges arrive one at a time, an edge closes a cycle iff its endpoints are already in the same component. Kruskal's algorithm uses this test to reject edges, and **Redundant Connection** (LC 684) asks for exactly the edge that closes the first cycle. See [Trie & Union Find](12_trie_union_find.md).
+
+**Directed graphs.** The undirected test fails here: in the graph $a \to b$, $a \to c$, $c \to b$, DFS reaches $b$ a second time, but there's no cycle. A directed DFS sorts edges into **four** classes, not two. Each edge `current → neighbor` is classified by the state of `neighbor` at the moment DFS explores the edge:
+
+| State of `neighbor` | Edge class | Meaning |
+|---|---|---|
+| White: undiscovered | Tree edge | DFS discovers `neighbor` from `current` |
+| Gray: discovered, not finished | **Back edge** | `neighbor` is an ancestor, still on the recursion stack |
+| Black: finished | Forward or cross edge | `neighbor` is a finished descendant, or belongs to a finished branch |
+
+Only back edges signal a cycle:
+
+- **Back edge ⇒ cycle.** A gray `neighbor` is an ancestor of `current`. The tree path `neighbor → … → current` plus the edge `current → neighbor` forms a cycle.
+- **Cycle ⇒ back edge.** Let $v$ be the first vertex of the cycle that DFS discovers. At that moment, every other vertex on the cycle is white and reachable from $v$, so DFS discovers all of them before it finishes $v$. That includes the vertex $u$ whose edge closes the cycle, $u \to v$. When DFS explores that edge, $v$ is still gray, so it's a back edge.
+- **Edges to black vertices are harmless.** A finished vertex has already explored everything reachable from it. If it could reach back into the current path, that exploration would already have found a back edge.
+
+Three colors are the minimum needed to tell these classes apart. A single `visited` set merges gray and black, and so reports forward and cross edges as cycles. Gray vertices are exactly the current DFS path, so keeping that path on a list makes it easy to return the **cycle itself** rather than just a yes or no:
+
+```python
+WHITE, GRAY, BLACK = 0, 1, 2                     # undiscovered, on the current path, finished
+
+
+def find_cycle_directed(graph: list[list[int]]) -> list[int] | None:
+    """Return the vertices of a directed cycle in order, or None if the graph is a DAG."""
+    color = [WHITE] * len(graph)
+    path: list[int] = []                         # the gray vertices, from the DFS root down
+
+    def dfs(current: int) -> list[int] | None:
+        color[current] = GRAY
+        path.append(current)
+        for neighbor in graph[current]:
+            if color[neighbor] == GRAY:          # back edge: the cycle runs from neighbor to current
+                return path[path.index(neighbor):]
+            if color[neighbor] == WHITE:
+                cycle = dfs(neighbor)
+                if cycle is not None:
+                    return cycle
+            # BLACK: forward or cross edge, harmless
+        path.pop()
+        color[current] = BLACK
+        return None
+
+    for start in range(len(graph)):              # the graph may be disconnected
+        if color[start] == WHITE:
+            cycle = dfs(start)
+            if cycle is not None:
+                return cycle
+    return None
+```
+
+If you only need a yes or no, drop `path` and return booleans. The same DFS also gives you a topological order for free: record each vertex as it turns black, then reverse the list (see [Via DFS: reverse post-order](#via-dfs-reverse-post-order)). The colors also answer **Find Eventual Safe States** (LC 802), which asks for the vertices from which no cycle can be reached. A vertex is safe iff its DFS turns it black without ever meeting a gray vertex.
+
+**Without recursion**, Kahn's algorithm detects directed cycles too: a cycle exists iff some vertices never reach in-degree zero (see [Via in-degrees: Kahn's algorithm](#via-in-degrees-kahns-algorithm)). Not every leftover vertex is on a cycle, though; some are only downstream of one. **Course Schedule** (LC 207) is solved either way.
+
+| Situation | Method | Example |
+|---|---|---|
+| Undirected, whole graph given | DFS that skips the parent, or $E > V - C$ | Graph Valid Tree (LC 261) |
+| Undirected, edges arrive one at a time | Union-find | Redundant Connection (LC 684) |
+| Directed, yes/no or a topological order | Three-color DFS, or Kahn's algorithm | Course Schedule (LC 207) |
+| Directed, which vertices can reach a cycle | Three-color DFS | Find Eventual Safe States (LC 802) |
+| Every vertex has out-degree 1 (linked list, functional graph) | [Floyd's tortoise and hare](06_linked_lists.md#cycle-detection-floyds-tortoise-and-hare), $O(1)$ space | Linked List Cycle (LC 141), Find the Duplicate Number (LC 287) |
+| Is there an *odd* cycle? | [Two-coloring](#two-coloring-is-the-graph-bipartite-lc-785) | Is Graph Bipartite? (LC 785) |
+
+### Weak points: bridges and articulation vertices
+
+An **articulation vertex** is one whose removal disconnects the graph; a **bridge** is such an edge. They are single points of failure in a network. DFS finds all of them in one pass, tracking two numbers per vertex:
+
+- $\text{discovery\_order}(v)$: when DFS first reaches $v$.
+- $\text{low}(v)$: the smallest discovery order reachable from $v$'s subtree by going down tree edges and then up **at most one** back edge. It measures how high $v$'s subtree can climb without using the edge to $v$'s parent.
+
+Because an undirected DFS has no cross edges, deleting a vertex $u$ can only cut off **subtrees of its children**: a child's subtree stays attached only if one of its back edges climbs above $u$. Leaves of the DFS tree are never articulation vertices, since deleting one leaves the rest of the tree intact. For every other vertex, one of three cases applies:
+
+1. **Root case.** The root is an articulation vertex iff it has **two or more children** in the DFS tree. With no cross edges, the only connection between its subtrees is the root itself. A root with one child can be deleted safely. The `low` test below doesn't work at the root: nothing sits above it, so $\text{low}(v) \ge \text{discovery\_order}(\text{root})$ always holds.
+2. **Parent case.** If $\text{low}(v) = \text{discovery\_order}(u)$ for some child $v$, then $v$'s subtree can climb back to $u$ but no higher. Deleting $u$ strands that subtree, so $u$ is an articulation vertex (unless it's the root, which case 1 handles).
+3. **Bridge case.** If $\text{low}(v) = \text{discovery\_order}(v)$, then nothing below $v$ even reaches $u$, so $(u, v)$ is a bridge. Both of its endpoints are articulation vertices, except for one that is a leaf ($v$ with no children) or a root with only this child ($u$).
+
+Cases 2 and 3 combine into one test: a **non-root** $u$ is an articulation vertex iff some child $v$ has $\text{low}(v) \ge \text{discovery\_order}(u)$. That covers $v$ in case 3 too, since $v$'s own children satisfy the test against $v$. A vertex can pass the test for several children, so record the results in a boolean array and not a list:
+
+```python
+def articulation_vertices(n: int, edges: list[list[int]]) -> list[int]:
+    graph = build_adjacency_list(n, edges)
+    discovery_order = [-1] * n            # -1 = unvisited
+    low = [0] * n                         # min discovery_order reachable with ≤ 1 back edge
+    is_articulation = [False] * n
+    discovery_time = 0
+
+    def dfs(current: int, parent: int) -> None:
+        nonlocal discovery_time
+        discovery_order[current] = low[current] = discovery_time
+        discovery_time += 1
+        children = 0
+        for neighbor in graph[current]:
+            if neighbor == parent:
+                continue
+            if discovery_order[neighbor] == -1:      # tree edge
+                children += 1
+                dfs(neighbor, current)
+                low[current] = min(low[current], low[neighbor])
+                if parent != -1 and low[neighbor] >= discovery_order[current]:
+                    is_articulation[current] = True  # parent or bridge case
+            else:                                    # back edge
+                low[current] = min(low[current], discovery_order[neighbor])
+        if parent == -1 and children >= 2:
+            is_articulation[current] = True          # root case
+
+    for s in range(n):
+        if discovery_order[s] == -1:
+            dfs(s, -1)
+    return [vertex for vertex in range(n) if is_articulation[vertex]]
+```
+
+**Bridges** come from the same DFS with a stricter test: a tree edge $(u, v)$ is a bridge iff $\text{low}(v) > \text{discovery\_order}(u)$, meaning no back edge from $v$'s subtree reaches $u$ or any of its ancestors. **Critical Connections** (LC 1192) asks for exactly these:
+
+```python
+def critical_connections(n: int, connections: list[list[int]]) -> list[list[int]]:
+    graph = build_adjacency_list(n, connections)
+    discovery_order = [-1] * n                       # -1 = unvisited
+    low = [0] * n                                    # min discovery_order reachable with ≤ 1 back edge
+    bridges = []
+    discovery_time = 0
+
+    def dfs(current: int, parent: int) -> None:
+        nonlocal discovery_time
+        discovery_order[current] = low[current] = discovery_time
+        discovery_time += 1
+        for neighbor in graph[current]:
+            if neighbor == parent:
+                continue
+            if discovery_order[neighbor] == -1:      # tree edge
+                dfs(neighbor, current)
+                low[current] = min(low[current], low[neighbor])
+                if low[neighbor] > discovery_order[current]:
+                    bridges.append([current, neighbor])
+            else:                                    # back edge
+                low[current] = min(low[current], discovery_order[neighbor])
+
+    for s in range(n):
+        if discovery_order[s] == -1:
+            dfs(s, -1)
+    return bridges
+```
+
+LC 1192 allows $10^5$ vertices, so on a long chain this recursion exceeds Python's default limit (see the recursion-depth warning above).
 
 ---
 
@@ -325,7 +476,26 @@ List the vertices in the order DFS *finishes* them, then reverse. Why is that a 
 - If $y$ is already finished, it finished before $x$ will. ✓
 - If $y$ is discovered but unfinished, it's an ancestor on the stack — a back edge, which means a cycle, which is impossible in a DAG.
 
-In every legal case, $y$ finishes before $x$, so after reversing, $x$ comes before $y$.
+In every legal case, $y$ finishes before $x$, so after reversing, $x$ comes before $y$. In code, it's a plain DFS that records each vertex as it finishes:
+
+```python
+def topological_sort_dfs(graph: list[list[int]]) -> list[int]:
+    """Assumes a DAG; use the three-color DFS from Cycle detection if it may not be one."""
+    visited = [False] * len(graph)
+    finished: list[int] = []
+
+    def dfs(current: int) -> None:
+        visited[current] = True
+        for neighbor in graph[current]:
+            if not visited[neighbor]:
+                dfs(neighbor)
+        finished.append(current)                 # post-order: every successor is already in
+
+    for start in range(len(graph)):
+        if not visited[start]:
+            dfs(start)
+    return finished[::-1]
+```
 
 ### Via in-degrees: Kahn's algorithm
 
@@ -360,7 +530,30 @@ def topological_sort(n: int, edges: list[list[int]]) -> list[int] | None:
 
 ### Strongly connected components
 
-A directed graph is **strongly connected** if every vertex can reach every other. Its **strongly connected components** (SCCs) are the maximal strongly connected pieces, and contracting each SCC to a single vertex always leaves a DAG. **Kosaraju's algorithm** finds them with two DFS passes: record finish order on $G$, then DFS the **reversed** graph in decreasing finish order — each search tree is one SCC.
+A directed graph is **strongly connected** if every vertex can reach every other. Its **strongly connected components** (SCCs) are the maximal strongly connected pieces. Contracting each SCC to a single vertex gives the **condensation**, which is always a DAG: a cycle through two components would make them one component.
+
+**Key idea: a DFS started in a sink component visits exactly that component.** A sink component has no edges leaving it, so the DFS cannot escape, and strong connectivity means it reaches every vertex inside. Starting each DFS in a sink component therefore produces one SCC per search tree. Once a component is marked, the DFS ignores it, so another component becomes a sink, and the process repeats. The only problem is finding a vertex in a sink component without already knowing the components. Finish times solve it.
+
+> **Finish-time lemma.** Write $f(C)$ for the latest finish time of any vertex in component $C$. If the condensation has an edge $C \to C'$, then $f(C) > f(C')$.
+
+*Proof:* consider which of the two components DFS enters first.
+
+- **$C$ first, at vertex $x$.** At that moment every vertex of $C$ and $C'$ is undiscovered and reachable from $x$, so all of them become descendants of $x$ and finish before $x$.
+- **$C'$ first.** $C$ is not reachable from $C'$: together with the edge $C \to C'$, that would put both on a cycle. So DFS finishes all of $C'$ before it discovers any vertex of $C$.
+
+So the vertex that finishes **last** lies in a **source** component, one with no incoming edges. We need a sink, and reversing every edge provides one. The reversed graph $G^R$ has the **same SCCs** (a reversed cycle is still a cycle), but every condensation edge points the other way, so sources of $G$ are sinks of $G^R$.
+
+**Kosaraju's algorithm** therefore makes two passes:
+
+1. DFS on $G$, recording vertices in the order they finish.
+2. DFS on $G^R$, starting from unassigned vertices in **decreasing** finish order. Each search tree is one SCC.
+
+Pass 2 stays correct after the first component. Let $x$ be the unassigned vertex with the latest finish, and let $C$ be its component. In $G^R$, the edges leaving $C$ lead to components $C'$ that have an edge $C' \to C$ in $G$. By the lemma, $f(C') > f(C)$, so $C'$ has already been assigned. The search from $x$ therefore reaches only $C$, plus already-assigned vertices that it skips. Both passes and building $G^R$ take $O(V + E)$.
+
+??? question "Stop and Think: Why not skip the reversal?"
+    **Problem:** The lemma says the last vertex to finish lies in a source component. Doesn't that make the vertex that finishes **first** lie in a sink component? Then pass 2 could run on $G$ itself, in increasing finish order.
+
+    **Solution:** No. The lemma compares only the *latest* finish time of each component; it says nothing about the earliest. Take the edges $0 \to 1$, $1 \to 0$, $0 \to 2$, and run DFS from $0$, visiting $1$ first. The finish order is $1, 2, 0$. Vertex $1$ finishes first, but its component $\{0, 1\}$ is a source: a DFS from $1$ on $G$ reaches $2$ as well and merges two SCCs. Only the latest finish is reliable, which is why the algorithm reverses the graph rather than the order.
 
 ```python
 def strongly_connected_components(graph: list[list[int]]) -> list[list[int]]:
@@ -376,7 +569,7 @@ def strongly_connected_components(graph: list[list[int]]) -> list[list[int]]:
         while stack:
             u, it = stack[-1]
             v = next(it, None)
-            if v is None:
+            if v is None:                            # all neighbors explored: u finishes
                 stack.pop()
                 finished.append(u)
             elif not seen[v]:
@@ -406,40 +599,9 @@ def strongly_connected_components(graph: list[list[int]]) -> list[list[int]]:
     return components
 ```
 
-(The first pass uses an explicit stack of iterators to get correct finish times without recursion.)
+Pass 1 needs true finish times, so it cannot use the plain stack from flood fill: popping a vertex there says nothing about whether its descendants are done. Instead, each stack entry holds a vertex together with an iterator over its unexplored neighbors. A vertex finishes when its iterator runs out, which is exactly when the recursive call would return. Pass 2 only collects reachable vertices, so the plain stack is enough there.
 
-### Weak points: bridges and articulation vertices
-
-An **articulation vertex** is one whose removal disconnects the graph; a **bridge** is such an edge. They are single points of failure in a network (LC 1192, Critical Connections). DFS finds all of them in one pass using a single extra number per vertex: $\text{low}(u)$, the earliest entry time reachable from $u$'s subtree using **at most one back edge**. A tree edge $(u, v)$ is a bridge iff $\text{low}(v) > \text{entry}(u)$ — nothing below $v$ can climb back above it.
-
-```python
-def critical_connections(n: int, connections: list[list[int]]) -> list[list[int]]:
-    graph = build_graph(n, connections)
-    entry = [-1] * n
-    low = [0] * n
-    bridges = []
-    timer = 0
-
-    def dfs(u: int, parent: int) -> None:
-        nonlocal timer
-        entry[u] = low[u] = timer
-        timer += 1
-        for v in graph[u]:
-            if v == parent:
-                continue
-            if entry[v] == -1:                       # tree edge
-                dfs(v, u)
-                low[u] = min(low[u], low[v])
-                if low[v] > entry[u]:
-                    bridges.append([u, v])
-            else:                                    # back edge
-                low[u] = min(low[u], entry[v])
-
-    for s in range(n):
-        if entry[s] == -1:
-            dfs(s, -1)
-    return bridges
-```
+**Tarjan's algorithm** finds the same components in a single DFS, using low-link values like those in [Weak points](#weak-points-bridges-and-articulation-vertices). Kosaraju's two passes are easier to get right in an interview.
 
 ---
 
@@ -482,10 +644,11 @@ $O(E \log V)$ with a heap. For dense graphs — such as **Min Cost to Connect Al
 
 ### Kruskal's algorithm
 
-Sort all edges by weight. Take each edge in order, **unless it would close a cycle**. Each accepted edge is the lightest crossing the cut between its endpoint's components. To check "would this close a cycle?" — are the endpoints already in the same component? — use a **union-find** structure (see [Trie & Union Find](12_trie_union_find.md)), which answers it in nearly constant time.
+Sort all edges by weight. Take each edge in order, **unless it would close a cycle**. Each accepted edge is the lightest one leaving its endpoint's component, so the cut property applies. To check "would this close a cycle?" — are the endpoints already in the same component? — use a **union-find** structure (see [Trie & Union Find](12_trie_union_find.md)), which answers it in nearly constant time.
 
 ```python
 def kruskal_mst_weight(n: int, edges: list[tuple[int, int, int]]) -> int:
+    """edges = [(u, v, w), ...] for an undirected connected graph."""
     parent = list(range(n))
 
     def find(x: int) -> int:
@@ -495,7 +658,7 @@ def kruskal_mst_weight(n: int, edges: list[tuple[int, int, int]]) -> int:
         return x
 
     total = used = 0
-    for w, u, v in sorted(edges):                    # edges as (weight, u, v)
+    for u, v, w in sorted(edges, key=lambda edge: edge[2]):
         ru, rv = find(u), find(v)
         if ru != rv:
             parent[ru] = rv
@@ -591,7 +754,7 @@ def floyd_warshall(n: int, edges: list[tuple[int, int, int]]) -> list[list[float
     return dist
 ```
 
-$O(V^3)$ — no better asymptotically than running Dijkstra from every vertex, but the loops are so tight that it's often faster for $V$ up to a few hundred. It handles negative edges (not negative cycles), and it computes **transitive closure** — which vertices can reach which — as a byproduct: $i$ reaches $j$ iff $D[i][j] < \infty$.
+$O(V^3)$. On sparse graphs, running Dijkstra from every vertex is asymptotically faster ($O(VE \log V)$), but on dense graphs that becomes $O(V^3 \log V)$, and Floyd–Warshall's tight loops win for $V$ up to a few hundred. It handles negative edges, and detects negative cycles: one exists iff some $D[i][i] < 0$ at the end. It also computes **transitive closure** — which vertices can reach which — as a byproduct: $i$ reaches $j$ iff $D[i][j] < \infty$.
 
 ### Which shortest-path algorithm?
 
@@ -608,7 +771,7 @@ $O(V^3)$ — no better asymptotically than running Dijkstra from every vertex, b
 
 ## Network Flow and Matching (Briefly)
 
-Think of each edge as a pipe with a **capacity**. The **maximum flow** from $s$ to $t$ is the most material that can be pushed through the network at once, and the **max-flow min-cut theorem** says it equals the total capacity of the cheapest set of edges whose removal separates $s$ from $t$. Flow algorithms (Ford–Fulkerson with BFS augmenting paths, Edmonds–Karp) solve connectivity problems and, crucially, **bipartite matching**: add a source connected to one side and a sink connected to the other, all capacities 1, and the maximum flow is the largest matching. Flow problems are uncommon in interviews but worth recognizing — "assign workers to jobs," "how many edges must be cut" — because the reduction is often the whole solution.
+Think of each edge as a pipe with a **capacity**. The **maximum flow** from $s$ to $t$ is the most material that can be pushed through the network at once, and the **max-flow min-cut theorem** says it equals the total capacity of the cheapest set of edges whose removal separates $s$ from $t$. Flow algorithms (Ford–Fulkerson, or its BFS version Edmonds–Karp, which repeatedly push flow along augmenting paths) solve connectivity problems and, crucially, **bipartite matching**: add a source connected to one side and a sink connected to the other, all capacities 1, and the maximum flow is the largest matching. Flow problems are uncommon in interviews but worth recognizing — "assign workers to jobs," "how many edges must be cut" — because the reduction is often the whole solution.
 
 ---
 
@@ -625,7 +788,7 @@ The hardest part of most graph problems is noticing that they are graph problems
 | Cheapest Flights Within K Stops (LC 787) | (city, stops used) | Flights | Dijkstra / Bellman–Ford |
 | Shortest Path to Get All Keys (LC 864) | (cell, keys held as a bitmask) | Grid moves | BFS |
 | Reconstruct Itinerary (LC 332) | Airports | Tickets | Eulerian path (Hierholzer) |
-| Minimum rooms / buckets for overlapping items | Items | Overlaps | Graph coloring |
+| Course Schedule (LC 207) | Courses | Prerequisites | Topological sort |
 
 Two recurring tricks stand out. First, **the obvious vertices are not always the right ones**: in Bus Routes, making each route a vertex turns "fewest buses" into plain BFS. Second, **when a constraint depends on history, put the history into the state**: "at most $k$ stops" or "holding these keys" become part of the vertex, and the enlarged graph is searched with the ordinary algorithm.
 
@@ -666,6 +829,7 @@ Two recurring tricks stand out. First, **the obvious vertices are not always the
 | Open the Lock (LC 752) | BFS on an implicit state graph |
 | Word Ladder (LC 127) | BFS, bidirectional BFS |
 | Course Schedule I & II (LC 207, 210) | Topological sort |
+| Find Eventual Safe States (LC 802) | Three-color DFS cycle detection |
 | Alien Dictionary (LC 269) | Build the graph, then topological sort |
 | Redundant Connection (LC 684) | Union-find cycle detection |
 | Critical Connections in a Network (LC 1192) | Bridges via low-link |
