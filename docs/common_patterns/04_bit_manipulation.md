@@ -31,7 +31,7 @@ There are $2$ bit strings of length 1, $4$ of length 2, and $2^w$ of length $w$.
 | `a >> k` | shift right: floor-divide by $2^k$ | `5 >> 1` = 2 |
 
 !!! warning "Precedence trap"
-    In Python, comparison operators bind **tighter** than `&`, `|`, and `^`. So `x & 1 == 0` means `x & (1 == 0)`, which is `x & False`, which is always `0`. Always parenthesize: `(x & 1) == 0`.
+    In Python, **arithmetic** binds tighter than shifts, and shifts bind tighter than `&`, `^`, `|`. So `1 << n - 1` means `1 << (n - 1)`, and `x & y + 1` means `x & (y + 1)`. (Comparisons bind looser than all of them, so `x & 1 == 0` does mean `(x & 1) == 0` — unlike in C, where it's a classic bug.) Always parenthesize mixed expressions.
 
 ### Negative numbers: two's complement
 
@@ -337,7 +337,7 @@ For each number, greedily prefer the opposite bit at each position from the top 
 
 ## Common Mistakes
 
-1. **Operator precedence.** `x & 1 == 0`, `a ^ b > 0`, `mask & 1 << i` — in Python the first two are wrong (comparisons bind tighter than `&`/`^`); the third happens to be right (`<<` binds tighter than `&`). Parenthesize everything.
+1. **Operator precedence.** `1 << n - 1` is `1 << (n - 1)` and `x & y + 1` is `x & (y + 1)`, because arithmetic binds tighter than shifts and bitwise operators. `x & 1 == 0` happens to work in Python, but the same line is a bug in C and Java. Parenthesize everything.
 
 2. **Forgetting Python's infinite width.** `~x` is `-x - 1`, not a 32-bit complement. Negative numbers have infinitely many leading 1s, so loops like `while x: x >>= 1` never terminate for negative `x`. Mask with `0xFFFFFFFF` whenever a problem assumes fixed width.
 
