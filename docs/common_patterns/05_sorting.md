@@ -14,7 +14,7 @@ Before choosing an algorithm, answer four questions about the order you want.
 
 **Increasing or decreasing?** Pass `reverse=True`, or negate a numeric key.
 
-**Sort by what key?** Records are usually sorted by a field, and the rest of the record must travel with it. Python's `key` function extracts the field; it is called once per element, so it's cheap even when expensive to compute.
+**Sort by what key?** Records are usually sorted by a field, and the rest of the record must travel with it. Python's `key` function extracts the field; it is called once per element ($n$ calls, not one per comparison), so even an expensive key is affordable.
 
 **What happens to ties?** A sort is **stable** if elements with equal keys keep their original relative order. Python's sort is guaranteed stable. Stability matters whenever you sort in several passes, or when the input order carries meaning (e.g., arrival time).
 
@@ -227,7 +227,7 @@ Choosing the pivot **at random** changes the nature of the guarantee. There is n
 ??? question "Stop and Think: Nuts and bolts"
     **Problem:** You have $n$ bolts of different widths and their $n$ matching nuts. You can try a nut on a bolt and learn whether the nut is too large, too small, or a match — but you cannot compare two nuts or two bolts directly. Match every bolt to its nut efficiently.
 
-    **Solution:** Trying each bolt against every remaining nut is $O(n^2)$. To do better, emulate quicksort. Pick a random bolt $b$ and test every nut against it, partitioning the nuts into smaller-than-$b$, larger-than-$b$, and its match $m$. Now use $m$ as a pivot to partition the **bolts** the same way. In $2n - 2$ tests we've matched one pair and split the problem into two independent subproblems, exactly as quicksort does. Expected time: $O(n \log n)$.
+    **Solution:** Trying each bolt against every remaining nut is $O(n^2)$. To do better, emulate quicksort. Pick a random bolt $b$ and test every nut against it, partitioning the nuts into smaller-than-$b$, larger-than-$b$, and its match $m$. Now use $m$ as a pivot to partition the **bolts** the same way. In $2n - 1$ tests we've matched one pair and split the problem into two independent subproblems, exactly as quicksort does. Expected time: $O(n \log n)$.
 
     Remarkably, no simple *deterministic* $O(n \log n)$ algorithm is known for this problem. Randomization makes the bad cases disappear, leaving a short and elegant algorithm.
 
