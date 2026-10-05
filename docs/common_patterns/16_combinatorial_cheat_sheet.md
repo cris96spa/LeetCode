@@ -336,7 +336,7 @@ The counts above are exactly the sizes of the search spaces in [Combinatorial Se
 
 | Object | Count | Generate with | Time to generate all |
 |---|---|---|---|
-| All subsets | $2^n$ | Include/exclude backtracking, or bitmasks | $O(n \cdot 2^n)$ |
+| All subsets | $2^n$ | Choose-next backtracking, or bitmasks | $O(n \cdot 2^n)$ |
 | $k$-subsets | $\binom{n}{k}$ | Choose-next backtracking with a size limit | $O(k \binom{n}{k})$ |
 | Permutations | $n!$ | Backtracking with `used` flags, or next-permutation | $O(n \cdot n!)$ |
 | Multiset permutations | $\frac{n!}{n_1! \cdots n_k!}$ | Sort + skip equal siblings | $O(n \cdot \text{count})$ |

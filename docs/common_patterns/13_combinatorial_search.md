@@ -58,35 +58,15 @@ Almost every backtracking problem is a variation on generating subsets, permutat
 
 ### Subsets (LC 78)
 
-**View 1 — include or exclude.** Position $i$ of the solution vector is a yes/no decision about item $i$. The search tree is a complete binary tree with $2^n$ leaves, one per subset.
+Every node of the search tree is itself a subset; its children add one element *later* than any already chosen. Starting each loop at `start` is what prevents generating `{2, 1}` after `{1, 2}`.
 
 ```python
 def subsets(nums: list[int]) -> list[list[int]]:
     result: list[list[int]] = []
     chosen: list[int] = []
 
-    def decide(i: int) -> None:
-        if i == len(nums):
-            result.append(chosen[:])             # copy: chosen keeps changing
-            return
-        decide(i + 1)                            # exclude nums[i]
-        chosen.append(nums[i])                   # include nums[i]
-        decide(i + 1)
-        chosen.pop()
-
-    decide(0)
-    return result
-```
-
-**View 2 — choose the next element.** Every node of the tree is itself a subset; its children add one element *later* than any already chosen. Starting each loop at `start` is what prevents generating `{2, 1}` after `{1, 2}`.
-
-```python
-def subsets_v2(nums: list[int]) -> list[list[int]]:
-    result: list[list[int]] = []
-    chosen: list[int] = []
-
     def extend(start: int) -> None:
-        result.append(chosen[:])                 # every node is a valid subset
+        result.append(chosen[:])                 # every node is a valid subset; copy, chosen keeps changing
         for i in range(start, len(nums)):
             chosen.append(nums[i])
             extend(i + 1)
@@ -96,7 +76,7 @@ def subsets_v2(nums: list[int]) -> list[list[int]]:
     return result
 ```
 
-Both are $O(n \cdot 2^n)$: $2^n$ subsets, each copied in $O(n)$. (Subsets can also be generated without recursion by binary counting; see [Bit Manipulation](04_bit_manipulation.md#generating-subsets).) View 2 generalizes more easily, so it's the one to reach for when constraints are added.
+$O(n \cdot 2^n)$: $2^n$ subsets, each copied in $O(n)$. (Subsets can also be generated without recursion by binary counting; see [Bit Manipulation](04_bit_manipulation.md#generating-subsets).) The combination, duplicate-handling, and Combination Sum generators below are all this same tree with an extra rule.
 
 ### Permutations (LC 46)
 
@@ -128,7 +108,7 @@ $O(n \cdot n!)$. There are $n!$ leaves, and the tree has fewer than $e \cdot n!$
 
 ### Combinations: $k$-subsets (LC 77)
 
-Choose $k$ of the numbers $1 \dots n$. It's View 2 of subsets, recording only nodes at depth $k$ — plus a cheap but valuable **prune**: if there aren't enough numbers left to reach size $k$, stop.
+Choose $k$ of the numbers $1 \dots n$. It's the subsets tree, recording only nodes at depth $k$ — plus a cheap but valuable **prune**: if there aren't enough numbers left to reach size $k$, stop.
 
 ```python
 def combine(n: int, k: int) -> list[list[int]]:
@@ -182,7 +162,7 @@ When the input contains duplicates, the generators above produce duplicate outpu
 
 **The rule:** sort the input so equal values are adjacent. At any single node of the search tree, try each **distinct value** as the next choice only once.
 
-**Subsets with duplicates** (LC 90) — in the choose-next-element tree, siblings are the choices at the same node; skip a value equal to the previous sibling:
+**Subsets with duplicates** (LC 90) — in the subsets tree, siblings are the choices at the same node; skip a value equal to the previous sibling:
 
 ```python
 def subsets_with_dup(nums: list[int]) -> list[list[int]]:
@@ -630,7 +610,7 @@ If the same sub-search is reached by different paths — for example, "can the r
 
 | Problem | Idea |
 |---|---|
-| Subsets (LC 78) | Include / exclude, or choose-next |
+| Subsets (LC 78) | Choose the next element |
 | Subsets II (LC 90) | Sort + skip repeated siblings |
 | Permutations (LC 46) | `used` flags |
 | Permutations II (LC 47) | Equal values in original order |
