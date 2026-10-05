@@ -111,9 +111,7 @@ def two_column_panel(
     table.add_column("value")
     for label, value in rows.items():
         table.add_row(f"{label}:", value)
-    _resolve(console).print(
-        Panel(table, title=f"[bold {STYLE_HEADER}]{title}[/]", border_style=style)
-    )
+    _resolve(console).print(Panel(table, title=f"[bold {STYLE_HEADER}]{title}[/]", border_style=style))
 
 
 def new_progress_bar(

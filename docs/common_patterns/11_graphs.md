@@ -233,7 +233,7 @@ def dfs_order(graph: list[list[int]], start: int) -> list[int]:
     return order
 ```
 
-DFS is essentially the same procedure as **backtracking** (see [Backtracking](13_backtracking.md)): advance whenever possible, back up only when every option is exhausted.
+DFS is essentially the same procedure as **backtracking** (see [Combinatorial Search](13_combinatorial_search.md)): advance whenever possible, back up only when every option is exhausted.
 
 !!! warning "Recursion depth"
     Recursive DFS on a long path of $10^5$ vertices exceeds Python's recursion limit. For large graphs, either use an explicit stack or `sys.setrecursionlimit` (and be aware that very deep recursion can still crash the interpreter).

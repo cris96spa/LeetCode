@@ -13,9 +13,7 @@ class SimpleLinear:
         self._out_features = out_features
 
         scale = 1 / math.sqrt(self._in_features)
-        self.weight = nn.Parameter(
-            scale * torch.rand(out_features, in_features), requires_grad=True
-        )
+        self.weight = nn.Parameter(scale * torch.rand(out_features, in_features), requires_grad=True)
         self.bias = nn.Parameter(torch.zeros(out_features), requires_grad=True)
 
     def forward(self, x: torch.Tensor) -> torch.Tensor:

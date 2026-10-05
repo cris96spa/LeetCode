@@ -110,7 +110,7 @@ nav:
       - "Trees": common_patterns/10_trees.md
       - "Graphs": common_patterns/11_graphs.md
       - "Trie & Union Find": common_patterns/12_trie_union_find.md
-      - "Backtracking": common_patterns/13_backtracking.md
+      - "Combinatorial Search": common_patterns/13_combinatorial_search.md
       - "Greedy": common_patterns/14_greedy.md
       - "Dynamic Programming": common_patterns/15_dynamic_programming.md
       - "Combinatorics": common_patterns/16_combinatorial_cheat_sheet.md

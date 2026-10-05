@@ -24,9 +24,7 @@ class LoRALinear(nn.Module):
         self.out_feature = out_features
 
         if rank > max(in_features, self.out_feature) or rank < 1:
-            raise ValueError(
-                f"Invalid rank, should be [1, {max(in_features, self.out_feature)}), got {rank}"
-            )
+            raise ValueError(f"Invalid rank, should be [1, {max(in_features, self.out_feature)}), got {rank}")
         self.rank = rank
         self.alpha = alpha
         self.scaling = self.alpha / self.rank

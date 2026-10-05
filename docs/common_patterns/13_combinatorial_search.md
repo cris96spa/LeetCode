@@ -1,8 +1,13 @@
-# Backtracking
+# Combinatorial Search
 
-Some problems have no clever shortcut: to find all valid arrangements, or the best one, you must in principle consider every candidate. **Backtracking** is the systematic way to do that — to enumerate every configuration of a search space exactly once, while abandoning partial configurations the moment they can't possibly succeed.
+Some problems have no clever shortcut: to find all valid arrangements, or the best one, you must in principle consider every candidate. **Combinatorial search** is the art of doing that efficiently. Its workhorse is **backtracking**, which enumerates every configuration of a search space exactly once while abandoning partial configurations the moment they can't possibly succeed.
 
-Exhaustive search has a bad reputation, but surprisingly large problems yield to it, and it has one great virtue: it is *obviously correct*. If you've tried every possibility, you haven't missed the answer. The craft lies in two places: generating each candidate **exactly once** (no repeats, no omissions), and **pruning** the search so that you only look at candidates that matter.
+Exhaustive search has a bad reputation, but surprisingly large problems yield to it, and it has one great virtue: it is *obviously correct*. If you've tried every possibility, you haven't missed the answer. The craft lies in four places:
+
+- **Generating** each candidate exactly once, with no repeats and no omissions.
+- **Pruning** the search so that you only look at candidates that matter.
+- **Ordering** the search so that the best candidates are examined first.
+- **Splitting** the search space when it is too big to enumerate as a whole.
 
 ---
 
@@ -267,7 +272,7 @@ def combination_sum(candidates: list[int], target: int) -> list[list[int]]:
 
 **Generate Parentheses** (LC 22) is pure feasibility pruning: never place more than $n$ opening brackets, and never close more than you've opened. Every leaf reached is valid, so no work is wasted on invalid strings at all.
 
-**2. Bounding (branch and bound):** in optimization problems, abandon a partial solution when even an optimistic estimate of its best completion can't beat the best solution found so far.
+**2. Bounding (branch and bound):** in optimization problems, abandon a partial solution when even an optimistic estimate of its best completion can't beat the best solution found so far. See the [worked example](#branch-and-bound-find-minimum-time-to-finish-all-jobs-lc-1723) below.
 
 **3. Symmetry:** if two branches are guaranteed to lead to equivalent results, explore only one. For a TSP tour, rotations of the same cycle are the same tour, so fix the starting city: a factor of $n$ saved for free.
 
@@ -306,6 +311,41 @@ def can_partition_k_subsets(nums: list[int], k: int) -> bool:
 - **(a) Order the choices**: placing large numbers first makes buckets overflow early, near the root of the tree, where pruning saves the most.
 - **(b) Feasibility**: never overfill a bucket.
 - **(c) Symmetry**: two buckets with the same current sum are interchangeable — putting `nums[i]` into either leads to equivalent searches. Try only one. In particular, all the empty buckets are the same bucket.
+
+### Branch and bound: Find Minimum Time to Finish All Jobs (LC 1723)
+
+LC 698 asks a yes/no question. Turn it into an optimization: assign every job to one of $k$ workers so that the **largest** total is as small as possible. Backtracking still tries every assignment, but now it also remembers `best`, the cost of the best complete assignment found so far. Branch and bound needs two things:
+
+- **A lower bound on every completion.** The largest load so far, `current_max`, can only grow as more jobs are assigned. So no completion of the current branch can cost less than it.
+- **A good solution to compare against.** As soon as `current_max >= best`, the branch can't produce anything better than what's already known, so abandon it.
+
+```python
+def minimum_time_required(jobs: list[int], k: int) -> int:
+    jobs = sorted(jobs, reverse=True)            # big jobs first: high loads show up early
+    loads = [0] * k
+    best = sum(jobs)                             # a valid answer to start from: one worker does it all
+
+    def assign(i: int, current_max: int) -> None:
+        nonlocal best
+        if current_max >= best:
+            return                               # bound: no completion of this branch can win
+        if i == len(jobs):
+            best = current_max                   # a strictly better complete solution
+            return
+        tried: set[int] = set()
+        for w in range(k):
+            if loads[w] in tried:
+                continue                         # symmetry: equal loads give equivalent subtrees
+            tried.add(loads[w])
+            loads[w] += jobs[i]
+            assign(i + 1, max(current_max, loads[w]))
+            loads[w] -= jobs[i]
+
+    assign(0, 0)
+    return best
+```
+
+The bound and the search help each other. Every improvement to `best` makes the bound prune more, and sorting the jobs largest first finds good solutions early, while the tree is still small. Two refinements tighten it further: start `best` from a greedy solution instead of the trivial one, and use a stronger lower bound, such as $\max(\text{current\_max}, \lceil \text{remaining work} / k \rceil)$. The stronger the bound, the earlier branches die.
 
 ---
 
@@ -457,11 +497,92 @@ Precomputing the palindrome table is itself a small dynamic program; it turns an
 
 ---
 
-## Beyond Depth-First: Best-First Search
+## Best-First Search and A\*
 
-Backtracking explores the tree depth-first, in whatever order the candidates happen to come. For optimization problems, it can pay to always expand the **most promising** partial solution next, keeping partial solutions in a priority queue ordered by an estimate of their final cost. That's **best-first search**.
+Backtracking explores the tree depth-first, in whatever order the candidates happen to come. For optimization problems, it can pay to always expand the **most promising** partial solution next. **Best-first search** keeps all the partial solutions generated so far in a priority queue, ordered by a cost, and repeatedly expands the cheapest one.
 
-Its most famous form, **A\***, orders partial solutions by *cost so far + an estimate of the remaining cost*. If the estimate never overestimates (it is a lower bound), the first complete solution popped is optimal — and a tight estimate lets the search ignore most of the tree. Dijkstra's algorithm is A\* with an estimate of zero. The price is memory: best-first search stores the whole frontier, while depth-first backtracking stores only one path.
+**When can it stop?** Not necessarily at the first complete solution it pops. That solution was the cheapest *partial* solution when it was chosen, but a more expensive partial solution might still finish more cheaply. The search can stop once the cheapest entry left in the queue costs at least as much as the best complete solution found. That rule is only correct if a partial solution's cost is a **lower bound** on the cost of every completion of it. Otherwise something deeper in the queue could still turn into a better answer.
+
+**A\*** sharpens the cost. Ordering by *cost so far* alone favors short partial solutions: in a traveling-salesman search, half a tour is almost always cheaper than any full tour, so every half-tour gets expanded before the search finishes anything. A\* orders by *cost so far + an estimate of the remaining cost*. If the estimate never overestimates, the total is still a lower bound, the stopping rule stays correct, and partial solutions near completion are no longer penalized. With a consistent estimate, like the one below, the first complete solution popped is optimal. Dijkstra's algorithm is A\* with an estimate of zero.
+
+**Sliding Puzzle** (LC 773) asks for the fewest moves that turn a $2 \times 3$ board into `[[1, 2, 3], [4, 5, 0]]`, where each move slides a tile into the blank. Each move shifts one tile by one cell, so every tile needs at least as many moves as its Manhattan distance from its goal cell. The sum of those distances is therefore a lower bound on the moves remaining:
+
+```python
+def sliding_puzzle(board: list[list[int]]) -> int:
+    goal = (1, 2, 3, 4, 5, 0)
+    moves_from = {0: (1, 3), 1: (0, 2, 4), 2: (1, 5), 3: (0, 4), 4: (1, 3, 5), 5: (2, 4)}
+
+    def estimate(state: tuple[int, ...]) -> int:
+        """Sum of each tile's Manhattan distance to its goal cell: never overestimates."""
+        return sum(
+            abs(i // 3 - (tile - 1) // 3) + abs(i % 3 - (tile - 1) % 3)
+            for i, tile in enumerate(state)
+            if tile
+        )
+
+    start = tuple(tile for row in board for tile in row)
+    fewest = {start: 0}                          # fewest moves found so far to each state
+    heap = [(estimate(start), 0, start)]         # (moves + estimate, moves, state)
+    while heap:
+        _, moves, state = heapq.heappop(heap)
+        if state == goal:
+            return moves
+        if moves > fewest[state]:
+            continue                             # stale entry
+        blank = state.index(0)
+        for j in moves_from[blank]:
+            nxt = list(state)
+            nxt[blank], nxt[j] = nxt[j], nxt[blank]
+            nxt = tuple(nxt)
+            if moves + 1 < fewest.get(nxt, moves + 2):
+                fewest[nxt] = moves + 1
+                heapq.heappush(heap, (moves + 1 + estimate(nxt), moves + 1, nxt))
+    return -1                                    # the goal is unreachable from this board
+```
+
+This board has only 360 reachable states, so plain BFS also works. A\* matters when the state space is large: the tighter the estimate, the more of the space it never touches.
+
+**The price is memory.** Depth-first backtracking stores only the current path, while best-first search stores the whole frontier. In Skiena's traveling-salesman experiments with 11 cities, the priority queue grew to 202,063 entries; the backtracking stack needed 11. A slow program eventually gives an answer, but one that runs out of memory never does.
+
+!!! tip "Take-Home Lesson"
+    The promise of a partial solution is not just its cost so far, but also the cost of the rest of the solution. An estimate of the remaining cost that is tight, yet still a lower bound, makes best-first search far more efficient.
+
+---
+
+## Meet in the Middle
+
+At $n = 40$, enumerating all $2^{40} \approx 10^{12}$ subsets is hopeless, but $2^{20} \approx 10^6$ is easy. **Meet in the middle** gets from one to the other by splitting the items into two halves, enumerating all subsets of each half separately, and combining the two lists cleverly instead of trying every pair.
+
+**Closest Subsequence Sum** (LC 1755): find the subset sum closest to `goal`, with $n \le 40$. Every subset is a subset of the left half plus a subset of the right half, so its sum is $s_L + s_R$. For each left sum $s_L$, the best partner is the right sum closest to $\text{goal} - s_L$. After sorting the right sums, binary search finds it:
+
+```python
+def subset_sums(nums: list[int]) -> list[int]:
+    sums = [0]
+    for x in nums:
+        sums += [s + x for s in sums]            # every old subset, with and without x
+    return sums
+
+
+def min_abs_difference(nums: list[int], goal: int) -> int:
+    half = len(nums) // 2
+    left = subset_sums(nums[:half])
+    right = sorted(subset_sums(nums[half:]))
+    best = abs(goal)                             # the empty subset
+    for s in left:
+        i = bisect.bisect_left(right, goal - s)  # the best partner is right[i - 1] or right[i]
+        for j in (i - 1, i):
+            if 0 <= j < len(right):
+                best = min(best, abs(s + right[j] - goal))
+    return best
+```
+
+**Time:** $O(2^{n/2} \cdot n)$, dominated by sorting the right half's $2^{n/2}$ sums: well under a second in Python at $n = 40$, compared with hours for brute force. The idea works whenever a solution splits into two independent halves whose combination can be checked quickly: by sorting and binary search, a hash map, or two pointers. **Partition Array Into Two Arrays to Minimize Sum Difference** (LC 2035) is the same trick, with the left and right sums grouped by how many elements they use.
+
+---
+
+## Heuristic Search (Briefly)
+
+When the search space is too large even for pruning, and an exact answer isn't required, **heuristic search** trades the guarantee of optimality for speed. **Random sampling** tries random solutions and keeps the best. **Local search** starts from some solution and repeatedly makes small changes, such as swapping two cities in a tour, as long as they improve it. It stops at a *local* optimum, which may be far from the best. **Simulated annealing** also accepts some changes that make the solution worse, with a probability that shrinks over time. That lets it escape local optima early, then settle down. These methods power real-world scheduling and layout tools, but they don't appear in interview problems, which always have exact answers.
 
 ---
 
@@ -481,6 +602,7 @@ If the same sub-search is reached by different paths — for example, "can the r
 | N-Queens | $\le n!$ | $O(n!)$, much less in practice |
 | Word Search | $m n \cdot 3^{L}$ paths | $O(mn \cdot 3^{L})$ for word length $L$ |
 | Palindrome partitioning | $2^{n-1}$ ways to cut | $O(n \cdot 2^n)$ |
+| Meet in the middle on subsets | $2 \cdot 2^{n/2}$ half-subsets | $O(n \cdot 2^{n/2})$ |
 
 ---
 
@@ -499,6 +621,8 @@ If the same sub-search is reached by different paths — for example, "can the r
 6. **Building strings by concatenation in deep recursions.** Use a list and `"".join` when recording a solution.
 
 7. **Using backtracking where the subproblems overlap.** If the future depends only on a small state, memoize it.
+
+8. **Stopping best-first search too early.** The first complete solution popped is optimal only when the queue's costs are lower bounds on every completion (and, for A\*, the estimate never overestimates). Otherwise keep searching until the cheapest queue entry can't beat the best solution found.
 
 ---
 
@@ -522,3 +646,7 @@ If the same sub-search is reached by different paths — for example, "can the r
 | Sudoku Solver (LC 37) | Most constrained cell first |
 | Partition to K Equal Sum Subsets (LC 698) | Ordering + symmetry pruning |
 | Matchsticks to Square (LC 473) | Same as LC 698 with $k = 4$ |
+| Find Minimum Time to Finish All Jobs (LC 1723) | Branch and bound |
+| Sliding Puzzle (LC 773) | A\* with Manhattan distance (or BFS) |
+| Closest Subsequence Sum (LC 1755) | Meet in the middle |
+| Partition Array Into Two Arrays to Minimize Sum Difference (LC 2035) | Meet in the middle, grouped by size |

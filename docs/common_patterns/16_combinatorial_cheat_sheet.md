@@ -332,7 +332,7 @@ class WeightedPicker:
 
 ## From Counts to Code
 
-The counts above are exactly the sizes of the search spaces in [Backtracking](13_backtracking.md), which is why they give the running times of the corresponding algorithms:
+The counts above are exactly the sizes of the search spaces in [Combinatorial Search](13_combinatorial_search.md), which is why they give the running times of the corresponding algorithms:
 
 | Object | Count | Generate with | Time to generate all |
 |---|---|---|---|

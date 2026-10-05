@@ -63,9 +63,7 @@ def expand(packages: set[str], depends: dict[str, set[str]]) -> set[str]:
 def recorded_files(workdir: Path) -> set[Path]:
     """Compile the document once and return every input file xelatex opened."""
     tex = workdir / "notes.tex"
-    subprocess.run(
-        [*pandoc_command(tex), "--standalone"], input=markdown_source(), text=True, check=True
-    )
+    subprocess.run([*pandoc_command(tex), "--standalone"], input=markdown_source(), text=True, check=True)
     result = subprocess.run(
         ["xelatex", "-recorder", "-no-pdf", "-interaction=nonstopmode", "-halt-on-error", tex.name],
         cwd=workdir,

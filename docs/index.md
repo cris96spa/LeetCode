@@ -370,3 +370,9 @@ A collection of LeetCode solutions in Python, organised by difficulty, with note
 - **Common Patterns** — theory notes and cheat sheets for the most frequent algorithmic patterns
 - **Cheat Sheet** — quick-reference card covering complexity, patterns, and idioms
 - **API Reference** — auto-generated documentation from the source code
+
+## References
+
+The Cheat Sheet and Common Patterns notes are study notes based on:
+
+> Steven S. Skiena. *The Algorithm Design Manual*, 3rd edition. Texts in Computer Science. Springer, Cham, 2020. ISBN 978-3-030-54255-9. [doi:10.1007/978-3-030-54256-6](https://doi.org/10.1007/978-3-030-54256-6)

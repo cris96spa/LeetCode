@@ -14,9 +14,7 @@ class LinearRegression:
         closed_form = (X.T @ X).inverse() @ X.T @ y
         return closed_form[1:], closed_form[0]
 
-    def gradient_descent(
-        self, X: torch.Tensor, y: torch.Tensor, lr: float = 0.01, steps: int = 1000
-    ):
+    def gradient_descent(self, X: torch.Tensor, y: torch.Tensor, lr: float = 0.01, steps: int = 1000):
         """Manual gradient descent loop."""
         w = torch.zeros(X.shape[1])
         b = torch.zeros(())

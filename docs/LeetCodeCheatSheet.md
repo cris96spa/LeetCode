@@ -189,7 +189,7 @@ See: [Sorting](common_patterns/05_sorting.md), [Binary Search](common_patterns/0
 | Divide and conquer | The problem splits into independent halves | Induction; master theorem for cost | [Complexity](common_patterns/01_complexity_analysis.md#recurrences-and-divide-and-conquer) |
 | Greedy | A local choice provably belongs to some optimum | Exchange argument, stays-ahead, or matching a lower bound | [Greedy](common_patterns/14_greedy.md) |
 | Dynamic programming | Optimal / counting problems with overlapping subproblems | A correct recurrence over few states | [Dynamic Programming](common_patterns/15_dynamic_programming.md) |
-| Backtracking | Enumerate or search all configurations; small $n$ | Exhaustive enumeration + pruning | [Backtracking](common_patterns/13_backtracking.md) |
+| Backtracking | Enumerate or search all configurations; small $n$ | Exhaustive enumeration + pruning | [Combinatorial Search](common_patterns/13_combinatorial_search.md) |
 | Graph modeling | Relationships, states, dependencies | A classical algorithm on a well-designed graph | [Graphs](common_patterns/11_graphs.md#design-graphs-not-algorithms) |
 
 ---
@@ -248,3 +248,8 @@ See: [Complexity Analysis](common_patterns/01_complexity_analysis.md#estimation-
 | `heapq` with non-comparable items on ties | `TypeError` | `(priority, counter, item)` tuples |
 
 See: [The Python Cost Model](common_patterns/01_complexity_analysis.md#the-python-cost-model).
+
+
+
+!!! quote "Source"
+    This cheat sheet is based on Steven S. Skiena, *The Algorithm Design Manual*, 3rd ed. (Springer, 2020). See [References](index.md#references).

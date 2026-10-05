@@ -19,6 +19,7 @@ DOCS = ROOT / "docs"
 STYLE = Path(__file__).resolve().parent / "pdf"
 
 PAGES = [DOCS / "LeetCodeCheatSheet.md", *sorted((DOCS / "common_patterns").glob("*.md"))]
+REFERENCES_RE = re.compile(r"^## References\n(.*?)(?=^## |\Z)", re.M | re.S)
 
 ADMONITION_RE = re.compile(r'^(?:!!!|\?\?\?\+?)\s+(\w+)(?:\s+"([^"]*)")?\s*$')
 # Fonts shipped with TeX Live, loaded by file name so local and CI builds match.
@@ -37,7 +38,8 @@ FONTS = [
     "--variable=monofontoptions:HyphenChar=None",
     "--variable=mathfont:STIXTwoMath-Regular.otf",
 ]
-LINK_RE = re.compile(r"\]\((?!https?:)[^)#]*\.md(#[^)]*)?\)")
+LINK_RE = re.compile(r"\]\((?!https?:)([^)#]*\.md)(#[^)]*)?\)")
+TITLE_RE = re.compile(r"^# (.+)$", re.M)
 
 
 def convert_admonitions(text: str) -> str:
@@ -65,16 +67,39 @@ def convert_admonitions(text: str) -> str:
     return "\n".join(out)
 
 
+def page_anchor(name: str) -> str:
+    """Anchor of an exported page's title, derived from its file name."""
+    return f"page-{Path(name).stem}"
+
+
+def anchor_title(text: str, page: Path) -> str:
+    """Give the page's title a stable anchor that whole-page links can target."""
+    return TITLE_RE.sub(lambda m: f"# {m.group(1)} {{#{page_anchor(page.name)}}}", text, count=1)
+
+
 def rewrite_links(text: str) -> str:
-    """Point cross-page links at in-document anchors; drop whole-page links."""
-    return LINK_RE.sub(lambda m: f"]({m.group(1)})" if m.group(1) else "]()", text)
+    """Point cross-page links at in-document anchors: the section, or the page's title."""
+    exported = {page.name for page in PAGES}
+
+    def target(match: re.Match) -> str:
+        page, section = match.groups()
+        if section:
+            return f"]({section})"
+        return f"](#{page_anchor(page)})" if Path(page).name in exported else "]()"
+
+    return LINK_RE.sub(target, text)
+
+
+def references() -> str:
+    """The home page's References section, as the PDF's closing chapter."""
+    match = REFERENCES_RE.search((DOCS / "index.md").read_text(encoding="utf-8"))
+    return f"# References\n{match.group(1)}" if match else ""
 
 
 def markdown_source() -> str:
     """Concatenate the exported pages, rewritten into pandoc-friendly markdown."""
-    return "\n\n".join(
-        rewrite_links(convert_admonitions(page.read_text(encoding="utf-8"))) for page in PAGES
-    )
+    pages = [anchor_title(convert_admonitions(page.read_text(encoding="utf-8")), page) for page in PAGES]
+    return "\n\n".join(rewrite_links(text) for text in [*pages, references()])
 
 
 def pandoc_command(output: Path) -> list[str]:

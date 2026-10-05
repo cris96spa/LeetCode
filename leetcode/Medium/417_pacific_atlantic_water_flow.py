@@ -35,9 +35,7 @@ class Solution:
             self._dfs(0, col, pacific, heights, rows, cols, heights[0][col])
             self._dfs(rows - 1, col, atlantic, heights, rows, cols, heights[rows - 1][col])
 
-        return [
-            [r, c] for r in range(rows) for c in range(cols) if pacific[r][c] and atlantic[r][c]
-        ]
+        return [[r, c] for r in range(rows) for c in range(cols) if pacific[r][c] and atlantic[r][c]]
 
     def _dfs(
         self,

@@ -477,7 +477,7 @@ On LeetCode, the constraints *tell you* the intended complexity. Budget roughly 
 |---|---|---|
 | $n \le 10$ | $O(n!)$, $O(n \cdot n!)$ | Permutations, brute force |
 | $n \le 20$ | $O(2^n)$, $O(n \cdot 2^n)$ | Subsets, bitmask DP, backtracking |
-| $n \le 40$ | $O(2^{n/2})$ | Meet in the middle |
+| $n \le 40$ | $O(2^{n/2})$ | [Meet in the middle](13_combinatorial_search.md#meet-in-the-middle) |
 | $n \le 500$ | $O(n^3)$ | Floyd–Warshall, interval DP |
 | $n \le 5{,}000$ | $O(n^2)$ | 2-D DP, all pairs |
 | $n \le 10^5$–$10^6$ | $O(n \log n)$ or $O(n)$ | Sorting, heaps, binary search, two pointers, hashing |
@@ -513,3 +513,7 @@ Estimation is also a sanity check for your own design. If you have derived an $O
 6. **Reporting $O(n)$ for a two-input problem.** Use $O(m + n)$, $O(V + E)$, $O(m \cdot n)$ — every independent size gets its own variable.
 
 7. **Treating hash operations as always $O(1)$.** They are $O(1)$ *expected*. Also, hashing a key costs time proportional to the key: hashing a string of length $k$ is $O(k)$, and using a `tuple` of length $k$ as a dict key is $O(k)$ per lookup.
+
+
+!!! quote "Source"
+    The Common Patterns chapters are based on Steven S. Skiena, *The Algorithm Design Manual*, 3rd ed. (Springer, 2020). See [References](../index.md#references).

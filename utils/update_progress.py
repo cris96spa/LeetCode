@@ -168,10 +168,7 @@ def _render_docs(
             f'    <div class="lc-progress-bar">'
             f'<div class="lc-progress-fill" style="width:{pct}%"></div></div>',
             "",
-            *(
-                f"    - [{'x' if _normalize(name) in solved_set else ' '}] {name}"
-                for name in problems
-            ),
+            *(f"    - [{'x' if _normalize(name) in solved_set else ' '}] {name}" for name in problems),
             "",
         ]
 

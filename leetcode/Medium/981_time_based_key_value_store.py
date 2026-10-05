@@ -94,9 +94,7 @@ class TimeMap:
         while left <= right:
             mid = (left + right) // 2
             if values[mid][0] <= timestamp:
-                result = values[mid][
-                    1
-                ]  # Update result and move right to search for closer timestamps
+                result = values[mid][1]  # Update result and move right to search for closer timestamps
                 left = mid + 1
             else:
                 right = mid - 1
