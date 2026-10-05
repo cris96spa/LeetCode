@@ -7,11 +7,11 @@ A collection of LeetCode solutions in Python, organised by difficulty, with note
 <!-- DASHBOARD:START -->
 <div class="lc-stats">
 <div class="lc-stat lc-easy"><span class="lc-num">26</span><span class="lc-label">Easy</span></div>
-<div class="lc-stat lc-medium"><span class="lc-num">78</span><span class="lc-label">Medium</span></div>
+<div class="lc-stat lc-medium"><span class="lc-num">79</span><span class="lc-label">Medium</span></div>
 <div class="lc-stat lc-hard"><span class="lc-num">1</span><span class="lc-label">Hard</span></div>
 </div>
 
-## NeetCode 250 &nbsp;·&nbsp; 83 / 250
+## NeetCode 250 &nbsp;·&nbsp; 84 / 250
 
 ??? note "Arrays & Hashing &nbsp;·&nbsp; 5 / 22 (23%)"
     <div class="lc-progress-bar"><div class="lc-progress-fill" style="width:23%"></div></div>
@@ -242,12 +242,12 @@ A collection of LeetCode solutions in Python, organised by difficulty, with note
     - [x] Reconstruct Itinerary
     - [ ] Swim In Rising Water
 
-??? note "Backtracking &nbsp;·&nbsp; 5 / 17 (29%)"
-    <div class="lc-progress-bar"><div class="lc-progress-fill" style="width:29%"></div></div>
+??? note "Backtracking &nbsp;·&nbsp; 6 / 17 (35%)"
+    <div class="lc-progress-bar"><div class="lc-progress-fill" style="width:35%"></div></div>
 
     - [ ] Combination Sum
     - [x] Combination Sum II
-    - [ ] Combinations
+    - [x] Combinations
     - [x] Generate Parentheses
     - [x] Letter Combinations of a Phone Number
     - [ ] Matchsticks to Square
