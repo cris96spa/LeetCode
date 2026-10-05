@@ -640,7 +640,31 @@ def prim_mst_weight(n: int, graph: list[list[tuple[int, int]]]) -> int:
     return total
 ```
 
-$O(E \log E)$: this is the **lazy** variant, which pushes every edge leaving the tree instead of decreasing keys, so the heap can hold $O(E)$ entries. Since $E < V^2$, $\log E < 2 \log V$, so this matches the $O(E \log V)$ of the decrease-key version. For dense graphs — such as **Min Cost to Connect All Points** (LC 1584), where every pair of points is an edge — a simple $O(V^2)$ array-based Prim is faster, since it never materializes the $V^2$ edges.
+$O(E \log E)$: this is the **lazy** variant, which pushes every edge leaving the tree instead of decreasing keys, so the heap can hold $O(E)$ entries. Since $E < V^2$, $\log E < 2 \log V$, so this matches the $O(E \log V)$ of the decrease-key version.
+
+For **dense** graphs — such as **Min Cost to Connect All Points** (LC 1584), where every pair of points is an edge — $E \approx V^2 / 2$, and the heap only adds overhead. Drop it: keep, for every vertex outside the tree, the cheapest edge connecting it to the tree, and find the next vertex with a linear scan.
+
+```python
+from typing import Callable
+
+
+def prim_dense(n: int, cost: Callable[[int, int], int]) -> int:
+    """MST weight of the complete graph on n vertices, with edge weights cost(u, v)."""
+    in_tree = [False] * n
+    cheapest = [float("inf")] * n                    # lightest edge from the tree to each vertex
+    cheapest[0] = 0
+    total = 0
+    for _ in range(n):
+        u = min((v for v in range(n) if not in_tree[v]), key=lambda v: cheapest[v])
+        in_tree[u] = True
+        total += cheapest[u]
+        for v in range(n):                           # u joined the tree: update the other vertices
+            if not in_tree[v]:
+                cheapest[v] = min(cheapest[v], cost(u, v))
+    return total
+```
+
+$V$ rounds of $O(V)$ work: $O(V^2)$ time and $O(V)$ space, with edge weights computed on demand rather than stored. For LC 1584, `cost` is the Manhattan distance between `points[u]` and `points[v]`.
 
 ### Kruskal's algorithm
 
@@ -771,7 +795,54 @@ $O(V^3)$. On sparse graphs, running Dijkstra from every vertex is asymptotically
 
 ## Network Flow and Matching (Briefly)
 
-Think of each edge as a pipe with a **capacity**. The **maximum flow** from $s$ to $t$ is the most material that can be pushed through the network at once, and the **max-flow min-cut theorem** says it equals the total capacity of the cheapest set of edges whose removal separates $s$ from $t$. Flow algorithms (Ford–Fulkerson, or its BFS version Edmonds–Karp, which repeatedly push flow along augmenting paths) solve connectivity problems and, crucially, **bipartite matching**: add a source connected to one side and a sink connected to the other, all capacities 1, and the maximum flow is the largest matching. Flow problems are uncommon in interviews but worth recognizing — "assign workers to jobs," "how many edges must be cut" — because the reduction is often the whole solution.
+**The problem.** You're given a directed graph in which each edge $(u, v)$ is a pipe with a **capacity** $c(u, v)$, plus a **source** $s$ and a **sink** $t$. A **flow** assigns each edge an amount $f(u, v)$ subject to two rules:
+
+- **Capacity:** $0 \le f(u, v) \le c(u, v)$. No pipe carries more than it can hold.
+- **Conservation:** at every vertex except $s$ and $t$, flow in equals flow out. Material is neither created nor stored along the way.
+
+The **value** of the flow is the net amount leaving $s$, which equals the amount arriving at $t$. The **maximum flow** problem asks for the largest possible value: how much can be shipped from $s$ to $t$ per unit of time?
+
+**Why greedy fails.** The natural idea is to find any path from $s$ to $t$ with spare capacity, push as much as it allows, and repeat. Take four unit-capacity edges $s \to a$, $s \to b$, $a \to t$, $b \to t$, plus a unit edge $a \to b$. If the first path found is $s \to a \to b \to t$, it uses up $s \to a$ and $b \to t$, and no other path remains: flow 1. The answer is 2, using $s \to a \to t$ and $s \to b \to t$. The first path routed its flow badly, and greedy can't take that back.
+
+**The fix: allow undoing.** Search for paths in the **residual graph**. It has a forward edge wherever capacity is left, and a **reverse** edge $v \to u$ wherever $(u, v)$ carries flow. Following a reverse edge cancels flow already sent. In the example, the residual graph contains $s \to b \to a \to t$. Pushing one unit along it cancels the flow on $a \to b$ and reroutes both units correctly. Such a path is an **augmenting path**, and repeating "find one, push along it" until none is left is the **Ford–Fulkerson** method. Finding each path with BFS (the shortest one) is **Edmonds–Karp**, which runs in $O(VE^2)$.
+
+```python
+def max_flow(n: int, edges: list[tuple[int, int, int]], source: int, sink: int) -> int:
+    """Edmonds–Karp. edges = [(u, v, capacity), ...], directed."""
+    residual = [defaultdict(int) for _ in range(n)]  # residual[u][v] = capacity left on u → v
+    for u, v, capacity in edges:
+        residual[u][v] += capacity
+        residual[v][u] += 0                          # make sure the reverse edge exists
+    flow = 0
+    while True:
+        parent = [-1] * n                            # BFS for a shortest augmenting path
+        parent[source] = source
+        queue = deque([source])
+        while queue and parent[sink] == -1:
+            current = queue.popleft()
+            for neighbor, left in residual[current].items():
+                if left > 0 and parent[neighbor] == -1:
+                    parent[neighbor] = current
+                    queue.append(neighbor)
+        if parent[sink] == -1:
+            return flow                              # no augmenting path: flow is maximum
+        bottleneck, v = float("inf"), sink           # the smallest capacity left on the path
+        while v != source:
+            bottleneck = min(bottleneck, residual[parent[v]][v])
+            v = parent[v]
+        v = sink                                     # push it: forward edges shrink, reverse edges grow
+        while v != source:
+            residual[parent[v]][v] -= bottleneck
+            residual[v][parent[v]] += bottleneck
+            v = parent[v]
+        flow += bottleneck
+```
+
+The reverse entry `residual[v][u]` starts at 0 and grows by however much flow crosses $u \to v$. That's what lets a later BFS find a path through it and cancel that flow.
+
+**Why the result is optimal: max-flow = min-cut.** A **cut** splits the vertices into a side containing $s$ and a side containing $t$. Its capacity is the total capacity of the edges crossing from the $s$ side to the $t$ side. Every unit of flow has to cross every cut, so **any flow ≤ any cut**. When no augmenting path is left, the vertices still reachable from $s$ in the residual graph form a cut whose edges are all saturated, so the flow equals that cut's capacity. Both are therefore optimal. The same computation answers "what is the cheapest set of edges whose removal disconnects $s$ from $t$?"
+
+**Where it shows up: bipartite matching.** To pair workers with jobs they're qualified for, as many pairs as possible: add a source with an edge to every worker, an edge from each worker to each job they can do, and an edge from every job to a sink, all with capacity 1. Each unit of flow is one worker–job pair, and capacity 1 stops anyone from being used twice. So the maximum flow is the maximum matching, and augmenting paths here become the "try to reassign someone" step of matching algorithms. Flow problems are uncommon in interviews, but they're worth recognizing in "assign X to Y" and "how many edges or vertices must be cut" problems, because spotting the reduction is usually the whole solution.
 
 ---
 
