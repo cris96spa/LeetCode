@@ -22,9 +22,9 @@ The repository is structured as follows:
 <!-- PROGRESS:START -->
 | | 🟢 Easy | 🟡 Medium | 🔴 Hard |
 |:--:|:--:|:--:|:--:|
-| **Solved** | **26** | **82** | **1** |
+| **Solved** | **26** | **83** | **1** |
 
-> **NeetCode 250** &nbsp;·&nbsp; 87 / 250 problems tracked
+> **NeetCode 250** &nbsp;·&nbsp; 88 / 250 problems tracked
 
 | Pattern | Solved | Total | Progress |
 |---------|-------:|------:|:---------|
@@ -41,7 +41,7 @@ The repository is structured as follows:
 | Greedy | 1 | 14 | `█░░░░░░░░░░░` 7% |
 | Graphs | 9 | 21 | `█████░░░░░░░` 43% |
 | Advanced Graphs | 3 | 10 | `████░░░░░░░░` 30% |
-| Backtracking | 9 | 17 | `██████░░░░░░` 53% |
+| Backtracking | 10 | 17 | `███████░░░░░` 59% |
 | 1-D Dynamic Programming | 7 | 17 | `█████░░░░░░░` 41% |
 | 2-D Dynamic Programming | 3 | 16 | `██░░░░░░░░░░` 19% |
 | Bit Manipulation | 3 | 10 | `████░░░░░░░░` 30% |

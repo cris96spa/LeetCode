@@ -266,18 +266,18 @@ def can_partition_k_subsets(nums: list[int], k: int) -> bool:
     if total % k:
         return False
     target = total // k
-    nums = sorted(nums, reverse=True)            # (a) big items first: fail fast
+    nums = sorted(nums, reverse=True) # (a) big items first: fail fast
     if nums[0] > target:
         return False
     buckets = [0] * k
 
     def place(i: int) -> bool:
         if i == len(nums):
-            return True                          # all placed; every bucket must equal target
+            return True               # all placed; every bucket must equal target
         seen: set[int] = set()
         for b in range(k):
             if buckets[b] + nums[i] > target or buckets[b] in seen:
-                continue                         # (b) infeasible, or (c) symmetric to a tried bucket
+                continue              # (b) infeasible, or (c) symmetric to a tried bucket
             seen.add(buckets[b])
             buckets[b] += nums[i]
             if place(i + 1):
