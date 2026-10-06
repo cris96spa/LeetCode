@@ -7,11 +7,11 @@ A collection of LeetCode solutions in Python, organised by difficulty, with note
 <!-- DASHBOARD:START -->
 <div class="lc-stats">
 <div class="lc-stat lc-easy"><span class="lc-num">26</span><span class="lc-label">Easy</span></div>
-<div class="lc-stat lc-medium"><span class="lc-num">81</span><span class="lc-label">Medium</span></div>
+<div class="lc-stat lc-medium"><span class="lc-num">82</span><span class="lc-label">Medium</span></div>
 <div class="lc-stat lc-hard"><span class="lc-num">1</span><span class="lc-label">Hard</span></div>
 </div>
 
-## NeetCode 250 &nbsp;·&nbsp; 86 / 250
+## NeetCode 250 &nbsp;·&nbsp; 87 / 250
 
 ??? note "Arrays & Hashing &nbsp;·&nbsp; 5 / 22 (23%)"
     <div class="lc-progress-bar"><div class="lc-progress-fill" style="width:23%"></div></div>
@@ -242,10 +242,10 @@ A collection of LeetCode solutions in Python, organised by difficulty, with note
     - [x] Reconstruct Itinerary
     - [ ] Swim In Rising Water
 
-??? note "Backtracking &nbsp;·&nbsp; 8 / 17 (47%)"
-    <div class="lc-progress-bar"><div class="lc-progress-fill" style="width:47%"></div></div>
+??? note "Backtracking &nbsp;·&nbsp; 9 / 17 (53%)"
+    <div class="lc-progress-bar"><div class="lc-progress-fill" style="width:53%"></div></div>
 
-    - [ ] Combination Sum
+    - [x] Combination Sum
     - [x] Combination Sum II
     - [x] Combinations
     - [x] Generate Parentheses
