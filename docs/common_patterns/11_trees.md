@@ -214,9 +214,9 @@ def has_path_sum(root: TreeNode | None, target: int) -> bool:
 
 **Bottom-up (post-order):** return information **up** as results — height, subtree size, subtree sum, "is this subtree valid." Each node combines what its children report. `max_depth`, `is_balanced`, and `diameter` above are all bottom-up.
 
-Some problems need both: pass the running state down, and collect results as the recursion unwinds. **Path Sum II** (LC 113) passes the current path down, appends at each node, and **undoes** the append on the way back up — the backtracking pattern (see [Combinatorial Search](13_combinatorial_search.md)).
+Some problems need both: pass the running state down, and collect results as the recursion unwinds. **Path Sum II** (LC 113) passes the current path down, appends at each node, and **undoes** the append on the way back up — the backtracking pattern (see [Combinatorial Search](14_combinatorial_search.md)).
 
-**Path Sum III** (LC 437) counts downward paths (not necessarily from the root) summing to a target. Along any root-to-node path, this is exactly "count subarrays with sum $k$" — so it's solved with the prefix-sum-plus-hash-map idea from [Two Pointers & Sliding Window](03_two_pointers_sliding_window.md#prefix-sums), passing the prefix counts down and removing each prefix as the recursion leaves its node:
+**Path Sum III** (LC 437) counts downward paths (not necessarily from the root) summing to a target. Along any root-to-node path, this is exactly "count subarrays with sum $k$" — so it's solved with the prefix-sum-plus-hash-map idea from [Two Pointers & Sliding Window](04_two_pointers_sliding_window.md#prefix-sums), passing the prefix counts down and removing each prefix as the recursion leaves its node:
 
 ```python
 def path_sum_iii(root: TreeNode | None, target: int) -> int:

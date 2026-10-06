@@ -101,7 +101,7 @@ def rob(nums: list[int]) -> int:
     return take
 ```
 
-That "take it or leave it" split — the item is either in the solution or not — is the most common recurrence pattern in all of DP. **Climbing Stairs** (LC 70) is Fibonacci; **Maximum Subarray** (LC 53) uses "best ending here" (see [Kadane's algorithm](03_two_pointers_sliding_window.md#largest-subrange-three-algorithms-for-one-problem)).
+That "take it or leave it" split — the item is either in the solution or not — is the most common recurrence pattern in all of DP. **Climbing Stairs** (LC 70) is Fibonacci; **Maximum Subarray** (LC 53) uses "best ending here" (see [Kadane's algorithm](04_two_pointers_sliding_window.md#largest-subrange-three-algorithms-for-one-problem)).
 
 ### Word Break (LC 139)
 
@@ -164,7 +164,7 @@ def longest_increasing_subsequence(nums: list[int]) -> list[int]:
     return seq[::-1]
 ```
 
-$O(n^2)$ time. Notice the move we made — the obvious quantity wasn't enough, so we asked for more information about every prefix. It's the same "strengthen the hypothesis" move as in [tree recursion](10_trees.md#strengthening-the-hypothesis), and it's how most DP states are discovered.
+$O(n^2)$ time. Notice the move we made — the obvious quantity wasn't enough, so we asked for more information about every prefix. It's the same "strengthen the hypothesis" move as in [tree recursion](11_trees.md#strengthening-the-hypothesis), and it's how most DP states are discovered.
 
 ### $O(n \log n)$ with patience sorting
 
@@ -294,7 +294,7 @@ def coin_change(coins: list[int], amount: int) -> int:
     return fewest[amount] if fewest[amount] != INF else -1
 ```
 
-Here greedy fails (coins $\{1, 6, 10\}$, amount 12 — see [Greedy](14_greedy.md#when-greedy-fails)) but DP is always right, because it considers every last coin.
+Here greedy fails (coins $\{1, 6, 10\}$, amount 12 — see [Greedy](15_greedy.md#when-greedy-fails)) but DP is always right, because it considers every last coin.
 
 ### Counting: combinations vs. permutations
 
@@ -358,7 +358,7 @@ def linear_partition(s: list[int], k: int) -> int:
     return min(M[n][p] for p in range(1, k + 1))       # "k or fewer" sections
 ```
 
-This is **Split Array Largest Sum** (LC 410). The [binary search on the answer](02_binary_search.md#split-array-largest-sum-lc-410) solution is faster, $O(n \log \sum s)$ — but the DP generalizes to costs where no greedy feasibility check exists.
+This is **Split Array Largest Sum** (LC 410). The [binary search on the answer](03_binary_search.md#split-array-largest-sum-lc-410) solution is faster, $O(n \log \sum s)$ — but the DP generalizes to costs where no greedy feasibility check exists.
 
 ---
 
@@ -408,7 +408,7 @@ Each line of the tuple assignment is a transition: you can hold by keeping your 
 
 ## Beyond Sequences: Trees and Subsets
 
-**On trees**, the natural order is bottom-up: a node's answer combines its children's. **House Robber III** (LC 337) returns a pair per node — the best total with the node robbed, and without it — which is DP with the state stored in the recursion's return value (see [Trees](10_trees.md#strengthening-the-hypothesis)).
+**On trees**, the natural order is bottom-up: a node's answer combines its children's. **House Robber III** (LC 337) returns a pair per node — the best total with the node robbed, and without it — which is DP with the state stored in the recursion's return value (see [Trees](11_trees.md#strengthening-the-hypothesis)).
 
 **On subsets**, when there's no natural order, the state must remember *which* items have been used. Consider finding the shortest route visiting every city exactly once (the traveling salesman problem). A recurrence over "the path so far" is correct but has $n!$ states — it's just backtracking. But the future doesn't depend on the **order** of the cities visited, only on **which** cities were visited and **where you are now**. That gives $2^n \cdot n$ states:
 
@@ -435,7 +435,7 @@ def shortest_tour(dist: list[list[int]]) -> int:
     return min(best[full][v] + dist[v][0] for v in range(n)) if n > 1 else 0
 ```
 
-$O(n^2 2^n)$ — feasible for $n \approx 20$, where $n!$ would be hopeless. Subsets as integers are covered in [Bit Manipulation](04_bit_manipulation.md#bit-vectors-integers-as-sets).
+$O(n^2 2^n)$ — feasible for $n \approx 20$, where $n!$ would be hopeless. Subsets as integers are covered in [Bit Manipulation](05_bit_manipulation.md#bit-vectors-integers-as-sets).
 
 ---
 

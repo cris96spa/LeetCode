@@ -1,6 +1,6 @@
 # Sorting
 
-Sorting is the most thoroughly studied problem in computer science, and for good reason. It is the basic building block of countless algorithms: once data is sorted, searching becomes logarithmic, duplicates become adjacent, and closest pairs become neighbors (see [Two Pointers & Sliding Window](03_two_pointers_sliding_window.md#sorting-as-a-building-block)). A rule of thumb worth adopting: **when stuck on an array problem, ask what would become easy if the input were sorted.**
+Sorting is the most thoroughly studied problem in computer science, and for good reason. It is the basic building block of countless algorithms: once data is sorted, searching becomes logarithmic, duplicates become adjacent, and closest pairs become neighbors (see [Two Pointers & Sliding Window](04_two_pointers_sliding_window.md#sorting-as-a-building-block)). A rule of thumb worth adopting: **when stuck on an array problem, ask what would become easy if the input were sorted.**
 
 Sorting is also the best showcase of algorithm design paradigms. Every major technique produces a good sorting algorithm: incremental insertion gives insertion sort, data structures give heapsort, divide and conquer gives mergesort, randomization gives quicksort, and bucketing gives distribution sort. Studying them together is studying algorithm design in miniature.
 
@@ -96,7 +96,7 @@ def heapsort(a: list[int]) -> list[int]:
     return [heapq.heappop(heap) for _ in range(len(heap))]
 ```
 
-Heapsort is worst-case $O(n \log n)$, can run in place with $O(1)$ extra space, and is not stable. Heaps get a full treatment in [Heaps](09_heaps.md).
+Heapsort is worst-case $O(n \log n)$, can run in place with $O(1)$ extra space, and is not stable. Heaps get a full treatment in [Heaps](10_heaps.md).
 
 !!! tip "Take-Home Lesson"
     Selection sort and heapsort are the *same* algorithm. The difference between $O(n^2)$ and $O(n \log n)$ is entirely the data structure used to find the minimum. Many "new" algorithms are old algorithms with a better data structure plugged in.
@@ -280,7 +280,7 @@ def find_kth_largest(nums: list[int], k: int) -> int:
     return quickselect(nums[:], len(nums) - k)
 ```
 
-With good pivots, the work is $n + n/2 + n/4 + \cdots < 2n$ — a geometric series — so quickselect runs in $O(n)$ expected time. (The worst case is $O(n^2)$; the "median of medians" algorithm guarantees $O(n)$ deterministically, but it's rarely worth the complexity.) For the $k$ largest elements when $k \ll n$, a size-$k$ heap in $O(n \log k)$ is often simpler; see [Heaps](09_heaps.md).
+With good pivots, the work is $n + n/2 + n/4 + \cdots < 2n$ — a geometric series — so quickselect runs in $O(n)$ expected time. (The worst case is $O(n^2)$; the "median of medians" algorithm guarantees $O(n)$ deterministically, but it's rarely worth the complexity.) For the $k$ largest elements when $k \ll n$, a size-$k$ heap in $O(n \log k)$ is often simpler; see [Heaps](10_heaps.md).
 
 ---
 

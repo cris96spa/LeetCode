@@ -1,8 +1,120 @@
 # Algorithm Design Cheat Sheet
 
-A one-page reference for choosing data structures and algorithms. It is organized around the question that should come first in any design: **which operations does my algorithm perform, and how often?** Once you know that, the tables below tell you which structure makes those operations cheap.
+A quick reference for designing a solution, in the order you need it: read the **constraints** to get a complexity budget, match the **problem signals** to a technique, pick the **algorithm**, then choose the **data structures** that make its operations cheap, and finally check the **Python costs** that can silently break the budget.
 
-Each section links to the chapter that explains the material in depth.
+This page collects the lookup tables. Each section links to the chapter that explains the material in depth.
+
+---
+
+## From Constraints to Complexity
+
+Budget roughly $10^7$–$10^8$ simple operations per second in Python. The input size usually tells you the intended complexity:
+
+| $n$ up to | Target complexity | Typical techniques |
+|---|---|---|
+| 10 | $O(n!)$, $O(n \cdot n!)$ | Permutations, brute force |
+| 20 | $O(2^n)$, $O(n \cdot 2^n)$ | Subsets, bitmask DP, backtracking |
+| 40 | $O(2^{n/2})$ | [Meet in the middle](common_patterns/14_combinatorial_search.md#meet-in-the-middle) |
+| 500 | $O(n^3)$ | Floyd–Warshall, interval DP |
+| 5,000 | $O(n^2)$ | 2-D DP, all pairs |
+| $10^5$–$10^6$ | $O(n \log n)$, $O(n)$ | Sorting, heaps, binary search, two pointers, hashing, BFS / DFS |
+| $10^9$ and beyond | $O(\log n)$, $O(\sqrt n)$, $O(1)$ | Binary search on the answer, math |
+
+See: [Complexity Analysis](common_patterns/01_complexity_analysis.md#estimation-from-constraints-to-complexity), [Combinatorics](common_patterns/02_combinatorics.md).
+
+---
+
+## Problem Signals
+
+| If the problem mentions... | Think of |
+|---|---|
+| Sorted input, "find a pair / triplet" | Two pointers, binary search |
+| "Minimum possible maximum", "at least / at most" with large bounds | Binary search on the answer |
+| "Longest / shortest subarray or substring such that..." | Sliding window (monotone condition) or prefix sums |
+| "Subarray sum equals $k$", negative numbers | Prefix sums + hash map |
+| "Next greater / smaller", "span", histogram | Monotonic stack |
+| "$k$ largest / smallest / closest", "median of a stream" | Heap(s) |
+| Overlapping ranges, meetings, "minimum rooms" | Sort by endpoint, sweep line |
+| "All combinations / permutations / subsets", $n \le 20$ | Backtracking |
+| "Number of ways", "minimum cost", "longest ..." with choices | Dynamic programming |
+| "Shortest path", "fewest steps", grid moves | BFS (unweighted) / Dijkstra (weighted) |
+| Prerequisites, ordering with dependencies | Topological sort |
+| "Connected", "same group", merging accounts | Union-find or DFS |
+| Prefixes, dictionary of words, word search | Trie |
+| "Appears once / twice", XOR, subsets as masks | Bit manipulation |
+| "Modulo $10^9 + 7$", "how many ways" with large $n$ | [Combinatorics](common_patterns/02_combinatorics.md#counting-modulo-a-prime) + DP |
+
+---
+
+## Algorithm Quick Reference
+
+### Design paradigms
+
+| Paradigm | Use when | Correctness comes from | Chapter |
+|---|---|---|---|
+| Sorting first | Pairs, duplicates, nearness, intervals | Order makes neighbors meaningful | [Sorting](common_patterns/06_sorting.md) |
+| Two pointers / sliding window | Pairs or subarrays with a monotone condition | An elimination argument | [Two Pointers](common_patterns/04_two_pointers_sliding_window.md) |
+| Divide and conquer | The problem splits into independent halves | Induction; master theorem for cost | [Complexity](common_patterns/01_complexity_analysis.md#recurrences-and-divide-and-conquer) |
+| Greedy | A local choice provably belongs to some optimum | Exchange argument, stays-ahead, or matching a lower bound | [Greedy](common_patterns/15_greedy.md) |
+| Dynamic programming | Optimal / counting problems with overlapping subproblems | A correct recurrence over few states | [Dynamic Programming](common_patterns/16_dynamic_programming.md) |
+| Backtracking | Enumerate or search all configurations; small $n$ | Exhaustive enumeration + pruning | [Combinatorial Search](common_patterns/14_combinatorial_search.md) |
+| Graph modeling | Relationships, states, dependencies | A classical algorithm on a well-designed graph | [Graphs](common_patterns/12_graphs.md#design-graphs-not-algorithms) |
+
+### Sorting and searching
+
+| Task | Algorithm | Time | Notes |
+|---|---|---|---|
+| Sort anything | Timsort (`sorted`, `list.sort`) | $O(n \log n)$ | Stable; $O(n)$ on sorted runs |
+| Sort small integer keys | Counting / radix sort | $O(n + k)$ | Beats the comparison lower bound |
+| Search sorted data | Binary search (`bisect`) | $O(\log n)$ | Also: first / last occurrence, insertion point |
+| Minimize a value with a monotone feasibility test | Binary search on the answer | $O(\text{check} \cdot \log R)$ | Range $R$ of possible answers |
+| $k$-th smallest | Quickselect | $O(n)$ expected | Or a size-$k$ heap, $O(n \log k)$ |
+| Merge $k$ sorted lists | Heap of heads | $O(n \log k)$ | |
+| Count inversions | Mergesort with counting | $O(n \log n)$ | |
+
+### Graphs
+
+| Problem | Algorithm | Time | Requirements |
+|---|---|---|---|
+| Reachability, connected components | BFS / DFS | $O(V + E)$ | — |
+| Shortest path, unweighted | BFS | $O(V + E)$ | — |
+| Shortest path, weights 0 / 1 | 0-1 BFS (deque) | $O(V + E)$ | — |
+| Shortest path, DAG | Relax in topological order | $O(V + E)$ | Acyclic; any weights |
+| Shortest path, non-negative weights | Dijkstra (heap) | $O(E \log V)$ | No negative edges |
+| Shortest path, negative weights / at most $k$ edges | Bellman–Ford | $O(VE)$ / $O(kE)$ | Detects negative cycles |
+| All-pairs shortest paths | Floyd–Warshall | $O(V^3)$ | $V \lesssim 400$ |
+| Minimum spanning tree | Kruskal (union-find) / Prim (heap) | $O(E \log E)$ / $O(E \log V)$ | Connected, undirected |
+| Ordering with dependencies | Topological sort (Kahn / DFS) | $O(V + E)$ | Acyclic |
+| Cycle detection | DFS (3 colors) / union-find | $O(V + E)$ | Directed / undirected |
+| Two-coloring (bipartite?) | BFS / DFS coloring | $O(V + E)$ | — |
+| Strongly connected components | Kosaraju / Tarjan | $O(V + E)$ | Directed |
+| Bridges, articulation points | DFS low-link | $O(V + E)$ | Undirected |
+
+See: [Sorting](common_patterns/06_sorting.md), [Binary Search](common_patterns/03_binary_search.md), [Graphs](common_patterns/12_graphs.md#which-shortest-path-algorithm).
+
+---
+
+## Which Structure Do I Need?
+
+Start from the operations the algorithm performs, and how often; pick the simplest structure that makes all of them fast.
+
+| I need to... | Use | Cost |
+|---|---|---|
+| Look up, insert, delete by exact key | Hash map / set | $O(1)$ expected |
+| Count occurrences | `Counter` | $O(1)$ expected per update |
+| Repeatedly take the smallest (or largest) item, with insertions | Binary heap | $O(\log n)$ |
+| Keep the $k$ best items of a stream | Size-$k$ heap | $O(\log k)$ per item |
+| Insert, delete, **and** ask ordered questions (successor, $k$-th, range) | Balanced BST / `SortedList` | $O(\log n)$ |
+| Answer "what's nearest to $x$?" on fixed data | Sorted array + `bisect` | $O(\log n)$ |
+| Process in LIFO order / match nested structure | Stack | $O(1)$ |
+| Process in FIFO order / explore by distance | Queue (`deque`) | $O(1)$ |
+| Find the next greater / smaller element for all items | Monotonic stack | $O(n)$ total |
+| Max / min of every sliding window | Monotonic deque | $O(n)$ total |
+| Merge groups and ask "same group?" | Union-find | $O(\alpha(n))$ |
+| Query words by prefix | Trie | $O(L)$ |
+| Range sums with updates | Fenwick tree | $O(\log n)$ |
+| Evict the least recently used item | Hash map + doubly linked list (`OrderedDict`) | $O(1)$ |
+| Represent a subset of $\le 64$ items compactly | Bitmask (`int`) | $O(1)$ |
 
 !!! tip "Take-Home Lesson"
     Data structure design is a balancing act. The fastest structure for operations A *and* B is often not the fastest for A alone or B alone. Picking the wrong structure can be disastrous; picking the very best one matters much less, because several good choices usually perform similarly.
@@ -42,7 +154,7 @@ Rows are data structures; columns are operations on $n$ stored items. In each co
 - **Heaps** win at "give me the minimum" and nothing else — which is often all you need.
 - **Balanced BSTs** are never the fastest at any single operation, but they are the only structure with **no bad column**. Use one when you need both updates *and* ordered queries.
 
-See: [Complexity Analysis](common_patterns/01_complexity_analysis.md), [Linked Lists](common_patterns/06_linked_lists.md#contiguous-vs-linked), [Heaps](common_patterns/09_heaps.md#how-should-a-priority-queue-be-built), [Trees](common_patterns/10_trees.md#binary-search-trees).
+See: [Linked Lists](common_patterns/07_linked_lists.md#contiguous-vs-linked), [Heaps](common_patterns/10_heaps.md#how-should-a-priority-queue-be-built), [Trees](common_patterns/11_trees.md#binary-search-trees).
 
 ---
 
@@ -68,7 +180,7 @@ Structures built for a narrower set of operations, and the best cost for each.
 2. $\alpha$ is the inverse Ackermann function: at most 4 for any realistic $n$.
 3. $w$ is the machine word size; Python integers are arbitrary precision, so large unions cost time proportional to the size of the integer.
 
-See: [Stacks & Queues](common_patterns/07_stacks_queues.md), [Heaps](common_patterns/09_heaps.md), [Trie & Union Find](common_patterns/12_trie_union_find.md), [Bit Manipulation](common_patterns/04_bit_manipulation.md#bit-vectors-integers-as-sets).
+See: [Stacks & Queues](common_patterns/08_stacks_queues.md), [Heaps](common_patterns/10_heaps.md), [Trie & Union Find](common_patterns/13_trie_union_find.md), [Bit Manipulation](common_patterns/05_bit_manipulation.md#bit-vectors-integers-as-sets).
 
 ---
 
@@ -90,7 +202,7 @@ Structures for questions about contiguous ranges of an array: sums, minimums, co
 
 **Rule of thumb:** static array → prefix sums (sums) or sparse table (min / max). Updates interleaved with queries → Fenwick tree (sums) or segment tree (anything else). Offline batch of range additions → difference array.
 
-A Fenwick tree is short enough to write from memory. Index $i$ is responsible for the range ending at $i$ whose length is the lowest set bit of $i$ (see [Bit Manipulation](common_patterns/04_bit_manipulation.md#the-lowest-set-bit)):
+A Fenwick tree is short enough to write from memory. Index $i$ is responsible for the range ending at $i$ whose length is the lowest set bit of $i$ (see [Bit Manipulation](common_patterns/05_bit_manipulation.md#the-lowest-set-bit)):
 
 ```python
 class FenwickTree:
@@ -118,136 +230,55 @@ class FenwickTree:
         return self.prefix_sum(hi) - self.prefix_sum(lo)
 ```
 
-See: [Prefix Sums](common_patterns/03_two_pointers_sliding_window.md#prefix-sums), [Intervals: Difference Arrays](common_patterns/08_intervals.md#difference-arrays-sweep-lines-on-integer-grids).
+See: [Prefix Sums](common_patterns/04_two_pointers_sliding_window.md#prefix-sums), [Intervals: Difference Arrays](common_patterns/09_intervals.md#difference-arrays-sweep-lines-on-integer-grids).
 
 ---
 
-## Which Structure Do I Need?
+## Python Cost Model
 
-Start from the operations the algorithm performs; pick the simplest structure that makes all of them fast.
+A built-in call is a subroutine, not a step: many one-liners hide a loop. All figures are for CPython.
 
-| I need to... | Use | Cost |
+### Built-in operations
+
+| Container | Operation | Cost |
 |---|---|---|
-| Look up, insert, delete by exact key | Hash map / set | $O(1)$ expected |
-| Count occurrences | `Counter` | $O(1)$ expected per update |
-| Repeatedly take the smallest (or largest) item, with insertions | Binary heap | $O(\log n)$ |
-| Keep the $k$ best items of a stream | Size-$k$ heap | $O(\log k)$ per item |
-| Insert, delete, **and** ask ordered questions (successor, $k$-th, range) | Balanced BST / `SortedList` | $O(\log n)$ |
-| Answer "what's nearest to $x$?" on fixed data | Sorted array + `bisect` | $O(\log n)$ |
-| Process in LIFO order / match nested structure | Stack | $O(1)$ |
-| Process in FIFO order / explore by distance | Queue (`deque`) | $O(1)$ |
-| Find the next greater / smaller element for all items | Monotonic stack | $O(n)$ total |
-| Max / min of every sliding window | Monotonic deque | $O(n)$ total |
-| Merge groups and ask "same group?" | Union-find | $O(\alpha(n))$ |
-| Query words by prefix | Trie | $O(L)$ |
-| Range sums with updates | Fenwick tree | $O(\log n)$ |
-| Evict the least recently used item | Hash map + doubly linked list (`OrderedDict`) | $O(1)$ |
-| Represent a subset of $\le 64$ items compactly | Bitmask (`int`) | $O(1)$ |
+| `list` | index `a[i]`, assign `a[i] = x`, `len(a)` | $O(1)$ |
+| | `append(x)`, `pop()` | $O(1)$ amortized |
+| | `pop(0)`, `insert(0, x)`, `insert(i, x)`, `del a[i]` | $O(n)$ |
+| | `x in a`, `a.index(x)`, `a.count(x)`, `a.remove(x)` | $O(n)$ |
+| | `min(a)`, `max(a)`, `sum(a)` | $O(n)$ |
+| | slice `a[i:j]`, `a.copy()`, `a + b` | $O(j-i)$, $O(n)$, $O(n + m)$ |
+| | `a.sort()`, `sorted(a)` | $O(n \log n)$ |
+| `dict` / `set` | `d[k]`, `k in d`, `d[k] = v`, `del d[k]`, `s.add(x)` | $O(1)$ average, $O(n)$ worst ¹ |
+| | iteration, copy, `set(a)`, `list(d.keys())` | $O(n)$ |
+| | `s & t`, <code>s &#124; t</code> | $O(\min(n, m))$, $O(n + m)$ |
+| `collections.deque` | `append`, `appendleft`, `pop`, `popleft` | $O(1)$ |
+| | index `q[i]` | $O(n)$ (fast only near the ends) |
+| `heapq` | `heappush`, `heappop` | $O(\log n)$ |
+| | `heapify` | $O(n)$ |
+| | `h[0]` (peek) | $O(1)$ |
+| `str` | index, `len` | $O(1)$ |
+| | `s + t`, slicing, `s.replace`, `s.split` | $O(n)$ |
+| | `"".join(parts)` | $O(\text{total length})$ |
+| `int` | arithmetic on "small" integers | $O(1)$ |
+| | arithmetic on $k$-digit integers | grows with $k$ (arbitrary precision) |
 
----
+1. Plus the cost of hashing the key: $O(k)$ for a string or tuple of length $k$.
 
-## Algorithm Quick Reference
-
-### Sorting and searching
-
-| Task | Algorithm | Time | Notes |
-|---|---|---|---|
-| Sort anything | Timsort (`sorted`, `list.sort`) | $O(n \log n)$ | Stable; $O(n)$ on sorted runs |
-| Sort small integer keys | Counting / radix sort | $O(n + k)$ | Beats the comparison lower bound |
-| Search sorted data | Binary search (`bisect`) | $O(\log n)$ | Also: first / last occurrence, insertion point |
-| Minimize a value with a monotone feasibility test | Binary search on the answer | $O(\text{check} \cdot \log R)$ | Range $R$ of possible answers |
-| $k$-th smallest | Quickselect | $O(n)$ expected | Or a size-$k$ heap, $O(n \log k)$ |
-| Merge $k$ sorted lists | Heap of heads | $O(n \log k)$ | |
-| Count inversions | Mergesort with counting | $O(n \log n)$ | |
-
-### Graphs
-
-| Problem | Algorithm | Time | Requirements |
-|---|---|---|---|
-| Reachability, connected components | BFS / DFS | $O(V + E)$ | — |
-| Shortest path, unweighted | BFS | $O(V + E)$ | — |
-| Shortest path, weights 0 / 1 | 0-1 BFS (deque) | $O(V + E)$ | — |
-| Shortest path, DAG | Relax in topological order | $O(V + E)$ | Acyclic; any weights |
-| Shortest path, non-negative weights | Dijkstra (heap) | $O(E \log V)$ | No negative edges |
-| Shortest path, negative weights / at most $k$ edges | Bellman–Ford | $O(VE)$ / $O(kE)$ | Detects negative cycles |
-| All-pairs shortest paths | Floyd–Warshall | $O(V^3)$ | $V \lesssim 400$ |
-| Minimum spanning tree | Kruskal (union-find) / Prim (heap) | $O(E \log E)$ / $O(E \log V)$ | Connected, undirected |
-| Ordering with dependencies | Topological sort (Kahn / DFS) | $O(V + E)$ | Acyclic |
-| Cycle detection | DFS (3 colors) / union-find | $O(V + E)$ | Directed / undirected |
-| Two-coloring (bipartite?) | BFS / DFS coloring | $O(V + E)$ | — |
-| Strongly connected components | Kosaraju / Tarjan | $O(V + E)$ | Directed |
-| Bridges, articulation points | DFS low-link | $O(V + E)$ | Undirected |
-
-See: [Sorting](common_patterns/05_sorting.md), [Binary Search](common_patterns/02_binary_search.md), [Graphs](common_patterns/11_graphs.md#which-shortest-path-algorithm).
-
-### Design paradigms
-
-| Paradigm | Use when | Correctness comes from | Chapter |
-|---|---|---|---|
-| Sorting first | Pairs, duplicates, nearness, intervals | Order makes neighbors meaningful | [Sorting](common_patterns/05_sorting.md) |
-| Two pointers / sliding window | Pairs or subarrays with a monotone condition | An elimination argument | [Two Pointers](common_patterns/03_two_pointers_sliding_window.md) |
-| Divide and conquer | The problem splits into independent halves | Induction; master theorem for cost | [Complexity](common_patterns/01_complexity_analysis.md#recurrences-and-divide-and-conquer) |
-| Greedy | A local choice provably belongs to some optimum | Exchange argument, stays-ahead, or matching a lower bound | [Greedy](common_patterns/14_greedy.md) |
-| Dynamic programming | Optimal / counting problems with overlapping subproblems | A correct recurrence over few states | [Dynamic Programming](common_patterns/15_dynamic_programming.md) |
-| Backtracking | Enumerate or search all configurations; small $n$ | Exhaustive enumeration + pruning | [Combinatorial Search](common_patterns/13_combinatorial_search.md) |
-| Graph modeling | Relationships, states, dependencies | A classical algorithm on a well-designed graph | [Graphs](common_patterns/11_graphs.md#design-graphs-not-algorithms) |
-
----
-
-## From Constraints to Complexity
-
-Budget roughly $10^7$–$10^8$ simple operations per second in Python. The input size usually tells you the intended complexity:
-
-| $n$ up to | Target complexity | Typical techniques |
-|---|---|---|
-| 10 | $O(n!)$ | Permutations, brute force |
-| 20 | $O(2^n)$, $O(n \cdot 2^n)$ | Subsets, bitmask DP, backtracking |
-| 40 | $O(2^{n/2})$ | Meet in the middle |
-| 500 | $O(n^3)$ | Floyd–Warshall, interval DP |
-| 5,000 | $O(n^2)$ | 2-D DP, all pairs |
-| $10^5$–$10^6$ | $O(n \log n)$, $O(n)$ | Sorting, heaps, binary search, two pointers, hashing, BFS / DFS |
-| $10^9$ and beyond | $O(\log n)$, $O(\sqrt n)$, $O(1)$ | Binary search on the answer, math |
-
-See: [Complexity Analysis](common_patterns/01_complexity_analysis.md#estimation-from-constraints-to-complexity).
-
----
-
-## Problem Signals
-
-| If the problem mentions... | Think of |
-|---|---|
-| Sorted input, "find a pair / triplet" | Two pointers, binary search |
-| "Minimum possible maximum", "at least / at most" with large bounds | Binary search on the answer |
-| "Longest / shortest subarray or substring such that..." | Sliding window (monotone condition) or prefix sums |
-| "Subarray sum equals $k$", negative numbers | Prefix sums + hash map |
-| "Next greater / smaller", "span", histogram | Monotonic stack |
-| "$k$ largest / smallest / closest", "median of a stream" | Heap(s) |
-| Overlapping ranges, meetings, "minimum rooms" | Sort by endpoint, sweep line |
-| "All combinations / permutations / subsets", $n \le 20$ | Backtracking |
-| "Number of ways", "minimum cost", "longest ..." with choices | Dynamic programming |
-| "Shortest path", "fewest steps", grid moves | BFS (unweighted) / Dijkstra (weighted) |
-| Prerequisites, ordering with dependencies | Topological sort |
-| "Connected", "same group", merging accounts | Union-find or DFS |
-| Prefixes, dictionary of words, word search | Trie |
-| "Appears once / twice", XOR, subsets as masks | Bit manipulation |
-| "Modulo $10^9 + 7$", "how many ways" with large $n$ | Combinatorics + DP |
-
----
-
-## Python Performance Traps
+### Performance traps
 
 | Looks cheap | Actually costs | Use instead |
 |---|---|---|
 | `list.pop(0)`, `list.insert(0, x)` | $O(n)$ | `deque.popleft()`, `deque.appendleft(x)` |
 | `x in some_list` | $O(n)$ | `x in some_set` |
 | `s += piece` in a loop | $O(n^2)$ total | `"".join(pieces)` |
-| `arr[1:]` in recursion | $O(n)$ per call | Pass indices |
+| `arr[1:]` in recursion | $O(n)$ per call, $O(n^2)$ total | Pass indices |
 | `sorted()` inside a loop | $O(n \log n)$ per iteration | Sort once, or use a heap / `SortedList` |
 | `min(arr)` / `max(arr)` in a loop | $O(n)$ per iteration | Heap, monotonic deque, or running value |
 | Deep recursion (> ~1000 levels) | `RecursionError` | Explicit stack, or `sys.setrecursionlimit` |
 | `heapq` with non-comparable items on ties | `TypeError` | `(priority, counter, item)` tuples |
 
-See: [The Python Cost Model](common_patterns/01_complexity_analysis.md#the-python-cost-model).
+See: [Complexity Analysis: the RAM model](common_patterns/01_complexity_analysis.md#the-ram-model-of-computation).
 
 
 

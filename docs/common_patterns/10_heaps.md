@@ -132,7 +132,7 @@ The $h$ in the numerator is crushed by the $2^h$ in the denominator, and the sum
 
 ### Heapsort
 
-Build a heap, then delete-min $n$ times. This is just **selection sort with a better data structure**: selection sort repeatedly finds the minimum by scanning in $O(n)$; heapsort finds it in $O(\log n)$. Worst-case $O(n \log n)$, and it can run in place. See [Sorting](05_sorting.md#heapsort-selection-sort-with-the-right-data-structure).
+Build a heap, then delete-min $n$ times. This is just **selection sort with a better data structure**: selection sort repeatedly finds the minimum by scanning in $O(n)$; heapsort finds it in $O(\log n)$. Worst-case $O(n \log n)$, and it can run in place. See [Sorting](06_sorting.md#heapsort-selection-sort-with-the-right-data-structure).
 
 ---
 
@@ -215,7 +215,7 @@ It may seem backward that "$k$ largest" uses a **min**-heap. The heap exists to 
 | Sort | $O(n \log n)$ | $O(n)$ | Simplest |
 | Size-$k$ min-heap | $O(n \log k)$ | $O(k)$ | Streams; best when $k \ll n$ |
 | Heapify all, pop $k$ times | $O(n + k \log n)$ | $O(n)$ | |
-| Quickselect | $O(n)$ expected | $O(1)$ | Fastest; see [Sorting](05_sorting.md#selection-the-k-th-smallest-element) |
+| Quickselect | $O(n)$ expected | $O(1)$ | Fastest; see [Sorting](06_sorting.md#selection-the-k-th-smallest-element) |
 
 The same pattern handles K Closest Points (LC 973; a max-heap of size $k$ on distance, via negation), Top K Frequent Elements (LC 347; heap over `Counter` items), and Kth Largest Element in a Stream (LC 703).
 
@@ -329,7 +329,7 @@ def reorganize_string(s: str) -> str:
     return "".join(result) if len(result) == len(s) else ""
 ```
 
-Other greedy-with-heap problems: Task Scheduler (LC 621), Meeting Rooms II (a heap of end times — see [Intervals](08_intervals.md#partitioning-how-many-rooms-lc-253)), Minimum Cost to Connect Sticks (LC 1167, which is Huffman coding), and, most importantly, **Dijkstra's shortest paths** and **Prim's minimum spanning tree** (see [Graphs](11_graphs.md)).
+Other greedy-with-heap problems: Task Scheduler (LC 621), Meeting Rooms II (a heap of end times — see [Intervals](09_intervals.md#partitioning-how-many-rooms-lc-253)), Minimum Cost to Connect Sticks (LC 1167, which is Huffman coding), and, most importantly, **Dijkstra's shortest paths** and **Prim's minimum spanning tree** (see [Graphs](12_graphs.md)).
 
 ---
 

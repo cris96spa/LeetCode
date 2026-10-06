@@ -99,19 +99,19 @@ nav:
   - "Cheat Sheet": LeetCodeCheatSheet.md
   - "Common Patterns":
       - "Complexity Analysis": common_patterns/01_complexity_analysis.md
-      - "Binary Search": common_patterns/02_binary_search.md
-      - "Two Pointers & Sliding Window": common_patterns/03_two_pointers_sliding_window.md
-      - "Bit Manipulation": common_patterns/04_bit_manipulation.md
-      - "Sorting": common_patterns/05_sorting.md
-      - "Linked Lists": common_patterns/06_linked_lists.md
-      - "Stacks & Queues": common_patterns/07_stacks_queues.md
-      - "Intervals": common_patterns/08_intervals.md
-      - "Heaps": common_patterns/09_heaps.md
-      - "Trees": common_patterns/10_trees.md
-      - "Graphs": common_patterns/11_graphs.md
-      - "Trie & Union Find": common_patterns/12_trie_union_find.md
-      - "Combinatorial Search": common_patterns/13_combinatorial_search.md
-      - "Greedy": common_patterns/14_greedy.md
-      - "Dynamic Programming": common_patterns/15_dynamic_programming.md
-      - "Combinatorics": common_patterns/16_combinatorial_cheat_sheet.md
+      - "Combinatorics": common_patterns/02_combinatorics.md
+      - "Binary Search": common_patterns/03_binary_search.md
+      - "Two Pointers & Sliding Window": common_patterns/04_two_pointers_sliding_window.md
+      - "Bit Manipulation": common_patterns/05_bit_manipulation.md
+      - "Sorting": common_patterns/06_sorting.md
+      - "Linked Lists": common_patterns/07_linked_lists.md
+      - "Stacks & Queues": common_patterns/08_stacks_queues.md
+      - "Intervals": common_patterns/09_intervals.md
+      - "Heaps": common_patterns/10_heaps.md
+      - "Trees": common_patterns/11_trees.md
+      - "Graphs": common_patterns/12_graphs.md
+      - "Trie & Union Find": common_patterns/13_trie_union_find.md
+      - "Combinatorial Search": common_patterns/14_combinatorial_search.md
+      - "Greedy": common_patterns/15_greedy.md
+      - "Dynamic Programming": common_patterns/16_dynamic_programming.md
   - "Solutions": api/

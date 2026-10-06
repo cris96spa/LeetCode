@@ -181,7 +181,7 @@ def max_non_overlapping(intervals: list[list[int]]) -> int:
 
 **Time:** $O(n \log n)$.
 
-This exchange argument is *the* template for proving greedy algorithms correct: show that the greedy choice can be swapped into any optimal solution without making it worse. See [Greedy](14_greedy.md) for more.
+This exchange argument is *the* template for proving greedy algorithms correct: show that the greedy choice can be swapped into any optimal solution without making it worse. See [Greedy](15_greedy.md) for more.
 
 ### Problems that are secretly interval scheduling
 
@@ -294,7 +294,7 @@ def job_scheduling(start: list[int], end: list[int], profit: list[int]) -> int:
     return best[-1]
 ```
 
-**Time:** $O(n \log n)$. The pattern — sort, then DP where each item looks back to its last compatible predecessor — recurs throughout scheduling problems. See [Dynamic Programming](15_dynamic_programming.md).
+**Time:** $O(n \log n)$. The pattern — sort, then DP where each item looks back to its last compatible predecessor — recurs throughout scheduling problems. See [Dynamic Programming](16_dynamic_programming.md).
 
 !!! note "Narrowing the problem"
     Scheduling is extremely sensitive to the exact problem statement. Unweighted intervals: greedy, $O(n \log n)$. Weighted intervals: DP, $O(n \log n)$. But allow each job to occupy *several* disjoint intervals (a film that shoots in March and again in June), and the problem becomes NP-complete — no efficient algorithm is known at all. When a problem seems hard, check whether the instances you actually need to handle belong to a simpler special case. Restricting the input until an efficient algorithm exists is a legitimate and powerful design technique.

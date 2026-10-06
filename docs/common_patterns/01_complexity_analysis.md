@@ -17,19 +17,9 @@ To compare algorithms without running them, we need an abstract machine to count
 Under this model, the running time of an algorithm on an instance is the number of steps it executes. The model is *wrong* in almost every detail — multiplication costs more than addition, cache misses cost a hundred times more than cache hits — and yet it is extraordinarily useful, for the same reason a flat-Earth model is useful for planning a walk to the grocery store: the errors are irrelevant at the scale of the question being asked.
 
 !!! warning "Python breaks the RAM model in sneaky places"
-    The single most common source of complexity bugs in Python is a line that *looks* like one step but is secretly a loop:
+    The single most common source of complexity bugs in Python is a line that *looks* like one step but is secretly a loop. `x in my_list` scans the list, `my_list.pop(0)` shifts every element, `arr[i:j]` copies the slice, `s + t` builds a new string, and `min(arr)` reads everything.
 
-    | Looks like one step | Actually costs | Why |
-    |---|---|---|
-    | `x in my_list` | $O(n)$ | linear scan |
-    | `my_list.pop(0)`, `my_list.insert(0, x)` | $O(n)$ | shifts every element |
-    | `arr[i:j]` | $O(j - i)$ | copies the slice |
-    | `s + t` for strings | $O(\lvert s\rvert + \lvert t\rvert)$ | strings are immutable; a new one is built |
-    | `min(arr)`, `max(arr)`, `sum(arr)` | $O(n)$ | scans everything |
-    | `sorted(arr)` | $O(n \log n)$ | a full sort |
-    | `list(d.keys())`, `set(arr)` | $O(n)$ | builds a new container |
-
-    Apply the RAM model faithfully: **a built-in call is a subroutine, not a step.**
+    Apply the RAM model faithfully: **a built-in call is a subroutine, not a step.** The [Python cost model](../LeetCodeCheatSheet.md#python-cost-model) in the cheat sheet lists the cost of each common built-in and the usual fixes.
 
 !!! tip "Take-Home Lesson"
     Algorithms can be understood and compared in a language- and machine-independent way. The RAM model gives us a common currency — the number of simple steps — for that comparison.
@@ -124,7 +114,7 @@ $$
 n! \gg c^n \gg n^3 \gg n^2 \gg n^{1+\epsilon} \gg n \log n \gg n \gg \sqrt{n} \gg \log^2 n \gg \log n \gg \log\log n \gg \alpha(n) \gg 1
 $$
 
-where $\alpha(n)$ is the inverse Ackermann function — the "practically constant" factor in Union-Find (see [Trie & Union Find](12_trie_union_find.md)).
+where $\alpha(n)$ is the inverse Ackermann function — the "practically constant" factor in Union-Find (see [Trie & Union Find](13_trie_union_find.md)).
 
 | Class | Typical source |
 |---|---|
@@ -136,6 +126,8 @@ where $\alpha(n)$ is the inverse Ackermann function — the "practically constan
 | $n^3$ | Looking at all **triples**: Floyd–Warshall, interval DP, naive matrix multiplication |
 | $2^n$ | Enumerating all **subsets** |
 | $n!$ | Enumerating all **orderings** (permutations) |
+
+Counting these objects exactly — subsets of size $k$, orderings with repeats, trees, partitions — is the subject of [Combinatorics](02_combinatorics.md).
 
 !!! tip "Take-Home Lesson"
     A small set of growth classes suffices for almost every algorithm. Learn to recognize them by their *structure* — pairs, triples, subsets, orderings, halving — and you can estimate complexity before writing a line of code.
@@ -441,47 +433,15 @@ Each active recursive call holds a stack frame. Recursion depth $d$ costs $O(d)$
 
 ---
 
-## The Python Cost Model
-
-Knowing the cost of built-in operations is as important as knowing the algorithm. All figures are for CPython.
-
-| Container | Operation | Cost |
-|---|---|---|
-| `list` | index `a[i]`, assign `a[i] = x`, `len(a)` | $O(1)$ |
-| | `append(x)`, `pop()` | $O(1)$ amortized |
-| | `pop(0)`, `insert(0, x)`, `insert(i, x)`, `del a[i]` | $O(n)$ |
-| | `x in a`, `a.index(x)`, `a.count(x)`, `a.remove(x)` | $O(n)$ |
-| | slice `a[i:j]`, `a.copy()`, `a + b` | $O(j-i)$, $O(n)$, $O(n + m)$ |
-| | `a.sort()`, `sorted(a)` | $O(n \log n)$ |
-| `dict` / `set` | `d[k]`, `k in d`, `d[k] = v`, `del d[k]`, `s.add(x)` | $O(1)$ average, $O(n)$ worst |
-| | iteration, copy | $O(n)$ |
-| | `s & t`, `s | t` | $O(\min(n, m))$, $O(n + m)$ |
-| `collections.deque` | `append`, `appendleft`, `pop`, `popleft` | $O(1)$ |
-| | index `q[i]` | $O(n)$ (fast only near the ends) |
-| `heapq` | `heappush`, `heappop` | $O(\log n)$ |
-| | `heapify` | $O(n)$ |
-| | `h[0]` (peek) | $O(1)$ |
-| `str` | index, `len` | $O(1)$ |
-| | `s + t`, slicing, `s.replace`, `s.split` | $O(n)$ |
-| | `"".join(parts)` | $O(\text{total length})$ |
-| `int` | arithmetic on "small" integers | $O(1)$ |
-| | arithmetic on $k$-digit integers | grows with $k$ (arbitrary precision) |
-
----
-
 ## Estimation: From Constraints to Complexity
 
-On LeetCode, the constraints *tell you* the intended complexity. Budget roughly $10^7$–$10^8$ simple operations for Python in a one- or two-second time limit, and read the table backwards:
+On LeetCode, the constraints *tell you* the intended complexity. Budget roughly $10^7$–$10^8$ simple operations for Python in a one- or two-second time limit, then read the [growth-rate table](#growth-rates-and-dominance) backwards: find the fastest-growing class that still fits the budget at the given $n$.
 
-| Constraint | Largest feasible complexity | Typical techniques |
-|---|---|---|
-| $n \le 10$ | $O(n!)$, $O(n \cdot n!)$ | Permutations, brute force |
-| $n \le 20$ | $O(2^n)$, $O(n \cdot 2^n)$ | Subsets, bitmask DP, backtracking |
-| $n \le 40$ | $O(2^{n/2})$ | [Meet in the middle](13_combinatorial_search.md#meet-in-the-middle) |
-| $n \le 500$ | $O(n^3)$ | Floyd–Warshall, interval DP |
-| $n \le 5{,}000$ | $O(n^2)$ | 2-D DP, all pairs |
-| $n \le 10^5$–$10^6$ | $O(n \log n)$ or $O(n)$ | Sorting, heaps, binary search, two pointers, hashing |
-| $n \le 10^9$ or more | $O(\log n)$, $O(\sqrt{n})$, $O(1)$ | Binary search on the answer, math |
+- $n \le 20$ admits $2^n \approx 10^6$, so exponential search over subsets is intended.
+- $n \le 5{,}000$ admits $n^2 = 2.5 \times 10^7$, but not $n^3$.
+- $n = 10^5$ rules out $n^2 = 10^{10}$ and leaves $n \log n \approx 1.7 \times 10^6$.
+
+The full lookup, with the techniques that typically hit each bound, is the [constraints table](../LeetCodeCheatSheet.md#from-constraints-to-complexity) in the cheat sheet.
 
 Estimation is also a sanity check for your own design. If you have derived an $O(n^2)$ algorithm and $n = 10^5$, stop: you need a better idea, not a better implementation.
 
@@ -502,17 +462,15 @@ Estimation is also a sanity check for your own design. If you have derived an $O
        i *= 2      # O(log n): multiplicative steps
    ```
 
-2. **Hidden linear work inside a loop.** `pop(0)`, `x in list`, slicing, and string concatenation inside a loop turn $O(n)$ into $O(n^2)$. Use `deque`, `set`, index arithmetic, and `"".join`, respectively.
+2. **Hidden linear work inside a loop.** `pop(0)`, `x in list`, slicing (including `solve(arr[1:])` in recursion), and string concatenation inside a loop turn $O(n)$ into $O(n^2)$. See the [performance traps](../LeetCodeCheatSheet.md#performance-traps) for the fixes.
 
-3. **Slicing in recursion.** `solve(arr[1:])` copies the array at every level: $O(n)$ extra per call, $O(n^2)$ total for $n$ levels. Pass indices instead.
+3. **Forgetting the call stack.** A recursive solution with no explicit data structures still uses $O(\text{depth})$ space.
 
-4. **Forgetting the call stack.** A recursive solution with no explicit data structures still uses $O(\text{depth})$ space.
+4. **Assuming nested loops mean $O(n^2)$.** The inner loop may share a budget with the outer one (amortized $O(n)$) or shrink geometrically (harmonic, $O(n \log n)$). Count what actually happens.
 
-5. **Assuming nested loops mean $O(n^2)$.** The inner loop may share a budget with the outer one (amortized $O(n)$) or shrink geometrically (harmonic, $O(n \log n)$). Count what actually happens.
+5. **Reporting $O(n)$ for a two-input problem.** Use $O(m + n)$, $O(V + E)$, $O(m \cdot n)$ — every independent size gets its own variable.
 
-6. **Reporting $O(n)$ for a two-input problem.** Use $O(m + n)$, $O(V + E)$, $O(m \cdot n)$ — every independent size gets its own variable.
-
-7. **Treating hash operations as always $O(1)$.** They are $O(1)$ *expected*. Also, hashing a key costs time proportional to the key: hashing a string of length $k$ is $O(k)$, and using a `tuple` of length $k$ as a dict key is $O(k)$ per lookup.
+6. **Treating hash operations as always $O(1)$.** They are $O(1)$ *expected*. Also, hashing a key costs time proportional to the key: hashing a string of length $k$ is $O(k)$, and using a `tuple` of length $k$ as a dict key is $O(k)$ per lookup.
 
 
 !!! quote "Source"

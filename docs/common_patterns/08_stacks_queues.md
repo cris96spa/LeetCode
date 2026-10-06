@@ -5,7 +5,7 @@ A **container** is a data structure that stores items and hands them back **with
 - A **stack** returns the most recently inserted item: **last in, first out** (LIFO).
 - A **queue** returns the least recently inserted item: **first in, first out** (FIFO).
 
-That one decision — which item comes out next — turns out to shape entire families of algorithms. Stacks are the natural companion of recursion, nesting, and "the most recent unresolved thing." Queues are the natural companion of fairness, simulation, and exploring things in the order they were discovered. And when neither order is what you need, you want a priority queue, which retrieves by content after all (see [Heaps](09_heaps.md)).
+That one decision — which item comes out next — turns out to shape entire families of algorithms. Stacks are the natural companion of recursion, nesting, and "the most recent unresolved thing." Queues are the natural companion of fairness, simulation, and exploring things in the order they were discovered. And when neither order is what you need, you want a priority queue, which retrieves by content after all (see [Heaps](10_heaps.md)).
 
 ---
 
@@ -311,9 +311,9 @@ The same pattern solves Remove Duplicate Letters (LC 316) and building the lexic
 
 ## Queues in Algorithms
 
-The queue's starring role is **breadth-first search**: vertices are explored in the order they're discovered, which guarantees that each is first reached by a shortest path. That story belongs to [Graphs](11_graphs.md) and [Trees](10_trees.md#level-order-traversal-bfs).
+The queue's starring role is **breadth-first search**: vertices are explored in the order they're discovered, which guarantees that each is first reached by a shortest path. That story belongs to [Graphs](12_graphs.md) and [Trees](11_trees.md#level-order-traversal-bfs).
 
-The **monotonic deque** is the queue-flavored sibling of the monotonic stack: it keeps candidates in decreasing order, evicts dominated ones from the back, and evicts expired ones from the front. It gives $O(n)$ sliding window maximum (LC 239) — see [Two Pointers & Sliding Window](03_two_pointers_sliding_window.md#sliding-window-maximum-lc-239).
+The **monotonic deque** is the queue-flavored sibling of the monotonic stack: it keeps candidates in decreasing order, evicts dominated ones from the back, and evicts expired ones from the front. It gives $O(n)$ sliding window maximum (LC 239) — see [Two Pointers & Sliding Window](04_two_pointers_sliding_window.md#sliding-window-maximum-lc-239).
 
 ---
 

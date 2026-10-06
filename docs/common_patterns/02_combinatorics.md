@@ -37,7 +37,7 @@ Almost every counting argument is built from a few rules.
 | **Bijection** | If two sets can be matched one-to-one, they have the same size | Subsets of $n$ items ↔ $n$-bit strings: $2^n$ |
 | **Inclusion–exclusion** | $\lvert A \cup B\rvert = \lvert A\rvert + \lvert B\rvert - \lvert A \cap B\rvert$ | Numbers $\le 100$ divisible by 2 or 3: $50 + 33 - 16 = 67$ |
 
-The **bijection** rule deserves special mention: much of combinatorial cleverness is finding a way to see an unfamiliar set as a familiar one in disguise. Stars and bars, below, is a bijection. So is the observation that subsets are binary strings (see [Bit Manipulation](04_bit_manipulation.md#generating-subsets)).
+The **bijection** rule deserves special mention: much of combinatorial cleverness is finding a way to see an unfamiliar set as a familiar one in disguise. Stars and bars, below, is a bijection. So is the observation that subsets are binary strings (see [Bit Manipulation](05_bit_manipulation.md#generating-subsets)).
 
 ---
 
@@ -77,7 +77,7 @@ $\binom{n}{k}$ is the most important family of counting numbers. Computing it fr
 
 $$\binom{n}{k} = \binom{n-1}{k-1} + \binom{n-1}{k}, \qquad \binom{n}{0} = \binom{n}{n} = 1$$
 
-**Why it's true** (a combinatorial proof, which is often clearer than algebra): fix one particular item. Every $k$-subset either **contains** it — then the other $k - 1$ items come from the remaining $n - 1$ — or it **doesn't** — then all $k$ come from the remaining $n - 1$. The cases don't overlap and cover everything, so add them. This is exactly the take-or-skip recurrence of [dynamic programming](15_dynamic_programming.md), and Pascal's triangle is its table.
+**Why it's true** (a combinatorial proof, which is often clearer than algebra): fix one particular item. Every $k$-subset either **contains** it — then the other $k - 1$ items come from the remaining $n - 1$ — or it **doesn't** — then all $k$ come from the remaining $n - 1$. The cases don't overlap and cover everything, so add them. This is exactly the take-or-skip recurrence of [dynamic programming](16_dynamic_programming.md), and Pascal's triangle is its table.
 
 ```python
 def pascal(n: int) -> list[list[int]]:
@@ -266,8 +266,8 @@ Why uniform? Position 0 receives each element with probability $1/n$; given that
 
 It sounds too obvious to be useful, but it proves existence without construction:
 
-- **Find the Duplicate Number** (LC 287): $n + 1$ values from $\{1, \ldots, n\}$ must include a repeat. Treating the array as a function $i \mapsto \text{nums}[i]$, that repeat is the entrance to a cycle, found by [Floyd's algorithm](06_linked_lists.md#cycle-detection-floyds-tortoise-and-hare).
-- **Maximum Gap** (LC 164): with $n$ numbers spanning a range $R$, some gap is at least $R/(n - 1)$, so the answer never lies inside a bucket of that width (see [Sorting](05_sorting.md#bucketing-in-interviews)).
+- **Find the Duplicate Number** (LC 287): $n + 1$ values from $\{1, \ldots, n\}$ must include a repeat. Treating the array as a function $i \mapsto \text{nums}[i]$, that repeat is the entrance to a cycle, found by [Floyd's algorithm](07_linked_lists.md#cycle-detection-floyds-tortoise-and-hare).
+- **Maximum Gap** (LC 164): with $n$ numbers spanning a range $R$, some gap is at least $R/(n - 1)$, so the answer never lies inside a bucket of that width (see [Sorting](06_sorting.md#bucketing-in-interviews)).
 - **Hashing:** with more keys than buckets, collisions are guaranteed; the question is only how many.
 - **Prefix sums mod $k$:** among any $k + 1$ prefix sums, two agree modulo $k$, so some non-empty subarray has a sum divisible by $k$.
 
@@ -332,7 +332,7 @@ class WeightedPicker:
 
 ## From Counts to Code
 
-The counts above are exactly the sizes of the search spaces in [Combinatorial Search](13_combinatorial_search.md), which is why they give the running times of the corresponding algorithms:
+The counts above are exactly the sizes of the search spaces in [Combinatorial Search](14_combinatorial_search.md), which is why they give the running times of the corresponding algorithms:
 
 | Object | Count | Generate with | Time to generate all |
 |---|---|---|---|

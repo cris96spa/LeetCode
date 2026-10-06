@@ -266,7 +266,7 @@ def submasks(mask: int) -> list[int]:
 If you iterate over the submasks of *every* mask of $n$ bits, the total work is not $4^n$ but $3^n$: each element is independently either outside the mask, in the mask but not the submask, or in both. This bound is what makes "DP over subsets of subsets" feasible for $n \le 15$ or so.
 
 !!! tip "Take-Home Lesson"
-    Every subset of $\{0, \dots, n-1\}$ *is* an integer in $[0, 2^n)$. Once you internalize that, enumerating subsets is a `for` loop, a set of visited items is a dictionary key, and "all subsets" dynamic programming (see [Dynamic Programming](15_dynamic_programming.md)) is ordinary DP with integer states.
+    Every subset of $\{0, \dots, n-1\}$ *is* an integer in $[0, 2^n)$. Once you internalize that, enumerating subsets is a `for` loop, a set of visited items is a dictionary key, and "all subsets" dynamic programming (see [Dynamic Programming](16_dynamic_programming.md)) is ordinary DP with integer states.
 
 ---
 
@@ -331,7 +331,7 @@ def range_bitwise_and(m: int, n: int) -> int:
 
 ### Maximum XOR of two numbers (LC 421)
 
-For each number, greedily prefer the opposite bit at each position from the top down. A binary trie over the bits answers "is there a number with this prefix?" in $O(\text{bits})$. See [Trie & Union Find](12_trie_union_find.md).
+For each number, greedily prefer the opposite bit at each position from the top down. A binary trie over the bits answers "is there a number with this prefix?" in $O(\text{bits})$. See [Trie & Union Find](13_trie_union_find.md).
 
 ---
 

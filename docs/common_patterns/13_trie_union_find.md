@@ -318,7 +318,7 @@ def equations_possible(equations: list[str]) -> bool:
 
 #### Kruskal's minimum spanning tree
 
-Sort edges by weight and add each one whose endpoints are in different components — the union-find test is exactly "would this edge close a cycle?" See [Graphs](11_graphs.md#kruskals-algorithm).
+Sort edges by weight and add each one whose endpoints are in different components — the union-find test is exactly "would this edge close a cycle?" See [Graphs](12_graphs.md#kruskals-algorithm).
 
 #### Online connectivity: Number of Islands II (LC 305)
 

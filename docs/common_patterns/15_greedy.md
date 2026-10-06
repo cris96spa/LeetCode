@@ -31,7 +31,7 @@ Before learning to prove greedy algorithms right, it helps to see how easily the
 
 **0/1 knapsack.** Pack items into a bag of capacity $W$ to maximize total value. Greedy by value-per-weight fails with capacity 10 and items (weight 6, value 7), (weight 5, value 5), (weight 5, value 5): greedy takes the densest item first and has room for nothing else (value 7), while the two lighter items give 10. But if items can be **cut** (the *fractional* knapsack), greedy by density is optimal — the troublesome leftover space can always be filled with a fraction of the next item.
 
-**Movie scheduling.** Choosing the largest set of non-overlapping intervals by earliest start or by shortest length both fail, on instances with just two or three intervals (see [Intervals](08_intervals.md#three-plausible-ideas-three-failures)).
+**Movie scheduling.** Choosing the largest set of non-overlapping intervals by earliest start or by shortest length both fail, on instances with just two or three intervals (see [Intervals](09_intervals.md#three-plausible-ideas-three-failures)).
 
 The pattern in all three: greedy fails when an early choice **blocks** better combinations later. A proof of correctness must show that this can't happen.
 
@@ -64,7 +64,7 @@ Show by induction that after each step, greedy's partial solution is **at least 
 
 ### 3. Match a lower bound
 
-Find a simple reason why **no** solution can do better than some value $L$, then show greedy achieves $L$. For meeting rooms, $L$ is the maximum number of meetings overlapping at one instant; greedy room assignment never opens more rooms than that (see [Intervals](08_intervals.md#partitioning-how-many-rooms-lc-253)). This is often the quickest proof when it applies.
+Find a simple reason why **no** solution can do better than some value $L$, then show greedy achieves $L$. For meeting rooms, $L$ is the maximum number of meetings overlapping at one instant; greedy room assignment never opens more rooms than that (see [Intervals](09_intervals.md#partitioning-how-many-rooms-lc-253)). This is often the quickest proof when it applies.
 
 ### ... and always hunt for counterexamples
 
@@ -114,7 +114,7 @@ def connect_sticks(sticks: list[int]) -> int:
 
 ### Graph algorithms
 
-Several of the most important graph algorithms are greedy, each with an exchange-argument proof: **Prim's** and **Kruskal's** minimum spanning tree algorithms (always take the lightest edge that crosses a cut) and **Dijkstra's** shortest paths (always finalize the closest unfinished vertex). See [Graphs](11_graphs.md#minimum-spanning-trees).
+Several of the most important graph algorithms are greedy, each with an exchange-argument proof: **Prim's** and **Kruskal's** minimum spanning tree algorithms (always take the lightest edge that crosses a cut) and **Dijkstra's** shortest paths (always finalize the closest unfinished vertex). See [Graphs](12_graphs.md#minimum-spanning-trees).
 
 ---
 

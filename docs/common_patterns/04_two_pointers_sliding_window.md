@@ -172,7 +172,7 @@ def move_zeroes(nums: list[int]) -> None:
             write += 1
 ```
 
-**Invariant:** `nums[:write]` is exactly the output for `nums[:read]`. Since `write <= read`, we never overwrite an element we haven't read yet. The same pattern is the partition step in quicksort (see [Sorting](05_sorting.md)).
+**Invariant:** `nums[:write]` is exactly the output for `nums[:read]`. Since `write <= read`, we never overwrite an element we haven't read yet. The same pattern is the partition step in quicksort (see [Sorting](06_sorting.md)).
 
 ### Merging two sorted sequences
 
@@ -198,7 +198,7 @@ When merging into an array that has spare room at its end (LC 88), fill it **fro
 
 ### Fast and slow
 
-Pointers moving at different speeds find the middle of a list, detect cycles, and locate cycle entrances. These are covered in [Linked Lists](06_linked_lists.md); the same idea finds the duplicate in LC 287, where the array is interpreted as a linked list `i -> nums[i]`.
+Pointers moving at different speeds find the middle of a list, detect cycles, and locate cycle entrances. These are covered in [Linked Lists](07_linked_lists.md); the same idea finds the duplicate in LC 287, where the array is interpreted as a linked list `i -> nums[i]`.
 
 ---
 
@@ -343,7 +343,7 @@ def max_sliding_window(nums: list[int], k: int) -> list[int]:
     return result
 ```
 
-Each index is appended once and popped at most once: $O(n)$ total. More on monotonic structures in [Stacks & Queues](07_stacks_queues.md).
+Each index is appended once and popped at most once: $O(n)$ total. More on monotonic structures in [Stacks & Queues](08_stacks_queues.md).
 
 ---
 
@@ -376,7 +376,7 @@ def max_subarray(nums: list[int]) -> int:
     return best
 ```
 
-That recurrence is a one-dimensional dynamic program (see [Dynamic Programming](15_dynamic_programming.md)), and a good example of how asking "what is the best answer **ending here**?" turns a quadratic search into a single pass.
+That recurrence is a one-dimensional dynamic program (see [Dynamic Programming](16_dynamic_programming.md)), and a good example of how asking "what is the best answer **ending here**?" turns a quadratic search into a single pass.
 
 ### Prefix sums
 

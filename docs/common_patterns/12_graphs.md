@@ -233,7 +233,7 @@ def dfs_order(graph: list[list[int]], start: int) -> list[int]:
     return order
 ```
 
-DFS is essentially the same procedure as **backtracking** (see [Combinatorial Search](13_combinatorial_search.md)): advance whenever possible, back up only when every option is exhausted.
+DFS is essentially the same procedure as **backtracking** (see [Combinatorial Search](14_combinatorial_search.md)): advance whenever possible, back up only when every option is exhausted.
 
 !!! warning "Recursion depth"
     Recursive DFS on a long path of $10^5$ vertices exceeds Python's recursion limit. For large graphs, either use an explicit stack or `sys.setrecursionlimit` (and be aware that very deep recursion can still crash the interpreter).
@@ -316,7 +316,7 @@ The test skips the parent by **vertex**, which assumes a simple graph. In a mult
 Two shortcuts avoid writing a DFS at all:
 
 - **Counting.** A forest with $V$ vertices and $C$ components has exactly $V - C$ edges, and any additional edge closes a cycle. So a simple undirected graph has a cycle iff $E > V - C$. **Graph Valid Tree** (LC 261) reduces to "$E = V - 1$ and the graph is connected."
-- **Union-find.** When edges arrive one at a time, an edge closes a cycle iff its endpoints are already in the same component. Kruskal's algorithm uses this test to reject edges, and **Redundant Connection** (LC 684) asks for exactly the edge that closes the first cycle. See [Trie & Union Find](12_trie_union_find.md).
+- **Union-find.** When edges arrive one at a time, an edge closes a cycle iff its endpoints are already in the same component. Kruskal's algorithm uses this test to reject edges, and **Redundant Connection** (LC 684) asks for exactly the edge that closes the first cycle. See [Trie & Union Find](13_trie_union_find.md).
 
 **Directed graphs.** The undirected test fails here: in the graph $a \to b$, $a \to c$, $c \to b$, DFS reaches $b$ a second time, but there's no cycle. A directed DFS sorts edges into **four** classes, not two. Each edge `current → neighbor` is classified by the state of `neighbor` at the moment DFS explores the edge:
 
@@ -376,7 +376,7 @@ If you only need a yes or no, drop `path` and return booleans. The same DFS also
 | Undirected, edges arrive one at a time | Union-find | Redundant Connection (LC 684) |
 | Directed, yes/no or a topological order | Three-color DFS, or Kahn's algorithm | Course Schedule (LC 207) |
 | Directed, which vertices can reach a cycle | Three-color DFS | Find Eventual Safe States (LC 802) |
-| Every vertex has out-degree 1 (linked list, functional graph) | [Floyd's tortoise and hare](06_linked_lists.md#cycle-detection-floyds-tortoise-and-hare), $O(1)$ space | Linked List Cycle (LC 141), Find the Duplicate Number (LC 287) |
+| Every vertex has out-degree 1 (linked list, functional graph) | [Floyd's tortoise and hare](07_linked_lists.md#cycle-detection-floyds-tortoise-and-hare), $O(1)$ space | Linked List Cycle (LC 141), Find the Duplicate Number (LC 287) |
 | Is there an *odd* cycle? | [Two-coloring](#two-coloring-is-the-graph-bipartite-lc-785) | Is Graph Bipartite? (LC 785) |
 
 ### Weak points: bridges and articulation vertices
@@ -609,7 +609,7 @@ Pass 1 needs true finish times, so it cannot use the plain stack from flood fill
 
 A **spanning tree** of a connected graph is a subset of $V - 1$ edges connecting all the vertices without a cycle. The **minimum spanning tree** (MST) is the one of least total weight: the cheapest way to connect everything — cities with roads, houses with cable, points with wire.
 
-Two greedy algorithms find it. Greedy algorithms are usually suspect (see [Intervals](08_intervals.md#three-plausible-ideas-three-failures)), so both come with a proof. The key fact behind both:
+Two greedy algorithms find it. Greedy algorithms are usually suspect (see [Intervals](09_intervals.md#three-plausible-ideas-three-failures)), so both come with a proof. The key fact behind both:
 
 > **Cut property.** Split the vertices into two groups. The lightest edge crossing between them belongs to some MST.
 
@@ -668,7 +668,7 @@ $V$ rounds of $O(V)$ work: $O(V^2)$ time and $O(V)$ space, with edge weights com
 
 ### Kruskal's algorithm
 
-Sort all edges by weight. Take each edge in order, **unless it would close a cycle**. Each accepted edge is the lightest one leaving its endpoint's component, so the cut property applies. To check "would this close a cycle?" — are the endpoints already in the same component? — use a **union-find** structure (see [Trie & Union Find](12_trie_union_find.md)), which answers it in nearly constant time.
+Sort all edges by weight. Take each edge in order, **unless it would close a cycle**. Each accepted edge is the lightest one leaving its endpoint's component, so the cut property applies. To check "would this close a cycle?" — are the endpoints already in the same component? — use a **union-find** structure (see [Trie & Union Find](13_trie_union_find.md)), which answers it in nearly constant time.
 
 ```python
 def kruskal_mst_weight(n: int, edges: list[tuple[int, int, int]]) -> int:
@@ -762,7 +762,7 @@ To get the distance between **every** pair of vertices, number the vertices and 
 
 $$D_k[i][j] = \min\big(D_{k-1}[i][j],\ D_{k-1}[i][k] + D_{k-1}[k][j]\big)$$
 
-This is dynamic programming (see [Dynamic Programming](15_dynamic_programming.md)), and the code is three nested loops:
+This is dynamic programming (see [Dynamic Programming](16_dynamic_programming.md)), and the code is three nested loops:
 
 ```python
 def floyd_warshall(n: int, edges: list[tuple[int, int, int]]) -> list[list[float]]:

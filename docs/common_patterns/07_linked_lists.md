@@ -251,11 +251,11 @@ Reversing in groups of $k$ (LC 25) is this same operation applied to successive 
 
 ### Sort a list (LC 148): mergesort
 
-Mergesort is the natural sort for linked lists: splitting uses the middle-finding runners, merging relinks nodes with no extra space, and nothing needs random access. $O(n \log n)$ time. See [Sorting](05_sorting.md#mergesort-divide-and-conquer).
+Mergesort is the natural sort for linked lists: splitting uses the middle-finding runners, merging relinks nodes with no extra space, and nothing needs random access. $O(n \log n)$ time. See [Sorting](06_sorting.md#mergesort-divide-and-conquer).
 
 ### Merge $k$ sorted lists (LC 23)
 
-Merging lists pairwise, one after another, costs $O(nk)$ for $n$ total nodes. Two better approaches, both $O(n \log k)$: keep the $k$ current heads in a **min-heap** and repeatedly pop the smallest (see [Heaps](09_heaps.md)), or merge lists in pairs like the levels of mergesort.
+Merging lists pairwise, one after another, costs $O(nk)$ for $n$ total nodes. Two better approaches, both $O(n \log k)$: keep the $k$ current heads in a **min-heap** and repeatedly pop the smallest (see [Heaps](10_heaps.md)), or merge lists in pairs like the levels of mergesort.
 
 ---
 

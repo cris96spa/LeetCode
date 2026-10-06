@@ -13,7 +13,7 @@ Exhaustive search has a bad reputation, but surprisingly large problems yield to
 
 ## How Big Is Exhaustive?
 
-It's important to have a feel for how big — and how small — the search spaces are. Python can explore on the order of a million simple search states per second:
+It's important to have a feel for how big — and how small — the search spaces are (the counting behind these sizes is in [Combinatorics](02_combinatorics.md)). Python can explore on the order of a million simple search states per second:
 
 | Search space | Size | Feasible up to about |
 |---|---|---|
@@ -76,7 +76,7 @@ def subsets(nums: list[int]) -> list[list[int]]:
     return result
 ```
 
-$O(n \cdot 2^n)$: $2^n$ subsets, each copied in $O(n)$. (Subsets can also be generated without recursion by binary counting; see [Bit Manipulation](04_bit_manipulation.md#generating-subsets).) The combination, duplicate-handling, and Combination Sum generators below are all this same tree with an extra rule.
+$O(n \cdot 2^n)$: $2^n$ subsets, each copied in $O(n)$. (Subsets can also be generated without recursion by binary counting; see [Bit Manipulation](05_bit_manipulation.md#generating-subsets).) The combination, duplicate-handling, and Combination Sum generators below are all this same tree with an extra rule.
 
 ### Permutations (LC 46)
 
@@ -441,7 +441,7 @@ def exist(board: list[list[str]], word: str) -> bool:
     return any(match(r, c, 0) for r in range(rows) for c in range(cols))
 ```
 
-A cheap global prune before searching: if the board doesn't contain enough copies of each letter in the word, return `False` immediately. For many words at once, drive the search with a trie (Word Search II; see [Trie & Union Find](12_trie_union_find.md#word-search-ii-lc-212-walking-a-trie-and-a-grid-together)).
+A cheap global prune before searching: if the board doesn't contain enough copies of each letter in the word, return `False` immediately. For many words at once, drive the search with a trie (Word Search II; see [Trie & Union Find](13_trie_union_find.md#word-search-ii-lc-212-walking-a-trie-and-a-grid-together)).
 
 ### Partitioning a string (LC 131)
 
@@ -568,7 +568,7 @@ When the search space is too large even for pruning, and an exact answer isn't r
 
 ## When Backtracking Should Become DP
 
-If the same sub-search is reached by different paths — for example, "can the rest of the string starting at position $i$ be segmented into words?" in Word Break — backtracking recomputes it every time. When the answer to a sub-search depends only on a small **state** (here, just $i$), cache it. That's memoization, and it turns exponential backtracking into polynomial dynamic programming. The signal: the subproblem's answer doesn't depend on the choices that led to it. See [Dynamic Programming](15_dynamic_programming.md).
+If the same sub-search is reached by different paths — for example, "can the rest of the string starting at position $i$ be segmented into words?" in Word Break — backtracking recomputes it every time. When the answer to a sub-search depends only on a small **state** (here, just $i$), cache it. That's memoization, and it turns exponential backtracking into polynomial dynamic programming. The signal: the subproblem's answer doesn't depend on the choices that led to it. See [Dynamic Programming](16_dynamic_programming.md).
 
 ---
 
