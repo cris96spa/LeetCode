@@ -8,10 +8,10 @@ A collection of LeetCode solutions in Python, organised by difficulty, with note
 <div class="lc-stats">
 <div class="lc-stat lc-easy"><span class="lc-num">26</span><span class="lc-label">Easy</span></div>
 <div class="lc-stat lc-medium"><span class="lc-num">84</span><span class="lc-label">Medium</span></div>
-<div class="lc-stat lc-hard"><span class="lc-num">1</span><span class="lc-label">Hard</span></div>
+<div class="lc-stat lc-hard"><span class="lc-num">2</span><span class="lc-label">Hard</span></div>
 </div>
 
-## NeetCode 250 &nbsp;·&nbsp; 89 / 250
+## NeetCode 250 &nbsp;·&nbsp; 90 / 250
 
 ??? note "Arrays & Hashing &nbsp;·&nbsp; 5 / 22 (23%)"
     <div class="lc-progress-bar"><div class="lc-progress-fill" style="width:23%"></div></div>
@@ -87,8 +87,8 @@ A collection of LeetCode solutions in Python, organised by difficulty, with note
     - [ ] Simplify Path
     - [x] Valid Parentheses
 
-??? note "Binary Search &nbsp;·&nbsp; 8 / 14 (57%)"
-    <div class="lc-progress-bar"><div class="lc-progress-fill" style="width:57%"></div></div>
+??? note "Binary Search &nbsp;·&nbsp; 9 / 14 (64%)"
+    <div class="lc-progress-bar"><div class="lc-progress-fill" style="width:64%"></div></div>
 
     - [ ] Binary Search
     - [x] Capacity to Ship Packages Within D Days
@@ -101,7 +101,7 @@ A collection of LeetCode solutions in Python, organised by difficulty, with note
     - [x] Search In Rotated Sorted Array
     - [x] Search In Rotated Sorted Array II
     - [ ] Search Insert Position
-    - [ ] Split Array Largest Sum
+    - [x] Split Array Largest Sum
     - [ ] Sqrt(x)
     - [x] Time Based Key Value Store
 
