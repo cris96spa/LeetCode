@@ -185,8 +185,18 @@ def search_rotated(nums: list[int], target: int) -> int:
     return -1
 ```
 
-!!! warning "Duplicates break the invariant"
-    With duplicates (LC 81), `nums[lo] == nums[mid] == nums[hi]` gives no information about which half is sorted. The only safe move is to shrink both ends by one, and the worst case degrades to $O(n)$ — try `[1, 1, 1, 1, 0, 1, 1]`. This is inherent, not a flaw in the code: no algorithm can do better.
+!!! warning "With duplicates (LC 81), this code returns wrong answers"
+    The test `nums[lo] <= nums[mid]` is how the code decides which half is sorted. With duplicates it can pick the wrong half. Search for `0` in `[1, 0, 1, 1, 1]`: `nums[lo] = nums[mid] = 1`, so the code assumes the left half `[1, 0, 1]` is sorted. It then rules out the target there and moves `lo` past the `0`.
+
+    When `nums[lo] == nums[mid] == nums[hi]`, either half could be the sorted one. What you *do* know is that `nums[lo]` and `nums[hi]` both equal `nums[mid]`, which was already checked and isn't the target. So drop those two elements and try again:
+
+    ```python
+    if nums[lo] == nums[mid] == nums[hi]:
+        lo, hi = lo + 1, hi - 1
+        continue
+    ```
+
+    Each such step removes only two elements, so the worst case becomes $O(n)$. No algorithm can do better. In `[1, 1, 1, 1, 0, 1, 1]`, every probe that lands on a `1` says nothing about where the `0` is, so in the worst case you must look at every position.
 
 ### Peak element (LC 162)
 
