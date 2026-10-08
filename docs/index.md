@@ -7,11 +7,11 @@ A collection of LeetCode solutions in Python, organised by difficulty, with note
 <!-- DASHBOARD:START -->
 <div class="lc-stats">
 <div class="lc-stat lc-easy"><span class="lc-num">27</span><span class="lc-label">Easy</span></div>
-<div class="lc-stat lc-medium"><span class="lc-num">84</span><span class="lc-label">Medium</span></div>
+<div class="lc-stat lc-medium"><span class="lc-num">85</span><span class="lc-label">Medium</span></div>
 <div class="lc-stat lc-hard"><span class="lc-num">2</span><span class="lc-label">Hard</span></div>
 </div>
 
-## NeetCode 250 &nbsp;·&nbsp; 91 / 250
+## NeetCode 250 &nbsp;·&nbsp; 92 / 250
 
 ??? note "Arrays & Hashing &nbsp;·&nbsp; 5 / 22 (23%)"
     <div class="lc-progress-bar"><div class="lc-progress-fill" style="width:23%"></div></div>
@@ -284,14 +284,14 @@ A collection of LeetCode solutions in Python, organised by difficulty, with note
     - [ ] Stone Game III
     - [x] Word Break
 
-??? note "2-D Dynamic Programming &nbsp;·&nbsp; 3 / 16 (19%)"
-    <div class="lc-progress-bar"><div class="lc-progress-fill" style="width:19%"></div></div>
+??? note "2-D Dynamic Programming &nbsp;·&nbsp; 4 / 16 (25%)"
+    <div class="lc-progress-bar"><div class="lc-progress-fill" style="width:25%"></div></div>
 
     - [x] Best Time to Buy And Sell Stock With Cooldown
     - [ ] Burst Balloons
     - [ ] Coin Change II
     - [ ] Distinct Subsequences
-    - [ ] Edit Distance
+    - [x] Edit Distance
     - [ ] Interleaving String
     - [ ] Last Stone Weight II
     - [ ] Longest Common Subsequence
