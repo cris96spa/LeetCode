@@ -222,8 +222,10 @@ def reorder_list(head: ListNode | None) -> None:
     # 3. interleave the two halves
     first = head
     while second:
-        first.next, first = second, first.next
-        second.next, second = first, second.next
+        first_rest, second_rest = first.next, second.next   # save both before rewiring
+        first.next = second
+        second.next = first_rest
+        first, second = first_rest, second_rest
 ```
 
 The same split-and-reverse approach checks whether a list is a palindrome in $O(1)$ space (LC 234): reverse the second half and compare it against the first.
@@ -285,7 +287,8 @@ def add_two_numbers(l1: ListNode | None, l2: ListNode | None) -> ListNode | None
     while l1 or l2 or carry:
         total = carry + (l1.val if l1 else 0) + (l2.val if l2 else 0)
         carry, digit = divmod(total, 10)
-        tail.next = tail = ListNode(digit)
+        tail.next = ListNode(digit)
+        tail = tail.next
         l1 = l1.next if l1 else None
         l2 = l2.next if l2 else None
     return dummy.next

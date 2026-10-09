@@ -117,7 +117,21 @@ The array isn't sorted, but an elimination argument still exists. Suppose `heigh
 
 ### Trapping rain water (LC 42)
 
-Water above position $i$ is $\min(\text{maxLeft}_i, \text{maxRight}_i) - h_i$. The obvious solution precomputes both maximum arrays in $O(n)$ space. The two-pointer version uses $O(1)$ space:
+Water above position $i$ is $\min(\text{maxLeft}_i, \text{maxRight}_i) - h_i$: it fills up to the lower of the tallest walls on either side. The direct solution precomputes both maxima for every position:
+
+```python
+def trap(height: list[int]) -> int:
+    n = len(height)
+    left_max = [0] * n                  # left_max[i] = tallest wall in height[:i+1]
+    right_max = [0] * n                 # right_max[i] = tallest wall in height[i:]
+    for i in range(n):
+        left_max[i] = max(height[i], left_max[i - 1] if i > 0 else 0)
+    for i in range(n - 1, -1, -1):
+        right_max[i] = max(height[i], right_max[i + 1] if i < n - 1 else 0)
+    return sum(min(left_max[i], right_max[i]) - height[i] for i in range(n))
+```
+
+$O(n)$ time and space. The two-pointer version drops both arrays, keeping only one running maximum per side, for $O(1)$ space:
 
 ```python
 def trap(height: list[int]) -> int:

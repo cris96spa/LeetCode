@@ -27,9 +27,9 @@ Greedy and DP both build a solution from decisions. The difference is that DP ke
 
 Before learning to prove greedy algorithms right, it helps to see how easily they go wrong.
 
-**Making change.** Pay $n$ units with as few coins as possible. Greedy: repeatedly take the largest coin that fits. With US coins $\{1, 5, 10, 25\}$ this is optimal. But with coins $\{1, 6, 10\}$ and $n = 12$, greedy takes $10 + 1 + 1$ (three coins), while $6 + 6$ uses two. Nothing in the greedy rule changed; the *problem instance* did. Coin Change (LC 322) therefore needs DP.
+**Making change.** Pay $n$ units with as few coins as possible. Greedy: repeatedly take the largest coin that fits. With US coins $\{1, 5, 10, 25\}$ this is optimal. But with coins $\{1, 6, 10\}$ and $n = 12$, greedy takes $10 + 1 + 1$ (three coins), while $6 + 6$ uses two. Nothing in the greedy rule changed; the *problem instance* did. Coin Change (LC 322) therefore needs [DP](16_dynamic_programming.md#unbounded-items-coin-change-lc-322).
 
-**0/1 knapsack.** Pack items into a bag of capacity $W$ to maximize total value. Greedy by value-per-weight fails with capacity 10 and items (weight 6, value 7), (weight 5, value 5), (weight 5, value 5): greedy takes the densest item first and has room for nothing else (value 7), while the two lighter items give 10. But if items can be **cut** (the *fractional* knapsack), greedy by density is optimal — the troublesome leftover space can always be filled with a fraction of the next item.
+**0/1 knapsack.** Pack items into a bag of capacity $W$ to maximize total value. Greedy by value-per-weight fails with capacity 10 and items (weight 6, value 7), (weight 5, value 5), (weight 5, value 5): greedy takes the densest item first and has room for nothing else (value 7), while the two lighter items give 10. The exact solution is [DP](16_dynamic_programming.md#01-knapsack). But if items can be **cut** (the *fractional* knapsack), greedy by density is optimal — the troublesome leftover space can always be filled with a fraction of the next item.
 
 **Movie scheduling.** Choosing the largest set of non-overlapping intervals by earliest start or by shortest length both fail, on instances with just two or three intervals (see [Intervals](09_intervals.md#three-plausible-ideas-three-failures)).
 

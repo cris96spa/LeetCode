@@ -273,7 +273,7 @@ def can_partition_k_subsets(nums: list[int], k: int) -> bool:
 
     def place(i: int) -> bool:
         if i == len(nums):
-            return True               # all placed; every bucket must equal target
+            return True               # all placed: no bucket exceeds target and they sum to k * target, so all equal it
         seen: set[int] = set()
         for b in range(k):
             if buckets[b] + nums[i] > target or buckets[b] in seen:
@@ -488,6 +488,9 @@ Backtracking explores the tree depth-first, in whatever order the candidates hap
 **Sliding Puzzle** (LC 773) asks for the fewest moves that turn a $2 \times 3$ board into `[[1, 2, 3], [4, 5, 0]]`, where each move slides a tile into the blank. Each move shifts one tile by one cell, so every tile needs at least as many moves as its Manhattan distance from its goal cell. The sum of those distances is therefore a lower bound on the moves remaining:
 
 ```python
+import heapq
+
+
 def sliding_puzzle(board: list[list[int]]) -> int:
     goal = (1, 2, 3, 4, 5, 0)
     moves_from = {0: (1, 3), 1: (0, 2, 4), 2: (1, 5), 3: (0, 4), 4: (1, 3, 5), 5: (2, 4)}
@@ -536,6 +539,9 @@ At $n = 40$, enumerating all $2^{40} \approx 10^{12}$ subsets is hopeless, but $
 **Closest Subsequence Sum** (LC 1755): find the subset sum closest to `goal`, with $n \le 40$. Every subset is a subset of the left half plus a subset of the right half, so its sum is $s_L + s_R$. For each left sum $s_L$, the best partner is the right sum closest to $\text{goal} - s_L$. After sorting the right sums, binary search finds it:
 
 ```python
+import bisect
+
+
 def subset_sums(nums: list[int]) -> list[int]:
     sums = [0]
     for x in nums:

@@ -41,17 +41,29 @@ Now each value is computed once: $O(n)$ time. This is **memoization**, or top-do
 !!! tip "Take-Home Lesson"
     Explicitly caching the results of recursive calls gives most of the benefit of dynamic programming — usually the same running time. If you can write a correct recursive solution whose arguments take few distinct values, adding a cache is often all it takes.
 
-**Computation in order.** Better still, notice that $F_i$ depends only on smaller values, so compute them from smallest to largest. No recursion at all:
+**Computation in order.** Better still, notice that $F_i$ depends only on smaller values, so fill a table from smallest to largest. No recursion at all:
+
+```python
+def fib_table(n: int) -> int:
+    F = [0] * (n + 1)                    # F[i] = the i-th Fibonacci number
+    if n > 0:
+        F[1] = 1
+    for i in range(2, n + 1):
+        F[i] = F[i - 1] + F[i - 2]
+    return F[n]
+```
+
+This is **tabulation**, or bottom-up DP. Now look at what the loop *reads*: only `F[i-1]` and `F[i-2]`. Everything older is dead, so two variables replace the table:
 
 ```python
 def fib_dp(n: int) -> int:
-    back2, back1 = 0, 1                  # F(i-2), F(i-1)
+    back2, back1 = 0, 1                  # F[i-2], F[i-1]
     for _ in range(n):
         back2, back1 = back1, back1 + back2
     return back2
 ```
 
-Since each value depends only on the previous two, we don't even need the table: $O(n)$ time, $O(1)$ space. This is **tabulation**, or bottom-up DP.
+$O(n)$ time, $O(1)$ space. Every space-optimized DP in this chapter is a full table compressed this way.
 
 ---
 
@@ -60,10 +72,13 @@ Since each value depends only on the previous two, we don't even need the table:
 Dynamic programming is a way of efficiently implementing a **recursive** algorithm. So the recurrence comes first, and the table second. Every DP solution goes through three steps:
 
 1. **Formulate the answer as a recurrence** relating the problem to smaller instances of itself. This is where correctness lives.
-2. **Show that the recurrence takes only polynomially many distinct parameter values.** Those values are the **states** — the cells of the table. This is where efficiency lives.
+2. **Show that the recurrence takes only polynomially many distinct parameter values.** Those values are the **states** — the cells of the table. Write down in one sentence what a cell means ("`T[i][j]` = can some subset of the first $i$ items sum to exactly $j$?"). If you can't, the recurrence isn't clear yet. This is where efficiency lives.
 3. **Choose an evaluation order** so that every subproblem is solved before it's needed.
 
-And, often, a fourth: **reconstruct the solution** itself (not just its cost) by recording which choice won at each state, then following those choices backward.
+Then, optionally:
+
+- **Compress the table.** Only after the full table is correct, check which cells the recurrence reads. If row $i$ needs only row $i - 1$, keep one or two rows.
+- **Reconstruct the solution** itself (not just its cost) by recording which choice won at each state, then following those choices backward.
 
 The running time is always
 
@@ -95,10 +110,23 @@ $$\text{best}(i) = \max\big(\text{best}(i-1),\ \text{best}(i-2) + a_i\big)$$
 
 ```python
 def rob(nums: list[int]) -> int:
-    skip = take = 0                     # best for the first i-2, i-1 houses
+    n = len(nums)
+    best = [0] * (n + 1)                # best[i] = max loot from the first i houses
+    for i in range(1, n + 1):
+        leave = best[i - 1]                                    # house i not robbed
+        take = (best[i - 2] if i >= 2 else 0) + nums[i - 1]    # robbed: house i-1 must be skipped
+        best[i] = max(leave, take)
+    return best[n]
+```
+
+`best[i]` reads only the previous two entries, so, as with Fibonacci, two variables suffice:
+
+```python
+def rob(nums: list[int]) -> int:
+    back2 = back1 = 0                   # best[i-2], best[i-1]
     for x in nums:
-        skip, take = take, max(take, skip + x)
-    return take
+        back2, back1 = back1, max(back1, back2 + x)
+    return back1
 ```
 
 That "take it or leave it" split — the item is either in the solution or not — is the most common recurrence pattern in all of DP. **Climbing Stairs** (LC 70) is Fibonacci; **Maximum Subarray** (LC 53) uses "best ending here" (see [Kadane's algorithm](04_two_pointers_sliding_window.md#largest-subrange-three-algorithms-for-one-problem)).
@@ -111,7 +139,7 @@ Can the string be split into dictionary words? `ok[i]` is true if the prefix `s[
 def word_break(s: str, words: list[str]) -> bool:
     dictionary = set(words)
     longest = max(map(len, dictionary), default=0)
-    ok = [True] + [False] * len(s)
+    ok = [True] + [False] * len(s)      # ok[i] = can s[:i] be split into words? (empty prefix: yes)
     for i in range(1, len(s) + 1):
         for j in range(max(0, i - longest), i):
             if ok[j] and s[j:i] in dictionary:
@@ -147,8 +175,8 @@ Store each element's best predecessor, and the subsequence itself can be read ba
 ```python
 def longest_increasing_subsequence(nums: list[int]) -> list[int]:
     n = len(nums)
-    length = [1] * n
-    prev = [-1] * n
+    length = [1] * n                    # length[i] = longest increasing subsequence ending at nums[i]
+    prev = [-1] * n                     # prev[i] = index of the element before nums[i] in it
     for i in range(n):
         for j in range(i):
             if nums[j] < nums[i] and length[j] + 1 > length[i]:
@@ -208,20 +236,41 @@ The naive recursion branches three ways at every step — exponential. But there
 ```python
 def min_distance(p: str, t: str) -> int:
     m, n = len(p), len(t)
-    prev = list(range(n + 1))                     # row i-1 of the table
+    # D[i][j] = edit distance between p[:i] and t[:j]
+    D = [[0] * (n + 1) for _ in range(m + 1)]
+    for i in range(m + 1):
+        D[i][0] = i                                   # delete all of p[:i]
+    for j in range(n + 1):
+        D[0][j] = j                                   # insert all of t[:j]
     for i in range(1, m + 1):
-        curr = [i] + [0] * n
+        for j in range(1, n + 1):
+            D[i][j] = min(
+                D[i - 1][j - 1] + (p[i - 1] != t[j - 1]),   # match / substitute
+                D[i][j - 1] + 1,                            # insert t[j-1]
+                D[i - 1][j] + 1,                            # delete p[i-1]
+            )
+    return D[m][n]
+```
+
+$O(mn)$ time and space. To reconstruct the actual edits, start at `D[m][n]` and step back to whichever of the three neighbors produced its value.
+
+**Compressing.** Row `i` reads only row `i - 1` (`D[i-1][j-1]`, `D[i-1][j]`) and the cell to its left in row `i` itself. So keep two rows, `prev` for row `i - 1` and `curr` for row `i`, giving $O(n)$ space (but no reconstruction):
+
+```python
+def min_distance(p: str, t: str) -> int:
+    m, n = len(p), len(t)
+    prev = list(range(n + 1))                     # row 0: D[0][j] = j
+    for i in range(1, m + 1):
+        curr = [i] + [0] * n                      # D[i][0] = i
         for j in range(1, n + 1):
             curr[j] = min(
-                prev[j - 1] + (p[i - 1] != t[j - 1]),   # match / substitute
-                curr[j - 1] + 1,                        # insert t[j-1]
-                prev[j] + 1,                            # delete p[i-1]
+                prev[j - 1] + (p[i - 1] != t[j - 1]),
+                curr[j - 1] + 1,
+                prev[j] + 1,
             )
         prev = curr
     return prev[n]
 ```
-
-$O(mn)$ time. Each row depends only on the previous one, so two rows suffice: $O(n)$ space. (Reconstructing the actual edits needs the full table, or a cleverer divide-and-conquer.)
 
 ### One routine, many problems
 
@@ -231,17 +280,19 @@ Small changes to the costs, the base cases, or the goal cell turn edit distance 
 
 ```python
 def longest_common_subsequence(a: str, b: str) -> int:
-    prev = [0] * (len(b) + 1)
-    for i in range(1, len(a) + 1):
-        curr = [0] * (len(b) + 1)
-        for j in range(1, len(b) + 1):
+    m, n = len(a), len(b)
+    # L[i][j] = length of the LCS of a[:i] and b[:j]; row/column 0 = empty prefix, LCS 0
+    L = [[0] * (n + 1) for _ in range(m + 1)]
+    for i in range(1, m + 1):
+        for j in range(1, n + 1):
             if a[i - 1] == b[j - 1]:
-                curr[j] = prev[j - 1] + 1
+                L[i][j] = L[i - 1][j - 1] + 1           # both last characters join the LCS
             else:
-                curr[j] = max(prev[j], curr[j - 1])
-        prev = curr
-    return prev[-1]
+                L[i][j] = max(L[i - 1][j], L[i][j - 1]) # drop a's last or b's last
+    return L[m][n]
 ```
+
+The same two-row compression as edit distance brings the space down to $O(n)$.
 
 - **Delete Operation for Two Strings** (LC 583): $|a| + |b| - 2 \cdot \text{LCS}$.
 - **Longest increasing subsequence** is the LCS of the sequence with its own sorted, de-duplicated version.
@@ -255,79 +306,217 @@ def longest_common_subsequence(a: str, b: str) -> int:
 
 ## Subset Sum and Knapsack
 
-**Subset sum:** is there a subset of $s_1, \ldots, s_n$ adding up to exactly $k$? Consider the items left to right. Either the last item $s_n$ is in the subset — so the first $n - 1$ items must make $k - s_n$ — or it isn't — so they must make $k$ on their own:
+All of these problems have the same structure: go through the items one at a time and decide, for each one, **take it or leave it**. So the state needs two indices:
 
-$$T[n][k] = T[n-1][k] \ \lor\ T[n-1][k - s_n]$$
+- **how many items have been decided**: a prefix, as in every sequence DP;
+- **how much of the budget is left**: the sum still to make, or the capacity still free.
 
-That's $O(nk)$ time for $n$ items and target $k$. Note that this is polynomial in the *value* $k$, not in the number of bits needed to write $k$ down — it's fast when $k$ is modest, but with $k \approx 10^{18}$ the table is useless. (Subset sum is NP-complete; DP doesn't contradict that.)
+The second index is a *value*, not a position. That's what's new here.
 
-In code, each row depends only on the previous one, so a single 1-D array suffices — **if the inner loop runs downward**, so that `reachable[j - x]` still refers to the previous row (a sum not yet using the current item):
+### Subset sum: the full table
+
+**Problem.** Given positive integers $s_1, \ldots, s_n$ and a target $k$, is there a subset summing to exactly $k$?
+
+**State.** $T[i][j]$ = *can some subset of the first $i$ items sum to exactly $j$?* We need it for every $0 \le i \le n$ and every $0 \le j \le k$, and the answer is $T[n][k]$.
+
+Why every $j$, and not just $k$? Taking an item changes the target. If we take $s_i$, the other items must make $j - s_i$, so we need answers for smaller targets too. As with LIS, the obvious question isn't enough, so we ask a more general one.
+
+**Recurrence.** Look at the last item, $s_i$. A subset of the first $i$ items that sums to $j$ either:
+
+- **leaves** $s_i$: then it's a subset of the first $i - 1$ items summing to $j$, so $T[i-1][j]$;
+- **takes** $s_i$: then the rest of it is a subset of the first $i - 1$ items summing to $j - s_i$, so $T[i-1][j - s_i]$ (possible only if $s_i \le j$).
+
+$$T[i][j] = T[i-1][j] \ \lor\ T[i-1][j - s_i]$$
+
+**Base case.** With no items, the only subset is the empty one, which sums to 0: $T[0][0] = \text{true}$, and $T[0][j] = \text{false}$ for $j > 0$.
+
+**Example.** Items $(2, 3, 5)$, $k = 8$ (T = reachable):
+
+| | $j$=0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 |
+|---|---|---|---|---|---|---|---|---|---|
+| $i = 0$: no items | T | | | | | | | | |
+| $i = 1$: + 2 | T | | T | | | | | | |
+| $i = 2$: + 3 | T | | T | T | | T | | | |
+| $i = 3$: + 5 | T | | T | T | | T | | T | T |
+
+Each row is the row above, plus the row above shifted right by $s_i$. $T[3][8]$ is true because $T[2][3]$ is true: take the 5, and $\{2, 3\}$ can make the remaining 3.
+
+```python
+def subset_sum(nums: list[int], k: int) -> bool:
+    n = len(nums)
+    # T[i][j] = can some subset of nums[:i] sum to exactly j?
+    T = [[False] * (k + 1) for _ in range(n + 1)]
+    T[0][0] = True                                      # empty subset makes 0
+    for i in range(1, n + 1):
+        x = nums[i - 1]                                 # the i-th item
+        for j in range(k + 1):
+            T[i][j] = T[i - 1][j]                       # leave x
+            if j >= x and T[i - 1][j - x]:
+                T[i][j] = True                          # take x
+    return T[n][k]
+```
+
+That's $O(nk)$ time for $n$ items and target $k$. This is polynomial in the *value* $k$, not in the number of bits needed to write $k$ down. It's fast when $k$ is modest, but with $k \approx 10^{18}$ the table is useless. (Subset sum is NP-complete; DP doesn't contradict that.)
+
+### Partition Equal Subset Sum (LC 416)
+
+**Problem.** Can `nums` be split into two groups with equal sums?
+
+This is subset sum with $k = \text{total} / 2$. Why is finding *one* group of that sum enough? Because every element goes into exactly one of the two groups. If group $A$ sums to $a$, the other group is everything else, and it sums to $\text{total} - a$. So:
+
+- If the two groups are equal, then $a = \text{total} - a$, so $a = \text{total}/2$. A valid split always contains a subset summing to $\text{total}/2$.
+- If some subset $A$ sums to $\text{total}/2$, put every other element in $B$. Then $B$ sums to $\text{total} - \text{total}/2 = \text{total}/2$ with no extra work.
+
+Finding one half is enough, because its complement is the other half. If the total is odd, no integer half exists.
 
 ```python
 def can_partition(nums: list[int]) -> bool:
-    """LC 416: split into two halves of equal sum = subset summing to total / 2."""
+    total = sum(nums)
+    if total % 2:
+        return False                    # odd total: two equal integer halves are impossible
+    return subset_sum(nums, total // 2) # the complement of that subset is the other half
+```
+
+### Compressing to one array: why downward
+
+Row $i$ reads only row $i - 1$, so we can keep a single array, `reachable[j]` = *can some subset of the items seen so far sum to $j$?*, and overwrite it in place, one item at a time.
+
+There's a catch. The take branch reads `T[i-1][j - x]`, a cell **to the left** in the **previous** row. If `j` goes upward, then by the time we reach `j`, the cell `j - x` has already been overwritten with row $i$. It may already include $x$, so $x$ gets used twice.
+
+Take `nums = [3]`, `k = 6`. Going upward, `reachable[3]` becomes true (0 + 3). Then `reachable[6]` reads `reachable[3]` and becomes true, meaning "6 = 3 + 3", which uses the single 3 twice. Going **downward**, `j = 6` is computed while `reachable[3]` still holds the previous row (false), and only then does `j = 3` become true. That's correct.
+
+```python
+def can_partition(nums: list[int]) -> bool:
     total = sum(nums)
     if total % 2:
         return False
     target = total // 2
-    reachable = [True] + [False] * target
+    reachable = [True] + [False] * target       # reachable[j] = some subset of the items so far sums to j
     for x in nums:
-        for j in range(target, x - 1, -1):          # downward: each item used at most once
+        for j in range(target, x - 1, -1):      # downward: reachable[j - x] is still the previous row
             reachable[j] = reachable[j] or reachable[j - x]
     return reachable[target]
 ```
 
-The **0/1 knapsack** problem is the same recurrence with values: `best[j] = max(best[j], best[j - w] + v)`, again iterating capacity downward.
+The loop stops at `x`: for `j < x` only "leave" is possible, so `T[i][j] = T[i-1][j]`, and the cell is left unchanged.
 
-### Unbounded items: coin change
+### 0/1 knapsack
 
-If each item can be used **any number of times**, iterate the capacity **upward**: then `dp[j - c]` may already include coin $c$, which is exactly what reuse means.
+Items have weights $w_i$ and values $v_i$. Each can be used **at most once**. Maximize the total value with total weight at most $C$.
+
+**State.** $\text{best}[i][c]$ = the largest value from a subset of the first $i$ items with total weight $\le c$.
+
+**Recurrence.** It's the same take-or-leave split, but now we compare values (max) instead of asking "is it possible?" (or):
+
+$$\text{best}[i][c] = \max\big(\text{best}[i-1][c],\ \text{best}[i-1][c - w_i] + v_i\big) \qquad (\text{take only if } w_i \le c)$$
+
+**Base case.** $\text{best}[0][c] = 0$ for every $c$: no items, no value. (Because the state says weight $\le c$, not $= c$, every capacity is achievable with the empty set.)
+
+```python
+def knapsack(weights: list[int], values: list[int], C: int) -> int:
+    n = len(weights)
+    # best[i][c] = max value from a subset of the first i items with total weight <= c
+    best = [[0] * (C + 1) for _ in range(n + 1)]
+    for i in range(1, n + 1):
+        w, v = weights[i - 1], values[i - 1]
+        for c in range(C + 1):
+            best[i][c] = best[i - 1][c]                                 # leave item i
+            if c >= w:
+                best[i][c] = max(best[i][c], best[i - 1][c - w] + v)    # take item i
+    return best[n][C]
+```
+
+The take branch reads row $i - 1$, exactly as in subset sum, so the one-array version also goes **downward**: `for c in range(C, w - 1, -1): best[c] = max(best[c], best[c - w] + v)`. Subset sum is the special case where each item's value equals its weight, and we ask whether $\text{best}[n][k] = k$.
+
+### Unbounded items: coin change (LC 322)
+
+Now each coin can be used **any number of times**. We want the fewest coins summing to exactly `amount`.
+
+**State.** $\text{fewest}[i][s]$ = the fewest coins summing to exactly $s$, using only the first $i$ coin types ($\infty$ if impossible).
+
+**Recurrence.** Take or leave coin type $i$, with value $c_i$:
+
+- **leave**: we never use $c_i$ again, so $\text{fewest}[i-1][s]$;
+- **take one copy**: and $c_i$ is *still available* for the rest, so $\text{fewest}[\mathbf{i}][s - c_i] + 1$.
+
+$$\text{fewest}[i][s] = \min\big(\text{fewest}[i-1][s],\ \text{fewest}[i][s - c_i] + 1\big)$$
+
+The only difference from 0/1 is the row index in the take branch: **$i$ instead of $i - 1$**. Taking a coin doesn't remove it from the menu.
+
+**Base case.** $\text{fewest}[0][0] = 0$ and $\text{fewest}[0][s] = \infty$ for $s > 0$. Here the sum must be *exact*, so unreachable states are $\infty$, not 0.
 
 ```python
 def coin_change(coins: list[int], amount: int) -> int:
-    """LC 322: fewest coins summing to amount."""
-    INF = amount + 1
-    fewest = [0] + [INF] * amount
+    INF = float("inf")
+    n = len(coins)
+    # fewest[i][s] = fewest coins summing to exactly s, using only the first i coin types
+    fewest = [[INF] * (amount + 1) for _ in range(n + 1)]
+    fewest[0][0] = 0
+    for i in range(1, n + 1):
+        c = coins[i - 1]
+        for s in range(amount + 1):
+            fewest[i][s] = fewest[i - 1][s]                             # never use c
+            if s >= c:
+                fewest[i][s] = min(fewest[i][s], fewest[i][s - c] + 1)  # one more c; row i: c still allowed
+    return fewest[n][amount] if fewest[n][amount] != INF else -1
+```
+
+**Compressing.** The take branch now reads the **current** row at `s - c`. In a single array, iterating **upward** gives exactly that, because `fewest[s - c]` has already been updated for coin `c`. So the loop direction isn't a trick to memorize. It follows from which row the recurrence reads:
+
+```python
+def coin_change(coins: list[int], amount: int) -> int:
+    INF = amount + 1                            # more coins than any real answer needs
+    fewest = [0] + [INF] * amount               # fewest[s] = fewest coins (types so far) making s
     for c in coins:
-        for j in range(c, amount + 1):              # upward: coin c can be reused
-            fewest[j] = min(fewest[j], fewest[j - c] + 1)
+        for s in range(c, amount + 1):          # upward: fewest[s - c] is already row i
+            fewest[s] = min(fewest[s], fewest[s - c] + 1)
     return fewest[amount] if fewest[amount] != INF else -1
 ```
 
-Here greedy fails (coins $\{1, 6, 10\}$, amount 12 — see [Greedy](15_greedy.md#when-greedy-fails)) but DP is always right, because it considers every last coin.
+Here greedy fails (coins $\{1, 6, 10\}$, amount 12; see [Greedy](15_greedy.md#when-greedy-fails)), but DP is always right, because it considers every possibility for each coin.
 
 ### Counting: combinations vs. permutations
 
-When **counting** the ways to reach a total, the loop order decides what's being counted:
+When **counting** the ways to reach a total, the right state depends on whether order matters.
+
+**Combinations (LC 518)**, where $\{1, 2\}$ and $\{2, 1\}$ are the same way. Use the coin-change state: $\text{ways}[i][s]$ = the number of ways to make $s$ using only the first $i$ coin types. Every way either uses no $c_i$ at all, or uses at least one $c_i$ (remove one copy, and the rest still uses types $1..i$):
+
+$$\text{ways}[i][s] = \text{ways}[i-1][s] + \text{ways}[i][s - c_i]$$
+
+Coin types are decided in a fixed order ($c_1$ first, then $c_2$, ...), so each multiset of coins is counted exactly once. In one array this becomes coins outer, sums upward, as in coin change.
+
+**Permutations (LC 377)**, where $(1, 2)$ and $(2, 1)$ are different. Now there is no "first $i$ items" index, because any item can come at any position. The state is just $\text{ways}[s]$ = the number of ordered sequences summing to $s$. Split on the **last element** $x$: the sequence is some sequence summing to $s - x$, followed by $x$.
+
+$$\text{ways}[s] = \sum_{x \le s} \text{ways}[s - x], \qquad \text{ways}[0] = 1 \text{ (the empty sequence)}$$
+
+To compute $\text{ways}[s]$ we need every smaller total, with every item allowed, so totals go in the outer loop. This is Climbing Stairs with arbitrary step sizes. It's a genuinely 1-D state, not a compressed table.
 
 ```python
 def count_combinations(coins: list[int], amount: int) -> int:
-    """LC 518: {1, 2} and {2, 1} are the same way. Coins in the OUTER loop."""
+    """LC 518. ways[s] = ways to make s with the coin types seen so far."""
     ways = [1] + [0] * amount
-    for c in coins:
-        for j in range(c, amount + 1):
-            ways[j] += ways[j - c]
+    for c in coins:                             # coin types outer: the table's row index
+        for s in range(c, amount + 1):          # upward: c may be reused
+            ways[s] += ways[s - c]
     return ways[amount]
 
 
 def count_sequences(nums: list[int], target: int) -> int:
-    """LC 377: (1, 2) and (2, 1) are different. Totals in the OUTER loop."""
+    """LC 377. ways[s] = ordered sequences summing to s."""
     ways = [1] + [0] * target
-    for j in range(1, target + 1):
-        for x in nums:
-            if x <= j:
-                ways[j] += ways[j - x]
+    for s in range(1, target + 1):              # totals outer
+        for x in nums:                          # every choice of last element
+            if x <= s:
+                ways[s] += ways[s - x]
     return ways[target]
 ```
 
-With coins outer, each combination is built in one canonical order (all 1s, then all 2s, ...), so it's counted once. With totals outer, every choice of *last* element is counted separately at every step, so orderings are distinct.
-
-| Variant | Loop structure | Inner direction |
-|---|---|---|
-| 0/1 (each item once) | items outer | capacity **downward** |
-| Unbounded (reuse allowed) | items outer | capacity **upward** |
-| Count unordered combinations | items outer | upward |
-| Count ordered sequences | totals outer | items inner |
+| Variant | State | Take branch reads | One-array loops |
+|---|---|---|---|
+| 0/1: subset sum, knapsack | first $i$ items, sum/capacity | row $i - 1$ | items outer, capacity **downward** |
+| Unbounded: coin change | first $i$ item types, sum | row $i$ | items outer, capacity **upward** |
+| Count combinations | first $i$ item types, sum | row $i$ | items outer, upward |
+| Count sequences | sum only; split on the last element | — | totals outer, items inner |
 
 ---
 
@@ -371,7 +560,7 @@ Some problems are naturally about **substrings or subarrays** $[i, j]$, and the 
 ```python
 def longest_palindrome_subseq(s: str) -> int:
     n = len(s)
-    dp = [[0] * n for _ in range(n)]
+    dp = [[0] * n for _ in range(n)]                    # dp[i][j] = longest palindromic subsequence of s[i..j]
     for i in range(n - 1, -1, -1):                      # i descending: dp[i+1] is ready
         dp[i][i] = 1
         for j in range(i + 1, n):
@@ -392,17 +581,26 @@ Choosing the *first* balloon instead would leave neighbors that depend on everyt
 
 ## State Machine DP
 
-When the decision at each step depends on a small amount of **mode** — holding a stock or not, in cooldown or not — make the mode part of the state. **Best Time to Buy and Sell Stock with Cooldown** (LC 309) has three modes per day:
+When the decision at each step depends on a small amount of **mode** — holding a stock or not, in cooldown or not — make the mode part of the state. **Best Time to Buy and Sell Stock with Cooldown** (LC 309) has three modes, so the state is (day $d$, mode), and each cell is the best profit at the end of day $d$ in that mode:
+
+- $\text{hold}[d]$: holding a stock. Either we already held it, or we bought today, which needs the "free" mode yesterday:
+  $\text{hold}[d] = \max(\text{hold}[d-1],\ \text{rest}[d-1] - p_d)$
+- $\text{sold}[d]$: sold today, so tomorrow is cooldown. We must have held yesterday:
+  $\text{sold}[d] = \text{hold}[d-1] + p_d$
+- $\text{rest}[d]$: not holding and free to buy tomorrow. Either we were already free, or yesterday's sale finished its cooldown:
+  $\text{rest}[d] = \max(\text{rest}[d-1],\ \text{sold}[d-1])$
+
+Before day 1, holding is impossible ($-\infty$) and the other two modes have profit 0. Day $d$ reads only day $d - 1$, so three variables replace the three columns:
 
 ```python
 def max_profit_cooldown(prices: list[int]) -> int:
-    hold, sold, rest = float("-inf"), 0, 0      # holding / just sold / free to buy
+    hold, sold, rest = float("-inf"), 0, 0      # hold[d-1], sold[d-1], rest[d-1]
     for p in prices:
         hold, sold, rest = max(hold, rest - p), hold + p, max(rest, sold)
     return max(sold, rest)
 ```
 
-Each line of the tuple assignment is a transition: you can hold by keeping your stock or buying from the "free" mode; you're "just sold" only by selling today; you're free if you were free or your cooldown just ended. The other stock problems (LC 123, 188, 714) add a transaction counter or a fee to the same machine.
+The tuple assignment matters: every right-hand side must read *yesterday's* values. The other stock problems (LC 123, 188, 714) add a transaction counter or a fee to the same machine.
 
 ---
 
@@ -419,7 +617,7 @@ def shortest_tour(dist: list[list[int]]) -> int:
     """Held–Karp: shortest cycle through all cities, starting and ending at city 0."""
     n = len(dist)
     INF = float("inf")
-    best = [[INF] * n for _ in range(1 << n)]
+    best = [[INF] * n for _ in range(1 << n)]           # best[S][v] = shortest path from 0 visiting exactly S, ending at v
     best[1][0] = 0                                      # visited {0}, standing at 0
     for S in range(1 << n):
         if not S & 1:

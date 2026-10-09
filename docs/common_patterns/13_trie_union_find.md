@@ -244,7 +244,9 @@ class UnionFind:
         while self.parent[root] != root:
             root = self.parent[root]
         while self.parent[x] != root:            # path compression
-            self.parent[x], x = root, self.parent[x]
+            next_x = self.parent[x]
+            self.parent[x] = root
+            x = next_x
         return root
 
     def union(self, x: int, y: int) -> bool:

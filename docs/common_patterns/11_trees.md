@@ -42,7 +42,17 @@ def max_depth(root: TreeNode | None) -> int:
 
 Sometimes the answers from the subtrees aren't *enough* to build the answer for the tree. Then the fix is the same as in an induction proof that gets stuck: **prove something stronger**. Make the recursive function return more information than the problem asked for.
 
-**Balanced Binary Tree (LC 110).** A tree is height-balanced if every node's subtrees differ in height by at most one. Knowing only that both subtrees are balanced doesn't tell you whether the whole tree is — you also need their heights. So return both. A convenient encoding returns the height, or $-1$ for "unbalanced":
+**Balanced Binary Tree (LC 110).** A tree is height-balanced if every node's subtrees differ in height by at most one. The definition transcribes directly:
+
+```python
+def is_balanced_naive(root: TreeNode | None) -> bool:
+    if root is None:
+        return True
+    return (abs(max_depth(root.left) - max_depth(root.right)) <= 1
+            and is_balanced_naive(root.left) and is_balanced_naive(root.right))
+```
+
+It's correct, but every node recomputes the heights of its whole subtree, which is $O(n^2)$ on a path-shaped tree. The trouble is that the recursive call answers only "is this subtree balanced?", and the parent also needs its height. So return both. A convenient encoding returns the height, or $-1$ for "unbalanced":
 
 ```python
 def is_balanced(root: TreeNode | None) -> bool:
@@ -58,7 +68,7 @@ def is_balanced(root: TreeNode | None) -> bool:
     return height(root) >= 0
 ```
 
-The naive version calls a separate `max_depth` at every node, which is $O(n^2)$ on a path-shaped tree. The strengthened version is one pass, $O(n)$.
+The strengthened version is one pass, $O(n)$.
 
 **Diameter of Binary Tree (LC 543).** The longest path between any two nodes either passes through the root or lies entirely inside one subtree. If it passes through a node, it's the deepest path down the left plus the deepest path down the right. So the recursive function returns **depth** (what the parent needs) while recording the best **diameter** seen (what the problem asks for):
 

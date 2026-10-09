@@ -197,7 +197,7 @@ Bit vectors are compact and every operation is a single word operation for $n \l
 
 ### Word-level parallelism: bitsets as a speedup
 
-Python's unbounded integers make a surprisingly powerful trick available. Take **Partition Equal Subset Sum (LC 416)**: can the numbers be split into two halves of equal sum? The standard DP tracks the set of reachable subset sums. Represent that set as the bits of one big integer — bit $s$ is 1 iff sum $s$ is reachable. Adding a number $x$ to every reachable sum is a *shift*:
+Python's unbounded integers make a surprisingly powerful trick available. Take **Partition Equal Subset Sum (LC 416)**: can the numbers be split into two halves of equal sum? It's enough to find one subset summing to half the total, because the remaining numbers then make up the other half. The [standard DP](16_dynamic_programming.md#partition-equal-subset-sum-lc-416) tracks the set of reachable subset sums. Represent that set as the bits of one big integer — bit $s$ is 1 iff sum $s$ is reachable. Adding a number $x$ to every reachable sum is a *shift*:
 
 ```python
 def can_partition(nums: list[int]) -> bool:

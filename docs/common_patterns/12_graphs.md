@@ -762,14 +762,14 @@ To get the distance between **every** pair of vertices, number the vertices and 
 
 $$D_k[i][j] = \min\big(D_{k-1}[i][j],\ D_{k-1}[i][k] + D_{k-1}[k][j]\big)$$
 
-This is dynamic programming (see [Dynamic Programming](16_dynamic_programming.md)), and the code is three nested loops:
+This is dynamic programming (see [Dynamic Programming](16_dynamic_programming.md)). The full table would be 3-D, one $V \times V$ layer per $k$. But a single 2-D table updated in place is enough. Round $k$ reads only row $k$ and column $k$, and those don't change during round $k$: $D[i][k] = \min(D[i][k],\ D[i][k] + D[k][k])$, and $D[k][k] = 0$. So the code is three nested loops over one table:
 
 ```python
 def floyd_warshall(n: int, edges: list[tuple[int, int, int]]) -> list[list[float]]:
     INF = float("inf")
     dist = [[0 if i == j else INF for j in range(n)] for i in range(n)]
     for u, v, w in edges:
-        dist[u][v] = min(dist[u][v], w)      # keeps into account multiple edges
+        dist[u][v] = min(dist[u][v], w)      # parallel edges: keep the lightest
     for k in range(n):                       # k MUST be the outermost loop
         for i in range(n):
             for j in range(n):
