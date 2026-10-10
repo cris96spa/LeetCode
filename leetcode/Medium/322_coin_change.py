@@ -141,8 +141,7 @@ class Solution:
 
         ============================================================
         """
-        state = [amount + 1] * (amount + 1)
-        state[0] = 0
+        state = [0] + [amount + 1] * (amount)
 
         if amount == 0:
             return 0
