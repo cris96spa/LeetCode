@@ -7,7 +7,7 @@ A collection of LeetCode solutions in Python, organised by difficulty, with note
 <!-- DASHBOARD:START -->
 <div class="lc-stats">
 <div class="lc-stat lc-easy"><span class="lc-num">27</span><span class="lc-label">Easy</span></div>
-<div class="lc-stat lc-medium"><span class="lc-num">88</span><span class="lc-label">Medium</span></div>
+<div class="lc-stat lc-medium"><span class="lc-num">89</span><span class="lc-label">Medium</span></div>
 <div class="lc-stat lc-hard"><span class="lc-num">3</span><span class="lc-label">Hard</span></div>
 </div>
 
@@ -162,7 +162,7 @@ A collection of LeetCode solutions in Python, organised by difficulty, with note
         - [ ] Set Matrix Zeroes
         - [ ] Spiral Matrix
 
-=== "NeetCode 150 &nbsp;·&nbsp; 80 / 150"
+=== "NeetCode 150 &nbsp;·&nbsp; 81 / 150"
 
     ??? note "Arrays & Hashing &nbsp;·&nbsp; 4 / 9 (44%)"
         <div class="lc-progress-bar"><div class="lc-progress-fill" style="width:44%"></div></div>
@@ -332,8 +332,8 @@ A collection of LeetCode solutions in Python, organised by difficulty, with note
         - [x] Subsets II
         - [ ] Word Search
 
-    ??? note "1-D Dynamic Programming &nbsp;·&nbsp; 9 / 12 (75%)"
-        <div class="lc-progress-bar"><div class="lc-progress-fill" style="width:75%"></div></div>
+    ??? note "1-D Dynamic Programming &nbsp;·&nbsp; 10 / 12 (83%)"
+        <div class="lc-progress-bar"><div class="lc-progress-fill" style="width:83%"></div></div>
 
         - [x] Climbing Stairs
         - [x] Coin Change
@@ -345,7 +345,7 @@ A collection of LeetCode solutions in Python, organised by difficulty, with note
         - [ ] Maximum Product Subarray
         - [x] Min Cost Climbing Stairs
         - [x] Palindromic Substrings
-        - [ ] Partition Equal Subset Sum
+        - [x] Partition Equal Subset Sum
         - [x] Word Break
 
     ??? note "2-D Dynamic Programming &nbsp;·&nbsp; 4 / 11 (36%)"
@@ -386,7 +386,7 @@ A collection of LeetCode solutions in Python, organised by difficulty, with note
         - [ ] Set Matrix Zeroes
         - [ ] Spiral Matrix
 
-=== "NeetCode 250 &nbsp;·&nbsp; 94 / 250"
+=== "NeetCode 250 &nbsp;·&nbsp; 95 / 250"
 
     ??? note "Arrays & Hashing &nbsp;·&nbsp; 5 / 22 (23%)"
         <div class="lc-progress-bar"><div class="lc-progress-fill" style="width:23%"></div></div>
@@ -638,8 +638,8 @@ A collection of LeetCode solutions in Python, organised by difficulty, with note
         - [ ] Word Break II
         - [ ] Word Search
 
-    ??? note "1-D Dynamic Programming &nbsp;·&nbsp; 9 / 17 (53%)"
-        <div class="lc-progress-bar"><div class="lc-progress-fill" style="width:53%"></div></div>
+    ??? note "1-D Dynamic Programming &nbsp;·&nbsp; 10 / 17 (59%)"
+        <div class="lc-progress-bar"><div class="lc-progress-fill" style="width:59%"></div></div>
 
         - [x] Climbing Stairs
         - [x] Coin Change
@@ -654,7 +654,7 @@ A collection of LeetCode solutions in Python, organised by difficulty, with note
         - [x] Min Cost Climbing Stairs
         - [ ] N-th Tribonacci Number
         - [x] Palindromic Substrings
-        - [ ] Partition Equal Subset Sum
+        - [x] Partition Equal Subset Sum
         - [ ] Perfect Squares
         - [ ] Stone Game III
         - [x] Word Break
