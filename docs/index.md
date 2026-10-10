@@ -7,7 +7,7 @@ A collection of LeetCode solutions in Python, organised by difficulty, with note
 <!-- DASHBOARD:START -->
 <div class="lc-stats">
 <div class="lc-stat lc-easy"><span class="lc-num">27</span><span class="lc-label">Easy</span></div>
-<div class="lc-stat lc-medium"><span class="lc-num">90</span><span class="lc-label">Medium</span></div>
+<div class="lc-stat lc-medium"><span class="lc-num">91</span><span class="lc-label">Medium</span></div>
 <div class="lc-stat lc-hard"><span class="lc-num">3</span><span class="lc-label">Hard</span></div>
 </div>
 
@@ -386,7 +386,7 @@ A collection of LeetCode solutions in Python, organised by difficulty, with note
         - [ ] Set Matrix Zeroes
         - [ ] Spiral Matrix
 
-=== "NeetCode 250 &nbsp;·&nbsp; 96 / 250"
+=== "NeetCode 250 &nbsp;·&nbsp; 97 / 250"
 
     ??? note "Arrays & Hashing &nbsp;·&nbsp; 5 / 22 (23%)"
         <div class="lc-progress-bar"><div class="lc-progress-fill" style="width:23%"></div></div>
@@ -638,12 +638,12 @@ A collection of LeetCode solutions in Python, organised by difficulty, with note
         - [ ] Word Break II
         - [ ] Word Search
 
-    ??? note "1-D Dynamic Programming &nbsp;·&nbsp; 10 / 17 (59%)"
-        <div class="lc-progress-bar"><div class="lc-progress-fill" style="width:59%"></div></div>
+    ??? note "1-D Dynamic Programming &nbsp;·&nbsp; 11 / 17 (65%)"
+        <div class="lc-progress-bar"><div class="lc-progress-fill" style="width:65%"></div></div>
 
         - [x] Climbing Stairs
         - [x] Coin Change
-        - [ ] Combination Sum IV
+        - [x] Combination Sum IV
         - [x] Decode Ways
         - [x] House Robber
         - [x] House Robber II
