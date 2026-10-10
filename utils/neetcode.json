@@ -1,0 +1,755 @@
+{
+    "source": "https://github.com/neetcode-gh/leetcode/blob/main/.problemSiteData.json",
+    "description": "NeetCode practice lists. Each problem records its pattern and the smallest list containing it; the lists are nested (Blind 75 ⊂ NeetCode 150 ⊂ NeetCode 250), so a problem belongs to its list and every later one.",
+    "lists": ["Blind 75", "NeetCode 150", "NeetCode 250"],
+    "problems": {
+        "3Sum": { "pattern": "Two Pointers", "list": "Blind 75" },
+        "4Sum": { "pattern": "Two Pointers", "list": "NeetCode 250" },
+        "Accounts Merge": { "pattern": "Graphs", "list": "NeetCode 250" },
+        "Add Binary": { "pattern": "Bit Manipulation", "list": "NeetCode 250" },
+        "Add Two Numbers": { "pattern": "Linked List", "list": "NeetCode 150" },
+        "Alien Dictionary": {
+            "pattern": "Advanced Graphs",
+            "list": "Blind 75"
+        },
+        "Asteroid Collision": { "pattern": "Stack", "list": "NeetCode 250" },
+        "Balanced Binary Tree": { "pattern": "Trees", "list": "NeetCode 150" },
+        "Baseball Game": { "pattern": "Stack", "list": "NeetCode 250" },
+        "Best Time to Buy And Sell Stock": {
+            "pattern": "Sliding Window",
+            "list": "Blind 75"
+        },
+        "Best Time to Buy And Sell Stock II": {
+            "pattern": "Arrays & Hashing",
+            "list": "NeetCode 250"
+        },
+        "Best Time to Buy And Sell Stock With Cooldown": {
+            "pattern": "2-D Dynamic Programming",
+            "list": "NeetCode 150"
+        },
+        "Binary Search": { "pattern": "Binary Search", "list": "NeetCode 150" },
+        "Binary Tree Inorder Traversal": {
+            "pattern": "Trees",
+            "list": "NeetCode 250"
+        },
+        "Binary Tree Level Order Traversal": {
+            "pattern": "Trees",
+            "list": "Blind 75"
+        },
+        "Binary Tree Maximum Path Sum": {
+            "pattern": "Trees",
+            "list": "Blind 75"
+        },
+        "Binary Tree Postorder Traversal": {
+            "pattern": "Trees",
+            "list": "NeetCode 250"
+        },
+        "Binary Tree Preorder Traversal": {
+            "pattern": "Trees",
+            "list": "NeetCode 250"
+        },
+        "Binary Tree Right Side View": {
+            "pattern": "Trees",
+            "list": "NeetCode 150"
+        },
+        "Bitwise AND of Numbers Range": {
+            "pattern": "Bit Manipulation",
+            "list": "NeetCode 250"
+        },
+        "Boats to Save People": {
+            "pattern": "Two Pointers",
+            "list": "NeetCode 250"
+        },
+        "Build a Matrix With Conditions": {
+            "pattern": "Advanced Graphs",
+            "list": "NeetCode 250"
+        },
+        "Burst Balloons": {
+            "pattern": "2-D Dynamic Programming",
+            "list": "NeetCode 150"
+        },
+        "Candy": { "pattern": "Greedy", "list": "NeetCode 250" },
+        "Capacity to Ship Packages Within D Days": {
+            "pattern": "Binary Search",
+            "list": "NeetCode 250"
+        },
+        "Car Fleet": { "pattern": "Stack", "list": "NeetCode 150" },
+        "Car Pooling": {
+            "pattern": "Heap / Priority Queue",
+            "list": "NeetCode 250"
+        },
+        "Cheapest Flights Within K Stops": {
+            "pattern": "Advanced Graphs",
+            "list": "NeetCode 150"
+        },
+        "Climbing Stairs": {
+            "pattern": "1-D Dynamic Programming",
+            "list": "Blind 75"
+        },
+        "Clone Graph": { "pattern": "Graphs", "list": "Blind 75" },
+        "Coin Change": {
+            "pattern": "1-D Dynamic Programming",
+            "list": "Blind 75"
+        },
+        "Coin Change II": {
+            "pattern": "2-D Dynamic Programming",
+            "list": "NeetCode 150"
+        },
+        "Combination Sum": { "pattern": "Backtracking", "list": "Blind 75" },
+        "Combination Sum II": {
+            "pattern": "Backtracking",
+            "list": "NeetCode 150"
+        },
+        "Combination Sum IV": {
+            "pattern": "1-D Dynamic Programming",
+            "list": "NeetCode 250"
+        },
+        "Combinations": { "pattern": "Backtracking", "list": "NeetCode 250" },
+        "Concatenation of Array": {
+            "pattern": "Arrays & Hashing",
+            "list": "NeetCode 250"
+        },
+        "Construct Binary Tree From Preorder And Inorder Traversal": {
+            "pattern": "Trees",
+            "list": "Blind 75"
+        },
+        "Construct Quad Tree": { "pattern": "Trees", "list": "NeetCode 250" },
+        "Container With Most Water": {
+            "pattern": "Two Pointers",
+            "list": "Blind 75"
+        },
+        "Contains Duplicate": {
+            "pattern": "Arrays & Hashing",
+            "list": "Blind 75"
+        },
+        "Contains Duplicate II": {
+            "pattern": "Sliding Window",
+            "list": "NeetCode 250"
+        },
+        "Copy List With Random Pointer": {
+            "pattern": "Linked List",
+            "list": "NeetCode 150"
+        },
+        "Count Good Nodes In Binary Tree": {
+            "pattern": "Trees",
+            "list": "NeetCode 150"
+        },
+        "Counting Bits": { "pattern": "Bit Manipulation", "list": "Blind 75" },
+        "Course Schedule": { "pattern": "Graphs", "list": "Blind 75" },
+        "Course Schedule II": { "pattern": "Graphs", "list": "NeetCode 150" },
+        "Course Schedule IV": { "pattern": "Graphs", "list": "NeetCode 250" },
+        "Daily Temperatures": { "pattern": "Stack", "list": "NeetCode 150" },
+        "Decode String": { "pattern": "Stack", "list": "NeetCode 250" },
+        "Decode Ways": {
+            "pattern": "1-D Dynamic Programming",
+            "list": "Blind 75"
+        },
+        "Delete Leaves With a Given Value": {
+            "pattern": "Trees",
+            "list": "NeetCode 250"
+        },
+        "Delete Node in a BST": { "pattern": "Trees", "list": "NeetCode 250" },
+        "Design Add And Search Words Data Structure": {
+            "pattern": "Tries",
+            "list": "Blind 75"
+        },
+        "Design Circular Queue": {
+            "pattern": "Linked List",
+            "list": "NeetCode 250"
+        },
+        "Design HashMap": {
+            "pattern": "Arrays & Hashing",
+            "list": "NeetCode 250"
+        },
+        "Design HashSet": {
+            "pattern": "Arrays & Hashing",
+            "list": "NeetCode 250"
+        },
+        "Design Twitter": {
+            "pattern": "Heap / Priority Queue",
+            "list": "NeetCode 150"
+        },
+        "Detect Squares": {
+            "pattern": "Math & Geometry",
+            "list": "NeetCode 150"
+        },
+        "Diameter of Binary Tree": {
+            "pattern": "Trees",
+            "list": "NeetCode 150"
+        },
+        "Distinct Subsequences": {
+            "pattern": "2-D Dynamic Programming",
+            "list": "NeetCode 150"
+        },
+        "Dota2 Senate": { "pattern": "Greedy", "list": "NeetCode 250" },
+        "Edit Distance": {
+            "pattern": "2-D Dynamic Programming",
+            "list": "NeetCode 150"
+        },
+        "Encode and Decode Strings": {
+            "pattern": "Arrays & Hashing",
+            "list": "Blind 75"
+        },
+        "Evaluate Division": { "pattern": "Graphs", "list": "NeetCode 250" },
+        "Evaluate Reverse Polish Notation": {
+            "pattern": "Stack",
+            "list": "NeetCode 150"
+        },
+        "Excel Sheet Column Title": {
+            "pattern": "Math & Geometry",
+            "list": "NeetCode 250"
+        },
+        "Extra Characters in a String": {
+            "pattern": "Tries",
+            "list": "NeetCode 250"
+        },
+        "Find Critical and Pseudo Critical Edges in Minimum Spanning Tree": {
+            "pattern": "Advanced Graphs",
+            "list": "NeetCode 250"
+        },
+        "Find K Closest Elements": {
+            "pattern": "Sliding Window",
+            "list": "NeetCode 250"
+        },
+        "Find Median From Data Stream": {
+            "pattern": "Heap / Priority Queue",
+            "list": "Blind 75"
+        },
+        "Find Minimum In Rotated Sorted Array": {
+            "pattern": "Binary Search",
+            "list": "Blind 75"
+        },
+        "Find The Duplicate Number": {
+            "pattern": "Linked List",
+            "list": "NeetCode 150"
+        },
+        "Find in Mountain Array": {
+            "pattern": "Binary Search",
+            "list": "NeetCode 250"
+        },
+        "Find the Town Judge": { "pattern": "Graphs", "list": "NeetCode 250" },
+        "First Missing Positive": {
+            "pattern": "Arrays & Hashing",
+            "list": "NeetCode 250"
+        },
+        "Gas Station": { "pattern": "Greedy", "list": "NeetCode 150" },
+        "Generate Parentheses": {
+            "pattern": "Backtracking",
+            "list": "NeetCode 150"
+        },
+        "Graph Valid Tree": { "pattern": "Graphs", "list": "Blind 75" },
+        "Greatest Common Divisor Traversal": {
+            "pattern": "Advanced Graphs",
+            "list": "NeetCode 250"
+        },
+        "Greatest Common Divisor of Strings": {
+            "pattern": "Math & Geometry",
+            "list": "NeetCode 250"
+        },
+        "Group Anagrams": { "pattern": "Arrays & Hashing", "list": "Blind 75" },
+        "Guess Number Higher Or Lower": {
+            "pattern": "Binary Search",
+            "list": "NeetCode 250"
+        },
+        "Hand of Straights": { "pattern": "Greedy", "list": "NeetCode 150" },
+        "Happy Number": {
+            "pattern": "Math & Geometry",
+            "list": "NeetCode 150"
+        },
+        "House Robber": {
+            "pattern": "1-D Dynamic Programming",
+            "list": "Blind 75"
+        },
+        "House Robber II": {
+            "pattern": "1-D Dynamic Programming",
+            "list": "Blind 75"
+        },
+        "House Robber III": { "pattern": "Trees", "list": "NeetCode 250" },
+        "IPO": { "pattern": "Heap / Priority Queue", "list": "NeetCode 250" },
+        "Implement Queue using Stacks": {
+            "pattern": "Stack",
+            "list": "NeetCode 250"
+        },
+        "Implement Stack Using Queues": {
+            "pattern": "Stack",
+            "list": "NeetCode 250"
+        },
+        "Implement Trie Prefix Tree": {
+            "pattern": "Tries",
+            "list": "Blind 75"
+        },
+        "Insert Greatest Common Divisors in Linked List": {
+            "pattern": "Math & Geometry",
+            "list": "NeetCode 250"
+        },
+        "Insert Interval": { "pattern": "Intervals", "list": "Blind 75" },
+        "Insert into a Binary Search Tree": {
+            "pattern": "Trees",
+            "list": "NeetCode 250"
+        },
+        "Integer Break": {
+            "pattern": "1-D Dynamic Programming",
+            "list": "NeetCode 250"
+        },
+        "Interleaving String": {
+            "pattern": "2-D Dynamic Programming",
+            "list": "NeetCode 150"
+        },
+        "Invert Binary Tree": { "pattern": "Trees", "list": "Blind 75" },
+        "Island Perimeter": { "pattern": "Graphs", "list": "NeetCode 250" },
+        "Jump Game": { "pattern": "Greedy", "list": "Blind 75" },
+        "Jump Game II": { "pattern": "Greedy", "list": "NeetCode 150" },
+        "Jump Game VII": { "pattern": "Greedy", "list": "NeetCode 250" },
+        "K Closest Points to Origin": {
+            "pattern": "Heap / Priority Queue",
+            "list": "NeetCode 150"
+        },
+        "Koko Eating Bananas": {
+            "pattern": "Binary Search",
+            "list": "NeetCode 150"
+        },
+        "Kth Largest Element In An Array": {
+            "pattern": "Heap / Priority Queue",
+            "list": "NeetCode 150"
+        },
+        "Kth Largest Element In a Stream": {
+            "pattern": "Heap / Priority Queue",
+            "list": "NeetCode 150"
+        },
+        "Kth Smallest Element In a Bst": {
+            "pattern": "Trees",
+            "list": "Blind 75"
+        },
+        "LFU Cache": { "pattern": "Linked List", "list": "NeetCode 250" },
+        "LRU Cache": { "pattern": "Linked List", "list": "NeetCode 150" },
+        "Largest Rectangle In Histogram": {
+            "pattern": "Stack",
+            "list": "NeetCode 150"
+        },
+        "Last Stone Weight": {
+            "pattern": "Heap / Priority Queue",
+            "list": "NeetCode 150"
+        },
+        "Last Stone Weight II": {
+            "pattern": "2-D Dynamic Programming",
+            "list": "NeetCode 250"
+        },
+        "Lemonade Change": { "pattern": "Greedy", "list": "NeetCode 250" },
+        "Letter Combinations of a Phone Number": {
+            "pattern": "Backtracking",
+            "list": "NeetCode 150"
+        },
+        "Linked List Cycle": { "pattern": "Linked List", "list": "Blind 75" },
+        "Longest Common Prefix": {
+            "pattern": "Arrays & Hashing",
+            "list": "NeetCode 250"
+        },
+        "Longest Common Subsequence": {
+            "pattern": "2-D Dynamic Programming",
+            "list": "Blind 75"
+        },
+        "Longest Consecutive Sequence": {
+            "pattern": "Arrays & Hashing",
+            "list": "Blind 75"
+        },
+        "Longest Happy String": {
+            "pattern": "Heap / Priority Queue",
+            "list": "NeetCode 250"
+        },
+        "Longest Increasing Path In a Matrix": {
+            "pattern": "2-D Dynamic Programming",
+            "list": "NeetCode 150"
+        },
+        "Longest Increasing Subsequence": {
+            "pattern": "1-D Dynamic Programming",
+            "list": "Blind 75"
+        },
+        "Longest Palindromic Substring": {
+            "pattern": "1-D Dynamic Programming",
+            "list": "Blind 75"
+        },
+        "Longest Repeating Character Replacement": {
+            "pattern": "Sliding Window",
+            "list": "Blind 75"
+        },
+        "Longest Substring Without Repeating Characters": {
+            "pattern": "Sliding Window",
+            "list": "Blind 75"
+        },
+        "Longest Turbulent Subarray": {
+            "pattern": "Greedy",
+            "list": "NeetCode 250"
+        },
+        "Lowest Common Ancestor of a Binary Search Tree": {
+            "pattern": "Trees",
+            "list": "Blind 75"
+        },
+        "Majority Element": {
+            "pattern": "Arrays & Hashing",
+            "list": "NeetCode 250"
+        },
+        "Majority Element II": {
+            "pattern": "Arrays & Hashing",
+            "list": "NeetCode 250"
+        },
+        "Matchsticks to Square": {
+            "pattern": "Backtracking",
+            "list": "NeetCode 250"
+        },
+        "Max Area of Island": { "pattern": "Graphs", "list": "NeetCode 150" },
+        "Maximum Depth of Binary Tree": {
+            "pattern": "Trees",
+            "list": "Blind 75"
+        },
+        "Maximum Frequency Stack": {
+            "pattern": "Stack",
+            "list": "NeetCode 250"
+        },
+        "Maximum Product Subarray": {
+            "pattern": "1-D Dynamic Programming",
+            "list": "Blind 75"
+        },
+        "Maximum Subarray": { "pattern": "Greedy", "list": "Blind 75" },
+        "Maximum Sum Circular Subarray": {
+            "pattern": "Greedy",
+            "list": "NeetCode 250"
+        },
+        "Median of Two Sorted Arrays": {
+            "pattern": "Binary Search",
+            "list": "NeetCode 150"
+        },
+        "Meeting Rooms": { "pattern": "Intervals", "list": "Blind 75" },
+        "Meeting Rooms II": { "pattern": "Intervals", "list": "Blind 75" },
+        "Meeting Rooms III": { "pattern": "Intervals", "list": "NeetCode 250" },
+        "Merge Intervals": { "pattern": "Intervals", "list": "Blind 75" },
+        "Merge K Sorted Lists": {
+            "pattern": "Linked List",
+            "list": "Blind 75"
+        },
+        "Merge Sorted Array": {
+            "pattern": "Two Pointers",
+            "list": "NeetCode 250"
+        },
+        "Merge Strings Alternately": {
+            "pattern": "Two Pointers",
+            "list": "NeetCode 250"
+        },
+        "Merge Triplets to Form Target Triplet": {
+            "pattern": "Greedy",
+            "list": "NeetCode 150"
+        },
+        "Merge Two Sorted Lists": {
+            "pattern": "Linked List",
+            "list": "Blind 75"
+        },
+        "Min Cost Climbing Stairs": {
+            "pattern": "1-D Dynamic Programming",
+            "list": "NeetCode 150"
+        },
+        "Min Cost to Connect All Points": {
+            "pattern": "Advanced Graphs",
+            "list": "NeetCode 150"
+        },
+        "Min Stack": { "pattern": "Stack", "list": "NeetCode 150" },
+        "Minimum Array End": {
+            "pattern": "Bit Manipulation",
+            "list": "NeetCode 250"
+        },
+        "Minimum Height Trees": { "pattern": "Graphs", "list": "NeetCode 250" },
+        "Minimum Interval to Include Each Query": {
+            "pattern": "Intervals",
+            "list": "NeetCode 150"
+        },
+        "Minimum Path Sum": {
+            "pattern": "2-D Dynamic Programming",
+            "list": "NeetCode 250"
+        },
+        "Minimum Size Subarray Sum": {
+            "pattern": "Sliding Window",
+            "list": "NeetCode 250"
+        },
+        "Minimum Window Substring": {
+            "pattern": "Sliding Window",
+            "list": "Blind 75"
+        },
+        "Missing Number": { "pattern": "Bit Manipulation", "list": "Blind 75" },
+        "Multiply Strings": {
+            "pattern": "Math & Geometry",
+            "list": "NeetCode 150"
+        },
+        "N Queens": { "pattern": "Backtracking", "list": "NeetCode 150" },
+        "N Queens II": { "pattern": "Backtracking", "list": "NeetCode 250" },
+        "N-th Tribonacci Number": {
+            "pattern": "1-D Dynamic Programming",
+            "list": "NeetCode 250"
+        },
+        "Network Delay Time": {
+            "pattern": "Advanced Graphs",
+            "list": "NeetCode 150"
+        },
+        "Non Overlapping Intervals": {
+            "pattern": "Intervals",
+            "list": "Blind 75"
+        },
+        "Number of 1 Bits": {
+            "pattern": "Bit Manipulation",
+            "list": "Blind 75"
+        },
+        "Number of Connected Components In An Undirected Graph": {
+            "pattern": "Graphs",
+            "list": "Blind 75"
+        },
+        "Number of Islands": { "pattern": "Graphs", "list": "Blind 75" },
+        "Online Stock Span": { "pattern": "Stack", "list": "NeetCode 250" },
+        "Open The Lock": { "pattern": "Graphs", "list": "NeetCode 250" },
+        "Pacific Atlantic Water Flow": {
+            "pattern": "Graphs",
+            "list": "Blind 75"
+        },
+        "Palindrome Partitioning": {
+            "pattern": "Backtracking",
+            "list": "NeetCode 150"
+        },
+        "Palindromic Substrings": {
+            "pattern": "1-D Dynamic Programming",
+            "list": "Blind 75"
+        },
+        "Partition Equal Subset Sum": {
+            "pattern": "1-D Dynamic Programming",
+            "list": "NeetCode 150"
+        },
+        "Partition Labels": { "pattern": "Greedy", "list": "NeetCode 150" },
+        "Partition to K Equal Sum Subsets": {
+            "pattern": "Backtracking",
+            "list": "NeetCode 250"
+        },
+        "Path with Minimum Effort": {
+            "pattern": "Advanced Graphs",
+            "list": "NeetCode 250"
+        },
+        "Perfect Squares": {
+            "pattern": "1-D Dynamic Programming",
+            "list": "NeetCode 250"
+        },
+        "Permutation In String": {
+            "pattern": "Sliding Window",
+            "list": "NeetCode 150"
+        },
+        "Permutations": { "pattern": "Backtracking", "list": "NeetCode 150" },
+        "Permutations II": {
+            "pattern": "Backtracking",
+            "list": "NeetCode 250"
+        },
+        "Plus One": { "pattern": "Math & Geometry", "list": "NeetCode 150" },
+        "Pow(x, n)": { "pattern": "Math & Geometry", "list": "NeetCode 150" },
+        "Product of Array Except Self": {
+            "pattern": "Arrays & Hashing",
+            "list": "Blind 75"
+        },
+        "Range Sum Query 2D Immutable": {
+            "pattern": "Arrays & Hashing",
+            "list": "NeetCode 250"
+        },
+        "Reconstruct Itinerary": {
+            "pattern": "Advanced Graphs",
+            "list": "NeetCode 150"
+        },
+        "Redundant Connection": { "pattern": "Graphs", "list": "NeetCode 150" },
+        "Regular Expression Matching": {
+            "pattern": "2-D Dynamic Programming",
+            "list": "NeetCode 150"
+        },
+        "Remove Duplicates From Sorted Array": {
+            "pattern": "Two Pointers",
+            "list": "NeetCode 250"
+        },
+        "Remove Element": {
+            "pattern": "Arrays & Hashing",
+            "list": "NeetCode 250"
+        },
+        "Remove Nth Node From End of List": {
+            "pattern": "Linked List",
+            "list": "Blind 75"
+        },
+        "Reorder List": { "pattern": "Linked List", "list": "Blind 75" },
+        "Reorganize String": {
+            "pattern": "Heap / Priority Queue",
+            "list": "NeetCode 250"
+        },
+        "Reverse Bits": { "pattern": "Bit Manipulation", "list": "Blind 75" },
+        "Reverse Integer": {
+            "pattern": "Bit Manipulation",
+            "list": "NeetCode 150"
+        },
+        "Reverse Linked List": { "pattern": "Linked List", "list": "Blind 75" },
+        "Reverse Linked List II": {
+            "pattern": "Linked List",
+            "list": "NeetCode 250"
+        },
+        "Reverse Nodes In K Group": {
+            "pattern": "Linked List",
+            "list": "NeetCode 150"
+        },
+        "Reverse String": { "pattern": "Two Pointers", "list": "NeetCode 250" },
+        "Roman to Integer": {
+            "pattern": "Math & Geometry",
+            "list": "NeetCode 250"
+        },
+        "Rotate Array": { "pattern": "Two Pointers", "list": "NeetCode 250" },
+        "Rotate Image": { "pattern": "Math & Geometry", "list": "Blind 75" },
+        "Rotting Oranges": { "pattern": "Graphs", "list": "NeetCode 150" },
+        "Same Tree": { "pattern": "Trees", "list": "Blind 75" },
+        "Search In Rotated Sorted Array": {
+            "pattern": "Binary Search",
+            "list": "Blind 75"
+        },
+        "Search In Rotated Sorted Array II": {
+            "pattern": "Binary Search",
+            "list": "NeetCode 250"
+        },
+        "Search Insert Position": {
+            "pattern": "Binary Search",
+            "list": "NeetCode 250"
+        },
+        "Search a 2D Matrix": {
+            "pattern": "Binary Search",
+            "list": "NeetCode 150"
+        },
+        "Serialize And Deserialize Binary Tree": {
+            "pattern": "Trees",
+            "list": "Blind 75"
+        },
+        "Set Matrix Zeroes": {
+            "pattern": "Math & Geometry",
+            "list": "Blind 75"
+        },
+        "Simplify Path": { "pattern": "Stack", "list": "NeetCode 250" },
+        "Single Number": {
+            "pattern": "Bit Manipulation",
+            "list": "NeetCode 150"
+        },
+        "Single Threaded CPU": {
+            "pattern": "Heap / Priority Queue",
+            "list": "NeetCode 250"
+        },
+        "Sliding Window Maximum": {
+            "pattern": "Sliding Window",
+            "list": "NeetCode 150"
+        },
+        "Sort Colors": {
+            "pattern": "Arrays & Hashing",
+            "list": "NeetCode 250"
+        },
+        "Sort an Array": {
+            "pattern": "Arrays & Hashing",
+            "list": "NeetCode 250"
+        },
+        "Spiral Matrix": { "pattern": "Math & Geometry", "list": "Blind 75" },
+        "Split Array Largest Sum": {
+            "pattern": "Binary Search",
+            "list": "NeetCode 250"
+        },
+        "Sqrt(x)": { "pattern": "Binary Search", "list": "NeetCode 250" },
+        "Stone Game": {
+            "pattern": "2-D Dynamic Programming",
+            "list": "NeetCode 250"
+        },
+        "Stone Game II": {
+            "pattern": "2-D Dynamic Programming",
+            "list": "NeetCode 250"
+        },
+        "Stone Game III": {
+            "pattern": "1-D Dynamic Programming",
+            "list": "NeetCode 250"
+        },
+        "Subarray Sum Equals K": {
+            "pattern": "Arrays & Hashing",
+            "list": "NeetCode 250"
+        },
+        "Subsets": { "pattern": "Backtracking", "list": "NeetCode 150" },
+        "Subsets II": { "pattern": "Backtracking", "list": "NeetCode 150" },
+        "Subtree of Another Tree": { "pattern": "Trees", "list": "Blind 75" },
+        "Sum of All Subsets XOR Total": {
+            "pattern": "Backtracking",
+            "list": "NeetCode 250"
+        },
+        "Sum of Two Integers": {
+            "pattern": "Bit Manipulation",
+            "list": "Blind 75"
+        },
+        "Surrounded Regions": { "pattern": "Graphs", "list": "NeetCode 150" },
+        "Swim In Rising Water": {
+            "pattern": "Advanced Graphs",
+            "list": "NeetCode 150"
+        },
+        "Target Sum": {
+            "pattern": "2-D Dynamic Programming",
+            "list": "NeetCode 150"
+        },
+        "Task Scheduler": {
+            "pattern": "Heap / Priority Queue",
+            "list": "NeetCode 150"
+        },
+        "Time Based Key Value Store": {
+            "pattern": "Binary Search",
+            "list": "NeetCode 150"
+        },
+        "Top K Frequent Elements": {
+            "pattern": "Arrays & Hashing",
+            "list": "Blind 75"
+        },
+        "Transpose Matrix": {
+            "pattern": "Math & Geometry",
+            "list": "NeetCode 250"
+        },
+        "Trapping Rain Water": {
+            "pattern": "Two Pointers",
+            "list": "NeetCode 150"
+        },
+        "Two Sum": { "pattern": "Arrays & Hashing", "list": "Blind 75" },
+        "Two Sum II Input Array Is Sorted": {
+            "pattern": "Two Pointers",
+            "list": "NeetCode 150"
+        },
+        "Unique Paths": {
+            "pattern": "2-D Dynamic Programming",
+            "list": "Blind 75"
+        },
+        "Unique Paths II": {
+            "pattern": "2-D Dynamic Programming",
+            "list": "NeetCode 250"
+        },
+        "Valid Anagram": { "pattern": "Arrays & Hashing", "list": "Blind 75" },
+        "Valid Palindrome": { "pattern": "Two Pointers", "list": "Blind 75" },
+        "Valid Palindrome II": {
+            "pattern": "Two Pointers",
+            "list": "NeetCode 250"
+        },
+        "Valid Parentheses": { "pattern": "Stack", "list": "Blind 75" },
+        "Valid Parenthesis String": {
+            "pattern": "Greedy",
+            "list": "NeetCode 150"
+        },
+        "Valid Sudoku": {
+            "pattern": "Arrays & Hashing",
+            "list": "NeetCode 150"
+        },
+        "Validate Binary Search Tree": {
+            "pattern": "Trees",
+            "list": "Blind 75"
+        },
+        "Verifying An Alien Dictionary": {
+            "pattern": "Graphs",
+            "list": "NeetCode 250"
+        },
+        "Walls And Gates": { "pattern": "Graphs", "list": "NeetCode 150" },
+        "Word Break": {
+            "pattern": "1-D Dynamic Programming",
+            "list": "Blind 75"
+        },
+        "Word Break II": { "pattern": "Backtracking", "list": "NeetCode 250" },
+        "Word Ladder": { "pattern": "Graphs", "list": "NeetCode 150" },
+        "Word Search": { "pattern": "Backtracking", "list": "Blind 75" },
+        "Word Search II": { "pattern": "Tries", "list": "Blind 75" }
+    }
+}

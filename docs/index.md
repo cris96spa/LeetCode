@@ -11,329 +11,704 @@ A collection of LeetCode solutions in Python, organised by difficulty, with note
 <div class="lc-stat lc-hard"><span class="lc-num">3</span><span class="lc-label">Hard</span></div>
 </div>
 
-## NeetCode 250 &nbsp;·&nbsp; 95 / 250
+## NeetCode Progress
 
-??? note "Arrays & Hashing &nbsp;·&nbsp; 5 / 22 (23%)"
-    <div class="lc-progress-bar"><div class="lc-progress-fill" style="width:23%"></div></div>
+=== "Blind 75 &nbsp;·&nbsp; 43 / 75"
 
-    - [ ] Best Time to Buy And Sell Stock II
-    - [ ] Concatenation of Array
-    - [ ] Contains Duplicate
-    - [ ] Design HashMap
-    - [ ] Design HashSet
-    - [ ] Encode and Decode Strings
-    - [ ] First Missing Positive
-    - [x] Group Anagrams
-    - [x] Longest Common Prefix
-    - [x] Longest Consecutive Sequence
-    - [ ] Majority Element
-    - [ ] Majority Element II
-    - [x] Product of Array Except Self
-    - [ ] Range Sum Query 2D Immutable
-    - [ ] Remove Element
-    - [ ] Sort an Array
-    - [ ] Sort Colors
-    - [ ] Subarray Sum Equals K
-    - [ ] Top K Frequent Elements
-    - [x] Two Sum
-    - [ ] Valid Anagram
-    - [ ] Valid Sudoku
+    ??? note "Arrays & Hashing &nbsp;·&nbsp; 4 / 8 (50%)"
+        <div class="lc-progress-bar"><div class="lc-progress-fill" style="width:50%"></div></div>
 
-??? note "Two Pointers &nbsp;·&nbsp; 3 / 13 (23%)"
-    <div class="lc-progress-bar"><div class="lc-progress-fill" style="width:23%"></div></div>
+        - [ ] Contains Duplicate
+        - [ ] Encode and Decode Strings
+        - [x] Group Anagrams
+        - [x] Longest Consecutive Sequence
+        - [x] Product of Array Except Self
+        - [ ] Top K Frequent Elements
+        - [x] Two Sum
+        - [ ] Valid Anagram
 
-    - [x] 3Sum
-    - [ ] 4Sum
-    - [ ] Boats to Save People
-    - [ ] Container With Most Water
-    - [ ] Merge Sorted Array
-    - [ ] Merge Strings Alternately
-    - [ ] Remove Duplicates From Sorted Array
-    - [ ] Reverse String
-    - [ ] Rotate Array
-    - [ ] Trapping Rain Water
-    - [x] Two Sum II Input Array Is Sorted
-    - [x] Valid Palindrome
-    - [ ] Valid Palindrome II
+    ??? note "Two Pointers &nbsp;·&nbsp; 2 / 3 (67%)"
+        <div class="lc-progress-bar"><div class="lc-progress-fill" style="width:67%"></div></div>
 
-??? note "Sliding Window &nbsp;·&nbsp; 3 / 9 (33%)"
-    <div class="lc-progress-bar"><div class="lc-progress-fill" style="width:33%"></div></div>
+        - [x] 3Sum
+        - [ ] Container With Most Water
+        - [x] Valid Palindrome
 
-    - [ ] Best Time to Buy And Sell Stock
-    - [ ] Contains Duplicate II
-    - [ ] Find K Closest Elements
-    - [x] Longest Repeating Character Replacement
-    - [x] Longest Substring Without Repeating Characters
-    - [ ] Minimum Size Subarray Sum
-    - [ ] Minimum Window Substring
-    - [x] Permutation In String
-    - [ ] Sliding Window Maximum
+    ??? note "Sliding Window &nbsp;·&nbsp; 2 / 4 (50%)"
+        <div class="lc-progress-bar"><div class="lc-progress-fill" style="width:50%"></div></div>
 
-??? note "Stack &nbsp;·&nbsp; 4 / 14 (29%)"
-    <div class="lc-progress-bar"><div class="lc-progress-fill" style="width:29%"></div></div>
+        - [ ] Best Time to Buy And Sell Stock
+        - [x] Longest Repeating Character Replacement
+        - [x] Longest Substring Without Repeating Characters
+        - [ ] Minimum Window Substring
 
-    - [ ] Asteroid Collision
-    - [ ] Baseball Game
-    - [x] Car Fleet
-    - [x] Daily Temperatures
-    - [ ] Decode String
-    - [x] Evaluate Reverse Polish Notation
-    - [ ] Implement Queue using Stacks
-    - [ ] Implement Stack Using Queues
-    - [ ] Largest Rectangle In Histogram
-    - [ ] Maximum Frequency Stack
-    - [ ] Min Stack
-    - [ ] Online Stock Span
-    - [ ] Simplify Path
-    - [x] Valid Parentheses
+    ??? success "Stack &nbsp;·&nbsp; 1 / 1 (100%)"
+        <div class="lc-progress-bar"><div class="lc-progress-fill" style="width:100%"></div></div>
 
-??? note "Binary Search &nbsp;·&nbsp; 10 / 14 (71%)"
-    <div class="lc-progress-bar"><div class="lc-progress-fill" style="width:71%"></div></div>
+        - [x] Valid Parentheses
 
-    - [ ] Binary Search
-    - [x] Capacity to Ship Packages Within D Days
-    - [ ] Find in Mountain Array
-    - [x] Find Minimum In Rotated Sorted Array
-    - [ ] Guess Number Higher Or Lower
-    - [x] Koko Eating Bananas
-    - [x] Median of Two Sorted Arrays
-    - [x] Search a 2D Matrix
-    - [x] Search In Rotated Sorted Array
-    - [x] Search In Rotated Sorted Array II
-    - [ ] Search Insert Position
-    - [x] Split Array Largest Sum
-    - [x] Sqrt(x)
-    - [x] Time Based Key Value Store
+    ??? success "Binary Search &nbsp;·&nbsp; 2 / 2 (100%)"
+        <div class="lc-progress-bar"><div class="lc-progress-fill" style="width:100%"></div></div>
 
-??? note "Linked List &nbsp;·&nbsp; 7 / 14 (50%)"
-    <div class="lc-progress-bar"><div class="lc-progress-fill" style="width:50%"></div></div>
+        - [x] Find Minimum In Rotated Sorted Array
+        - [x] Search In Rotated Sorted Array
 
-    - [ ] Add Two Numbers
-    - [x] Copy List With Random Pointer
-    - [ ] Design Circular Queue
-    - [x] Find The Duplicate Number
-    - [ ] LFU Cache
-    - [x] Linked List Cycle
-    - [x] LRU Cache
-    - [ ] Merge K Sorted Lists
-    - [ ] Merge Two Sorted Lists
-    - [x] Remove Nth Node From End of List
-    - [x] Reorder List
-    - [x] Reverse Linked List
-    - [ ] Reverse Linked List II
-    - [ ] Reverse Nodes In K Group
+    ??? note "Linked List &nbsp;·&nbsp; 4 / 6 (67%)"
+        <div class="lc-progress-bar"><div class="lc-progress-fill" style="width:67%"></div></div>
 
-??? note "Trees &nbsp;·&nbsp; 11 / 23 (48%)"
-    <div class="lc-progress-bar"><div class="lc-progress-fill" style="width:48%"></div></div>
+        - [x] Linked List Cycle
+        - [ ] Merge K Sorted Lists
+        - [ ] Merge Two Sorted Lists
+        - [x] Remove Nth Node From End of List
+        - [x] Reorder List
+        - [x] Reverse Linked List
 
-    - [x] Balanced Binary Tree
-    - [x] Binary Tree Inorder Traversal
-    - [x] Binary Tree Level Order Traversal
-    - [ ] Binary Tree Maximum Path Sum
-    - [ ] Binary Tree Postorder Traversal
-    - [x] Binary Tree Preorder Traversal
-    - [ ] Binary Tree Right Side View
-    - [ ] Construct Binary Tree From Preorder And Inorder Traversal
-    - [ ] Construct Quad Tree
-    - [x] Count Good Nodes In Binary Tree
-    - [ ] Delete Leaves With a Given Value
-    - [x] Delete Node in a BST
-    - [x] Diameter of Binary Tree
-    - [ ] House Robber III
-    - [x] Insert into a Binary Search Tree
-    - [x] Invert Binary Tree
-    - [x] Kth Smallest Element In a Bst
-    - [ ] Lowest Common Ancestor of a Binary Search Tree
-    - [x] Maximum Depth of Binary Tree
-    - [ ] Same Tree
-    - [ ] Serialize And Deserialize Binary Tree
-    - [ ] Subtree of Another Tree
-    - [ ] Validate Binary Search Tree
+    ??? note "Trees &nbsp;·&nbsp; 4 / 11 (36%)"
+        <div class="lc-progress-bar"><div class="lc-progress-fill" style="width:36%"></div></div>
 
-??? note "Tries &nbsp;·&nbsp; 0 / 4 (0%)"
-    <div class="lc-progress-bar"><div class="lc-progress-fill" style="width:0%"></div></div>
+        - [x] Binary Tree Level Order Traversal
+        - [ ] Binary Tree Maximum Path Sum
+        - [ ] Construct Binary Tree From Preorder And Inorder Traversal
+        - [x] Invert Binary Tree
+        - [x] Kth Smallest Element In a Bst
+        - [ ] Lowest Common Ancestor of a Binary Search Tree
+        - [x] Maximum Depth of Binary Tree
+        - [ ] Same Tree
+        - [ ] Serialize And Deserialize Binary Tree
+        - [ ] Subtree of Another Tree
+        - [ ] Validate Binary Search Tree
 
-    - [ ] Design Add And Search Words Data Structure
-    - [ ] Extra Characters in a String
-    - [ ] Implement Trie Prefix Tree
-    - [ ] Word Search II
+    ??? note "Tries &nbsp;·&nbsp; 0 / 3 (0%)"
+        <div class="lc-progress-bar"><div class="lc-progress-fill" style="width:0%"></div></div>
 
-??? note "Heap / Priority Queue &nbsp;·&nbsp; 4 / 12 (33%)"
-    <div class="lc-progress-bar"><div class="lc-progress-fill" style="width:33%"></div></div>
+        - [ ] Design Add And Search Words Data Structure
+        - [ ] Implement Trie Prefix Tree
+        - [ ] Word Search II
 
-    - [ ] Car Pooling
-    - [x] Design Twitter
-    - [ ] Find Median From Data Stream
-    - [ ] IPO
-    - [x] K Closest Points to Origin
-    - [ ] Kth Largest Element In a Stream
-    - [x] Kth Largest Element In An Array
-    - [ ] Last Stone Weight
-    - [ ] Longest Happy String
-    - [ ] Reorganize String
-    - [ ] Single Threaded CPU
-    - [x] Task Scheduler
+    ??? note "Heap / Priority Queue &nbsp;·&nbsp; 0 / 1 (0%)"
+        <div class="lc-progress-bar"><div class="lc-progress-fill" style="width:0%"></div></div>
 
-??? note "Intervals &nbsp;·&nbsp; 5 / 7 (71%)"
-    <div class="lc-progress-bar"><div class="lc-progress-fill" style="width:71%"></div></div>
+        - [ ] Find Median From Data Stream
 
-    - [x] Insert Interval
-    - [x] Meeting Rooms
-    - [x] Meeting Rooms II
-    - [ ] Meeting Rooms III
-    - [x] Merge Intervals
-    - [ ] Minimum Interval to Include Each Query
-    - [x] Non Overlapping Intervals
+    ??? success "Intervals &nbsp;·&nbsp; 5 / 5 (100%)"
+        <div class="lc-progress-bar"><div class="lc-progress-fill" style="width:100%"></div></div>
 
-??? note "Greedy &nbsp;·&nbsp; 1 / 14 (7%)"
-    <div class="lc-progress-bar"><div class="lc-progress-fill" style="width:7%"></div></div>
+        - [x] Insert Interval
+        - [x] Meeting Rooms
+        - [x] Meeting Rooms II
+        - [x] Merge Intervals
+        - [x] Non Overlapping Intervals
 
-    - [ ] Candy
-    - [ ] Dota2 Senate
-    - [ ] Gas Station
-    - [ ] Hand of Straights
-    - [ ] Jump Game
-    - [ ] Jump Game II
-    - [ ] Jump Game VII
-    - [ ] Lemonade Change
-    - [ ] Longest Turbulent Subarray
-    - [x] Maximum Subarray
-    - [ ] Maximum Sum Circular Subarray
-    - [ ] Merge Triplets to Form Target Triplet
-    - [ ] Partition Labels
-    - [ ] Valid Parenthesis String
+    ??? note "Greedy &nbsp;·&nbsp; 1 / 2 (50%)"
+        <div class="lc-progress-bar"><div class="lc-progress-fill" style="width:50%"></div></div>
 
-??? note "Graphs &nbsp;·&nbsp; 9 / 21 (43%)"
-    <div class="lc-progress-bar"><div class="lc-progress-fill" style="width:43%"></div></div>
+        - [ ] Jump Game
+        - [x] Maximum Subarray
 
-    - [ ] Accounts Merge
-    - [x] Clone Graph
-    - [x] Course Schedule
-    - [x] Course Schedule II
-    - [ ] Course Schedule IV
-    - [ ] Evaluate Division
-    - [ ] Find the Town Judge
-    - [ ] Graph Valid Tree
-    - [ ] Island Perimeter
-    - [ ] Max Area of Island
-    - [ ] Minimum Height Trees
-    - [x] Number of Connected Components In An Undirected Graph
-    - [x] Number of Islands
-    - [ ] Open The Lock
-    - [x] Pacific Atlantic Water Flow
-    - [ ] Redundant Connection
-    - [x] Rotting Oranges
-    - [x] Surrounded Regions
-    - [ ] Verifying An Alien Dictionary
-    - [x] Walls And Gates
-    - [ ] Word Ladder
+    ??? note "Graphs &nbsp;·&nbsp; 5 / 6 (83%)"
+        <div class="lc-progress-bar"><div class="lc-progress-fill" style="width:83%"></div></div>
 
-??? note "Advanced Graphs &nbsp;·&nbsp; 3 / 10 (30%)"
-    <div class="lc-progress-bar"><div class="lc-progress-fill" style="width:30%"></div></div>
+        - [x] Clone Graph
+        - [x] Course Schedule
+        - [ ] Graph Valid Tree
+        - [x] Number of Connected Components In An Undirected Graph
+        - [x] Number of Islands
+        - [x] Pacific Atlantic Water Flow
 
-    - [ ] Alien Dictionary
-    - [ ] Build a Matrix With Conditions
-    - [ ] Cheapest Flights Within K Stops
-    - [ ] Find Critical and Pseudo Critical Edges in Minimum Spanning Tree
-    - [ ] Greatest Common Divisor Traversal
-    - [x] Min Cost to Connect All Points
-    - [x] Network Delay Time
-    - [ ] Path with Minimum Effort
-    - [x] Reconstruct Itinerary
-    - [ ] Swim In Rising Water
+    ??? note "Advanced Graphs &nbsp;·&nbsp; 0 / 1 (0%)"
+        <div class="lc-progress-bar"><div class="lc-progress-fill" style="width:0%"></div></div>
 
-??? note "Backtracking &nbsp;·&nbsp; 10 / 17 (59%)"
-    <div class="lc-progress-bar"><div class="lc-progress-fill" style="width:59%"></div></div>
+        - [ ] Alien Dictionary
 
-    - [x] Combination Sum
-    - [x] Combination Sum II
-    - [x] Combinations
-    - [x] Generate Parentheses
-    - [x] Letter Combinations of a Phone Number
-    - [ ] Matchsticks to Square
-    - [ ] N Queens
-    - [ ] N Queens II
-    - [ ] Palindrome Partitioning
-    - [x] Partition to K Equal Sum Subsets
-    - [x] Permutations
-    - [x] Permutations II
-    - [x] Subsets
-    - [x] Subsets II
-    - [ ] Sum of All Subsets XOR Total
-    - [ ] Word Break II
-    - [ ] Word Search
+    ??? note "Backtracking &nbsp;·&nbsp; 1 / 2 (50%)"
+        <div class="lc-progress-bar"><div class="lc-progress-fill" style="width:50%"></div></div>
 
-??? note "1-D Dynamic Programming &nbsp;·&nbsp; 8 / 17 (47%)"
-    <div class="lc-progress-bar"><div class="lc-progress-fill" style="width:47%"></div></div>
+        - [x] Combination Sum
+        - [ ] Word Search
 
-    - [x] Climbing Stairs
-    - [x] Coin Change
-    - [ ] Combination Sum IV
-    - [x] Decode Ways
-    - [x] House Robber
-    - [ ] House Robber II
-    - [ ] Integer Break
-    - [x] Longest Increasing Subsequence
-    - [ ] Longest Palindromic Substring
-    - [ ] Maximum Product Subarray
-    - [x] Min Cost Climbing Stairs
-    - [ ] N-th Tribonacci Number
-    - [x] Palindromic Substrings
-    - [ ] Partition Equal Subset Sum
-    - [ ] Perfect Squares
-    - [ ] Stone Game III
-    - [x] Word Break
+    ??? note "1-D Dynamic Programming &nbsp;·&nbsp; 8 / 10 (80%)"
+        <div class="lc-progress-bar"><div class="lc-progress-fill" style="width:80%"></div></div>
 
-??? note "2-D Dynamic Programming &nbsp;·&nbsp; 5 / 16 (31%)"
-    <div class="lc-progress-bar"><div class="lc-progress-fill" style="width:31%"></div></div>
+        - [x] Climbing Stairs
+        - [x] Coin Change
+        - [x] Decode Ways
+        - [x] House Robber
+        - [x] House Robber II
+        - [x] Longest Increasing Subsequence
+        - [ ] Longest Palindromic Substring
+        - [ ] Maximum Product Subarray
+        - [x] Palindromic Substrings
+        - [x] Word Break
 
-    - [x] Best Time to Buy And Sell Stock With Cooldown
-    - [ ] Burst Balloons
-    - [ ] Coin Change II
-    - [ ] Distinct Subsequences
-    - [x] Edit Distance
-    - [ ] Interleaving String
-    - [ ] Last Stone Weight II
-    - [x] Longest Common Subsequence
-    - [ ] Longest Increasing Path In a Matrix
-    - [x] Minimum Path Sum
-    - [ ] Regular Expression Matching
-    - [ ] Stone Game
-    - [ ] Stone Game II
-    - [ ] Target Sum
-    - [x] Unique Paths
-    - [ ] Unique Paths II
+    ??? success "2-D Dynamic Programming &nbsp;·&nbsp; 2 / 2 (100%)"
+        <div class="lc-progress-bar"><div class="lc-progress-fill" style="width:100%"></div></div>
 
-??? note "Bit Manipulation &nbsp;·&nbsp; 3 / 10 (30%)"
-    <div class="lc-progress-bar"><div class="lc-progress-fill" style="width:30%"></div></div>
+        - [x] Longest Common Subsequence
+        - [x] Unique Paths
 
-    - [ ] Add Binary
-    - [ ] Bitwise AND of Numbers Range
-    - [ ] Counting Bits
-    - [ ] Minimum Array End
-    - [ ] Missing Number
-    - [x] Number of 1 Bits
-    - [x] Reverse Bits
-    - [ ] Reverse Integer
-    - [x] Single Number
-    - [ ] Sum of Two Integers
+    ??? note "Bit Manipulation &nbsp;·&nbsp; 2 / 5 (40%)"
+        <div class="lc-progress-bar"><div class="lc-progress-fill" style="width:40%"></div></div>
 
-??? note "Math & Geometry &nbsp;·&nbsp; 2 / 13 (15%)"
-    <div class="lc-progress-bar"><div class="lc-progress-fill" style="width:15%"></div></div>
+        - [ ] Counting Bits
+        - [ ] Missing Number
+        - [x] Number of 1 Bits
+        - [x] Reverse Bits
+        - [ ] Sum of Two Integers
 
-    - [ ] Detect Squares
-    - [ ] Excel Sheet Column Title
-    - [ ] Greatest Common Divisor of Strings
-    - [ ] Happy Number
-    - [ ] Insert Greatest Common Divisors in Linked List
-    - [x] Multiply Strings
-    - [ ] Plus One
-    - [ ] Pow(x, n)
-    - [x] Roman to Integer
-    - [ ] Rotate Image
-    - [ ] Set Matrix Zeroes
-    - [ ] Spiral Matrix
-    - [ ] Transpose Matrix
+    ??? note "Math & Geometry &nbsp;·&nbsp; 0 / 3 (0%)"
+        <div class="lc-progress-bar"><div class="lc-progress-fill" style="width:0%"></div></div>
+
+        - [ ] Rotate Image
+        - [ ] Set Matrix Zeroes
+        - [ ] Spiral Matrix
+
+=== "NeetCode 150 &nbsp;·&nbsp; 80 / 150"
+
+    ??? note "Arrays & Hashing &nbsp;·&nbsp; 4 / 9 (44%)"
+        <div class="lc-progress-bar"><div class="lc-progress-fill" style="width:44%"></div></div>
+
+        - [ ] Contains Duplicate
+        - [ ] Encode and Decode Strings
+        - [x] Group Anagrams
+        - [x] Longest Consecutive Sequence
+        - [x] Product of Array Except Self
+        - [ ] Top K Frequent Elements
+        - [x] Two Sum
+        - [ ] Valid Anagram
+        - [ ] Valid Sudoku
+
+    ??? note "Two Pointers &nbsp;·&nbsp; 3 / 5 (60%)"
+        <div class="lc-progress-bar"><div class="lc-progress-fill" style="width:60%"></div></div>
+
+        - [x] 3Sum
+        - [ ] Container With Most Water
+        - [ ] Trapping Rain Water
+        - [x] Two Sum II Input Array Is Sorted
+        - [x] Valid Palindrome
+
+    ??? note "Sliding Window &nbsp;·&nbsp; 3 / 6 (50%)"
+        <div class="lc-progress-bar"><div class="lc-progress-fill" style="width:50%"></div></div>
+
+        - [ ] Best Time to Buy And Sell Stock
+        - [x] Longest Repeating Character Replacement
+        - [x] Longest Substring Without Repeating Characters
+        - [ ] Minimum Window Substring
+        - [x] Permutation In String
+        - [ ] Sliding Window Maximum
+
+    ??? note "Stack &nbsp;·&nbsp; 4 / 6 (67%)"
+        <div class="lc-progress-bar"><div class="lc-progress-fill" style="width:67%"></div></div>
+
+        - [x] Car Fleet
+        - [x] Daily Temperatures
+        - [x] Evaluate Reverse Polish Notation
+        - [ ] Largest Rectangle In Histogram
+        - [ ] Min Stack
+        - [x] Valid Parentheses
+
+    ??? note "Binary Search &nbsp;·&nbsp; 6 / 7 (86%)"
+        <div class="lc-progress-bar"><div class="lc-progress-fill" style="width:86%"></div></div>
+
+        - [ ] Binary Search
+        - [x] Find Minimum In Rotated Sorted Array
+        - [x] Koko Eating Bananas
+        - [x] Median of Two Sorted Arrays
+        - [x] Search a 2D Matrix
+        - [x] Search In Rotated Sorted Array
+        - [x] Time Based Key Value Store
+
+    ??? note "Linked List &nbsp;·&nbsp; 7 / 11 (64%)"
+        <div class="lc-progress-bar"><div class="lc-progress-fill" style="width:64%"></div></div>
+
+        - [ ] Add Two Numbers
+        - [x] Copy List With Random Pointer
+        - [x] Find The Duplicate Number
+        - [x] Linked List Cycle
+        - [x] LRU Cache
+        - [ ] Merge K Sorted Lists
+        - [ ] Merge Two Sorted Lists
+        - [x] Remove Nth Node From End of List
+        - [x] Reorder List
+        - [x] Reverse Linked List
+        - [ ] Reverse Nodes In K Group
+
+    ??? note "Trees &nbsp;·&nbsp; 7 / 15 (47%)"
+        <div class="lc-progress-bar"><div class="lc-progress-fill" style="width:47%"></div></div>
+
+        - [x] Balanced Binary Tree
+        - [x] Binary Tree Level Order Traversal
+        - [ ] Binary Tree Maximum Path Sum
+        - [ ] Binary Tree Right Side View
+        - [ ] Construct Binary Tree From Preorder And Inorder Traversal
+        - [x] Count Good Nodes In Binary Tree
+        - [x] Diameter of Binary Tree
+        - [x] Invert Binary Tree
+        - [x] Kth Smallest Element In a Bst
+        - [ ] Lowest Common Ancestor of a Binary Search Tree
+        - [x] Maximum Depth of Binary Tree
+        - [ ] Same Tree
+        - [ ] Serialize And Deserialize Binary Tree
+        - [ ] Subtree of Another Tree
+        - [ ] Validate Binary Search Tree
+
+    ??? note "Tries &nbsp;·&nbsp; 0 / 3 (0%)"
+        <div class="lc-progress-bar"><div class="lc-progress-fill" style="width:0%"></div></div>
+
+        - [ ] Design Add And Search Words Data Structure
+        - [ ] Implement Trie Prefix Tree
+        - [ ] Word Search II
+
+    ??? note "Heap / Priority Queue &nbsp;·&nbsp; 4 / 7 (57%)"
+        <div class="lc-progress-bar"><div class="lc-progress-fill" style="width:57%"></div></div>
+
+        - [x] Design Twitter
+        - [ ] Find Median From Data Stream
+        - [x] K Closest Points to Origin
+        - [ ] Kth Largest Element In a Stream
+        - [x] Kth Largest Element In An Array
+        - [ ] Last Stone Weight
+        - [x] Task Scheduler
+
+    ??? note "Intervals &nbsp;·&nbsp; 5 / 6 (83%)"
+        <div class="lc-progress-bar"><div class="lc-progress-fill" style="width:83%"></div></div>
+
+        - [x] Insert Interval
+        - [x] Meeting Rooms
+        - [x] Meeting Rooms II
+        - [x] Merge Intervals
+        - [ ] Minimum Interval to Include Each Query
+        - [x] Non Overlapping Intervals
+
+    ??? note "Greedy &nbsp;·&nbsp; 1 / 8 (12%)"
+        <div class="lc-progress-bar"><div class="lc-progress-fill" style="width:12%"></div></div>
+
+        - [ ] Gas Station
+        - [ ] Hand of Straights
+        - [ ] Jump Game
+        - [ ] Jump Game II
+        - [x] Maximum Subarray
+        - [ ] Merge Triplets to Form Target Triplet
+        - [ ] Partition Labels
+        - [ ] Valid Parenthesis String
+
+    ??? note "Graphs &nbsp;·&nbsp; 9 / 13 (69%)"
+        <div class="lc-progress-bar"><div class="lc-progress-fill" style="width:69%"></div></div>
+
+        - [x] Clone Graph
+        - [x] Course Schedule
+        - [x] Course Schedule II
+        - [ ] Graph Valid Tree
+        - [ ] Max Area of Island
+        - [x] Number of Connected Components In An Undirected Graph
+        - [x] Number of Islands
+        - [x] Pacific Atlantic Water Flow
+        - [ ] Redundant Connection
+        - [x] Rotting Oranges
+        - [x] Surrounded Regions
+        - [x] Walls And Gates
+        - [ ] Word Ladder
+
+    ??? note "Advanced Graphs &nbsp;·&nbsp; 3 / 6 (50%)"
+        <div class="lc-progress-bar"><div class="lc-progress-fill" style="width:50%"></div></div>
+
+        - [ ] Alien Dictionary
+        - [ ] Cheapest Flights Within K Stops
+        - [x] Min Cost to Connect All Points
+        - [x] Network Delay Time
+        - [x] Reconstruct Itinerary
+        - [ ] Swim In Rising Water
+
+    ??? note "Backtracking &nbsp;·&nbsp; 7 / 10 (70%)"
+        <div class="lc-progress-bar"><div class="lc-progress-fill" style="width:70%"></div></div>
+
+        - [x] Combination Sum
+        - [x] Combination Sum II
+        - [x] Generate Parentheses
+        - [x] Letter Combinations of a Phone Number
+        - [ ] N Queens
+        - [ ] Palindrome Partitioning
+        - [x] Permutations
+        - [x] Subsets
+        - [x] Subsets II
+        - [ ] Word Search
+
+    ??? note "1-D Dynamic Programming &nbsp;·&nbsp; 9 / 12 (75%)"
+        <div class="lc-progress-bar"><div class="lc-progress-fill" style="width:75%"></div></div>
+
+        - [x] Climbing Stairs
+        - [x] Coin Change
+        - [x] Decode Ways
+        - [x] House Robber
+        - [x] House Robber II
+        - [x] Longest Increasing Subsequence
+        - [ ] Longest Palindromic Substring
+        - [ ] Maximum Product Subarray
+        - [x] Min Cost Climbing Stairs
+        - [x] Palindromic Substrings
+        - [ ] Partition Equal Subset Sum
+        - [x] Word Break
+
+    ??? note "2-D Dynamic Programming &nbsp;·&nbsp; 4 / 11 (36%)"
+        <div class="lc-progress-bar"><div class="lc-progress-fill" style="width:36%"></div></div>
+
+        - [x] Best Time to Buy And Sell Stock With Cooldown
+        - [ ] Burst Balloons
+        - [ ] Coin Change II
+        - [ ] Distinct Subsequences
+        - [x] Edit Distance
+        - [ ] Interleaving String
+        - [x] Longest Common Subsequence
+        - [ ] Longest Increasing Path In a Matrix
+        - [ ] Regular Expression Matching
+        - [ ] Target Sum
+        - [x] Unique Paths
+
+    ??? note "Bit Manipulation &nbsp;·&nbsp; 3 / 7 (43%)"
+        <div class="lc-progress-bar"><div class="lc-progress-fill" style="width:43%"></div></div>
+
+        - [ ] Counting Bits
+        - [ ] Missing Number
+        - [x] Number of 1 Bits
+        - [x] Reverse Bits
+        - [ ] Reverse Integer
+        - [x] Single Number
+        - [ ] Sum of Two Integers
+
+    ??? note "Math & Geometry &nbsp;·&nbsp; 1 / 8 (12%)"
+        <div class="lc-progress-bar"><div class="lc-progress-fill" style="width:12%"></div></div>
+
+        - [ ] Detect Squares
+        - [ ] Happy Number
+        - [x] Multiply Strings
+        - [ ] Plus One
+        - [ ] Pow(x, n)
+        - [ ] Rotate Image
+        - [ ] Set Matrix Zeroes
+        - [ ] Spiral Matrix
+
+=== "NeetCode 250 &nbsp;·&nbsp; 94 / 250"
+
+    ??? note "Arrays & Hashing &nbsp;·&nbsp; 5 / 22 (23%)"
+        <div class="lc-progress-bar"><div class="lc-progress-fill" style="width:23%"></div></div>
+
+        - [ ] Best Time to Buy And Sell Stock II
+        - [ ] Concatenation of Array
+        - [ ] Contains Duplicate
+        - [ ] Design HashMap
+        - [ ] Design HashSet
+        - [ ] Encode and Decode Strings
+        - [ ] First Missing Positive
+        - [x] Group Anagrams
+        - [x] Longest Common Prefix
+        - [x] Longest Consecutive Sequence
+        - [ ] Majority Element
+        - [ ] Majority Element II
+        - [x] Product of Array Except Self
+        - [ ] Range Sum Query 2D Immutable
+        - [ ] Remove Element
+        - [ ] Sort an Array
+        - [ ] Sort Colors
+        - [ ] Subarray Sum Equals K
+        - [ ] Top K Frequent Elements
+        - [x] Two Sum
+        - [ ] Valid Anagram
+        - [ ] Valid Sudoku
+
+    ??? note "Two Pointers &nbsp;·&nbsp; 3 / 13 (23%)"
+        <div class="lc-progress-bar"><div class="lc-progress-fill" style="width:23%"></div></div>
+
+        - [x] 3Sum
+        - [ ] 4Sum
+        - [ ] Boats to Save People
+        - [ ] Container With Most Water
+        - [ ] Merge Sorted Array
+        - [ ] Merge Strings Alternately
+        - [ ] Remove Duplicates From Sorted Array
+        - [ ] Reverse String
+        - [ ] Rotate Array
+        - [ ] Trapping Rain Water
+        - [x] Two Sum II Input Array Is Sorted
+        - [x] Valid Palindrome
+        - [ ] Valid Palindrome II
+
+    ??? note "Sliding Window &nbsp;·&nbsp; 3 / 9 (33%)"
+        <div class="lc-progress-bar"><div class="lc-progress-fill" style="width:33%"></div></div>
+
+        - [ ] Best Time to Buy And Sell Stock
+        - [ ] Contains Duplicate II
+        - [ ] Find K Closest Elements
+        - [x] Longest Repeating Character Replacement
+        - [x] Longest Substring Without Repeating Characters
+        - [ ] Minimum Size Subarray Sum
+        - [ ] Minimum Window Substring
+        - [x] Permutation In String
+        - [ ] Sliding Window Maximum
+
+    ??? note "Stack &nbsp;·&nbsp; 4 / 14 (29%)"
+        <div class="lc-progress-bar"><div class="lc-progress-fill" style="width:29%"></div></div>
+
+        - [ ] Asteroid Collision
+        - [ ] Baseball Game
+        - [x] Car Fleet
+        - [x] Daily Temperatures
+        - [ ] Decode String
+        - [x] Evaluate Reverse Polish Notation
+        - [ ] Implement Queue using Stacks
+        - [ ] Implement Stack Using Queues
+        - [ ] Largest Rectangle In Histogram
+        - [ ] Maximum Frequency Stack
+        - [ ] Min Stack
+        - [ ] Online Stock Span
+        - [ ] Simplify Path
+        - [x] Valid Parentheses
+
+    ??? note "Binary Search &nbsp;·&nbsp; 10 / 14 (71%)"
+        <div class="lc-progress-bar"><div class="lc-progress-fill" style="width:71%"></div></div>
+
+        - [ ] Binary Search
+        - [x] Capacity to Ship Packages Within D Days
+        - [ ] Find in Mountain Array
+        - [x] Find Minimum In Rotated Sorted Array
+        - [ ] Guess Number Higher Or Lower
+        - [x] Koko Eating Bananas
+        - [x] Median of Two Sorted Arrays
+        - [x] Search a 2D Matrix
+        - [x] Search In Rotated Sorted Array
+        - [x] Search In Rotated Sorted Array II
+        - [ ] Search Insert Position
+        - [x] Split Array Largest Sum
+        - [x] Sqrt(x)
+        - [x] Time Based Key Value Store
+
+    ??? note "Linked List &nbsp;·&nbsp; 7 / 14 (50%)"
+        <div class="lc-progress-bar"><div class="lc-progress-fill" style="width:50%"></div></div>
+
+        - [ ] Add Two Numbers
+        - [x] Copy List With Random Pointer
+        - [ ] Design Circular Queue
+        - [x] Find The Duplicate Number
+        - [ ] LFU Cache
+        - [x] Linked List Cycle
+        - [x] LRU Cache
+        - [ ] Merge K Sorted Lists
+        - [ ] Merge Two Sorted Lists
+        - [x] Remove Nth Node From End of List
+        - [x] Reorder List
+        - [x] Reverse Linked List
+        - [ ] Reverse Linked List II
+        - [ ] Reverse Nodes In K Group
+
+    ??? note "Trees &nbsp;·&nbsp; 11 / 23 (48%)"
+        <div class="lc-progress-bar"><div class="lc-progress-fill" style="width:48%"></div></div>
+
+        - [x] Balanced Binary Tree
+        - [x] Binary Tree Inorder Traversal
+        - [x] Binary Tree Level Order Traversal
+        - [ ] Binary Tree Maximum Path Sum
+        - [ ] Binary Tree Postorder Traversal
+        - [x] Binary Tree Preorder Traversal
+        - [ ] Binary Tree Right Side View
+        - [ ] Construct Binary Tree From Preorder And Inorder Traversal
+        - [ ] Construct Quad Tree
+        - [x] Count Good Nodes In Binary Tree
+        - [ ] Delete Leaves With a Given Value
+        - [x] Delete Node in a BST
+        - [x] Diameter of Binary Tree
+        - [ ] House Robber III
+        - [x] Insert into a Binary Search Tree
+        - [x] Invert Binary Tree
+        - [x] Kth Smallest Element In a Bst
+        - [ ] Lowest Common Ancestor of a Binary Search Tree
+        - [x] Maximum Depth of Binary Tree
+        - [ ] Same Tree
+        - [ ] Serialize And Deserialize Binary Tree
+        - [ ] Subtree of Another Tree
+        - [ ] Validate Binary Search Tree
+
+    ??? note "Tries &nbsp;·&nbsp; 0 / 4 (0%)"
+        <div class="lc-progress-bar"><div class="lc-progress-fill" style="width:0%"></div></div>
+
+        - [ ] Design Add And Search Words Data Structure
+        - [ ] Extra Characters in a String
+        - [ ] Implement Trie Prefix Tree
+        - [ ] Word Search II
+
+    ??? note "Heap / Priority Queue &nbsp;·&nbsp; 4 / 12 (33%)"
+        <div class="lc-progress-bar"><div class="lc-progress-fill" style="width:33%"></div></div>
+
+        - [ ] Car Pooling
+        - [x] Design Twitter
+        - [ ] Find Median From Data Stream
+        - [ ] IPO
+        - [x] K Closest Points to Origin
+        - [ ] Kth Largest Element In a Stream
+        - [x] Kth Largest Element In An Array
+        - [ ] Last Stone Weight
+        - [ ] Longest Happy String
+        - [ ] Reorganize String
+        - [ ] Single Threaded CPU
+        - [x] Task Scheduler
+
+    ??? note "Intervals &nbsp;·&nbsp; 5 / 7 (71%)"
+        <div class="lc-progress-bar"><div class="lc-progress-fill" style="width:71%"></div></div>
+
+        - [x] Insert Interval
+        - [x] Meeting Rooms
+        - [x] Meeting Rooms II
+        - [ ] Meeting Rooms III
+        - [x] Merge Intervals
+        - [ ] Minimum Interval to Include Each Query
+        - [x] Non Overlapping Intervals
+
+    ??? note "Greedy &nbsp;·&nbsp; 1 / 14 (7%)"
+        <div class="lc-progress-bar"><div class="lc-progress-fill" style="width:7%"></div></div>
+
+        - [ ] Candy
+        - [ ] Dota2 Senate
+        - [ ] Gas Station
+        - [ ] Hand of Straights
+        - [ ] Jump Game
+        - [ ] Jump Game II
+        - [ ] Jump Game VII
+        - [ ] Lemonade Change
+        - [ ] Longest Turbulent Subarray
+        - [x] Maximum Subarray
+        - [ ] Maximum Sum Circular Subarray
+        - [ ] Merge Triplets to Form Target Triplet
+        - [ ] Partition Labels
+        - [ ] Valid Parenthesis String
+
+    ??? note "Graphs &nbsp;·&nbsp; 9 / 21 (43%)"
+        <div class="lc-progress-bar"><div class="lc-progress-fill" style="width:43%"></div></div>
+
+        - [ ] Accounts Merge
+        - [x] Clone Graph
+        - [x] Course Schedule
+        - [x] Course Schedule II
+        - [ ] Course Schedule IV
+        - [ ] Evaluate Division
+        - [ ] Find the Town Judge
+        - [ ] Graph Valid Tree
+        - [ ] Island Perimeter
+        - [ ] Max Area of Island
+        - [ ] Minimum Height Trees
+        - [x] Number of Connected Components In An Undirected Graph
+        - [x] Number of Islands
+        - [ ] Open The Lock
+        - [x] Pacific Atlantic Water Flow
+        - [ ] Redundant Connection
+        - [x] Rotting Oranges
+        - [x] Surrounded Regions
+        - [ ] Verifying An Alien Dictionary
+        - [x] Walls And Gates
+        - [ ] Word Ladder
+
+    ??? note "Advanced Graphs &nbsp;·&nbsp; 3 / 10 (30%)"
+        <div class="lc-progress-bar"><div class="lc-progress-fill" style="width:30%"></div></div>
+
+        - [ ] Alien Dictionary
+        - [ ] Build a Matrix With Conditions
+        - [ ] Cheapest Flights Within K Stops
+        - [ ] Find Critical and Pseudo Critical Edges in Minimum Spanning Tree
+        - [ ] Greatest Common Divisor Traversal
+        - [x] Min Cost to Connect All Points
+        - [x] Network Delay Time
+        - [ ] Path with Minimum Effort
+        - [x] Reconstruct Itinerary
+        - [ ] Swim In Rising Water
+
+    ??? note "Backtracking &nbsp;·&nbsp; 10 / 17 (59%)"
+        <div class="lc-progress-bar"><div class="lc-progress-fill" style="width:59%"></div></div>
+
+        - [x] Combination Sum
+        - [x] Combination Sum II
+        - [x] Combinations
+        - [x] Generate Parentheses
+        - [x] Letter Combinations of a Phone Number
+        - [ ] Matchsticks to Square
+        - [ ] N Queens
+        - [ ] N Queens II
+        - [ ] Palindrome Partitioning
+        - [x] Partition to K Equal Sum Subsets
+        - [x] Permutations
+        - [x] Permutations II
+        - [x] Subsets
+        - [x] Subsets II
+        - [ ] Sum of All Subsets XOR Total
+        - [ ] Word Break II
+        - [ ] Word Search
+
+    ??? note "1-D Dynamic Programming &nbsp;·&nbsp; 9 / 17 (53%)"
+        <div class="lc-progress-bar"><div class="lc-progress-fill" style="width:53%"></div></div>
+
+        - [x] Climbing Stairs
+        - [x] Coin Change
+        - [ ] Combination Sum IV
+        - [x] Decode Ways
+        - [x] House Robber
+        - [x] House Robber II
+        - [ ] Integer Break
+        - [x] Longest Increasing Subsequence
+        - [ ] Longest Palindromic Substring
+        - [ ] Maximum Product Subarray
+        - [x] Min Cost Climbing Stairs
+        - [ ] N-th Tribonacci Number
+        - [x] Palindromic Substrings
+        - [ ] Partition Equal Subset Sum
+        - [ ] Perfect Squares
+        - [ ] Stone Game III
+        - [x] Word Break
+
+    ??? note "2-D Dynamic Programming &nbsp;·&nbsp; 5 / 16 (31%)"
+        <div class="lc-progress-bar"><div class="lc-progress-fill" style="width:31%"></div></div>
+
+        - [x] Best Time to Buy And Sell Stock With Cooldown
+        - [ ] Burst Balloons
+        - [ ] Coin Change II
+        - [ ] Distinct Subsequences
+        - [x] Edit Distance
+        - [ ] Interleaving String
+        - [ ] Last Stone Weight II
+        - [x] Longest Common Subsequence
+        - [ ] Longest Increasing Path In a Matrix
+        - [x] Minimum Path Sum
+        - [ ] Regular Expression Matching
+        - [ ] Stone Game
+        - [ ] Stone Game II
+        - [ ] Target Sum
+        - [x] Unique Paths
+        - [ ] Unique Paths II
+
+    ??? note "Bit Manipulation &nbsp;·&nbsp; 3 / 10 (30%)"
+        <div class="lc-progress-bar"><div class="lc-progress-fill" style="width:30%"></div></div>
+
+        - [ ] Add Binary
+        - [ ] Bitwise AND of Numbers Range
+        - [ ] Counting Bits
+        - [ ] Minimum Array End
+        - [ ] Missing Number
+        - [x] Number of 1 Bits
+        - [x] Reverse Bits
+        - [ ] Reverse Integer
+        - [x] Single Number
+        - [ ] Sum of Two Integers
+
+    ??? note "Math & Geometry &nbsp;·&nbsp; 2 / 13 (15%)"
+        <div class="lc-progress-bar"><div class="lc-progress-fill" style="width:15%"></div></div>
+
+        - [ ] Detect Squares
+        - [ ] Excel Sheet Column Title
+        - [ ] Greatest Common Divisor of Strings
+        - [ ] Happy Number
+        - [ ] Insert Greatest Common Divisors in Linked List
+        - [x] Multiply Strings
+        - [ ] Plus One
+        - [ ] Pow(x, n)
+        - [x] Roman to Integer
+        - [ ] Rotate Image
+        - [ ] Set Matrix Zeroes
+        - [ ] Spiral Matrix
+        - [ ] Transpose Matrix
 
 ## Other Solutions &nbsp;·&nbsp; 23
 

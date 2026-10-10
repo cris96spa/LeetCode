@@ -2,14 +2,14 @@ import json
 import logging
 import re
 import subprocess
-from collections import defaultdict
+from collections import Counter, defaultdict
 from pathlib import Path
 from typing import NamedTuple
 
 legger = logging.getLogger(__name__)
 
 _ROOT = Path(__file__).parent.parent
-_NEETCODE_MAP = _ROOT / "utils" / "neetcode250.json"
+_NEETCODE = _ROOT / "utils" / "neetcode.json"
 _README = _ROOT / "README.md"
 _DOCS_INDEX = _ROOT / "docs" / "index.md"
 
@@ -81,6 +81,34 @@ def _inject(text: str, start: str, end: str, content: str) -> str:
     return result
 
 
+def _load_neetcode() -> tuple[dict[str, str], dict[str, list[str]]]:
+    """Return {problem: pattern} and {list name: problems}, smallest list first.
+
+    Each problem records the smallest list containing it, so every list includes all
+    the problems of the lists before it.
+
+    Returns:
+        tuple[dict[str, str], dict[str, list[str]]]: mapping of problem to pattern, and lists
+            of problems by list name.
+
+    Raises:
+        ValueError: if a list's size doesn't match its name, or a problem names an unknown list.
+    """
+    data = json.loads(_NEETCODE.read_text())
+    order: list[str] = data["lists"]
+    problems: dict[str, dict[str, str]] = data["problems"]
+
+    mapping = {name: info["pattern"] for name, info in problems.items()}
+    lists = {
+        title: [name for name, info in problems.items() if order.index(info["list"]) <= i]
+        for i, title in enumerate(order)
+    }
+    for title, names in lists.items():
+        if len(names) != int(title.split()[-1]):  # "NeetCode 150" must hold 150 problems
+            raise ValueError(f"{title} has {len(names)} problems")
+    return mapping, lists
+
+
 def _classify(
     files: list[_SolvedFile],
     mapping: dict[str, str],
@@ -94,7 +122,8 @@ def _classify(
         name = _slug_to_name(file.slug)
         pattern = lookup.get(_normalize(name))
         if pattern:
-            pattern_solved[pattern].append(_normalize(name))
+            if _normalize(name) not in pattern_solved[pattern]:  # same problem in two folders
+                pattern_solved[pattern].append(_normalize(name))
         else:
             unmatched.append(file)
 
@@ -128,20 +157,42 @@ def _render_readme(
     return "\n".join(lines)
 
 
+def _render_list_tab(title: str, names: list[str], mapping: dict[str, str], solved: set[str]) -> list[str]:
+    """One content tab: the problems of a NeetCode list, grouped by pattern."""
+    by_pattern: dict[str, list[str]] = defaultdict(list)
+    for name in names:
+        by_pattern[mapping[name]].append(name)
+
+    list_solved = sum(_normalize(name) in solved for name in names)
+    lines = [f'=== "{title} &nbsp;·&nbsp; {list_solved} / {len(names)}"', ""]
+
+    for pattern in _NC250_PATTERN_ORDER:
+        problems = sorted(by_pattern.get(pattern, []), key=str.lower)
+        if not problems:
+            continue
+        s, t = sum(_normalize(name) in solved for name in problems), len(problems)
+        pct = round(s / t * 100)
+        admonition = "success" if s == t else "note"
+
+        lines += [
+            f'    ??? {admonition} "{pattern} &nbsp;·&nbsp; {s} / {t} ({pct}%)"',
+            f'        <div class="lc-progress-bar">'
+            f'<div class="lc-progress-fill" style="width:{pct}%"></div></div>',
+            "",
+            *(f"        - [{'x' if _normalize(name) in solved else ' '}] {name}" for name in problems),
+            "",
+        ]
+    return lines
+
+
 def _render_docs(
     counts: dict[str, int],
     pattern_solved: dict[str, list[str]],
-    totals: dict[str, int],
     mapping: dict[str, str],
+    lists: dict[str, list[str]],
     unmatched: list[_SolvedFile],
 ) -> str:
-    nc250_count = sum(len(v) for v in pattern_solved.values())
-
-    by_pattern: dict[str, list[str]] = defaultdict(list)
-    for name, pattern in mapping.items():
-        by_pattern[pattern].append(name)
-    for problems in by_pattern.values():
-        problems.sort(key=str.lower)
+    solved = {name for names in pattern_solved.values() for name in names}
 
     lines: list[str] = [
         '<div class="lc-stats">',
@@ -152,25 +203,12 @@ def _render_docs(
         ),
         "</div>",
         "",
-        f"## NeetCode 250 &nbsp;·&nbsp; {nc250_count} / 250",
+        "## NeetCode Progress",
         "",
     ]
 
-    for pattern in _NC250_PATTERN_ORDER:
-        solved_set = set(pattern_solved.get(pattern, []))
-        problems = by_pattern.get(pattern, [])
-        s, t = len(solved_set), totals.get(pattern, len(problems))
-        pct = round(s / t * 100) if t else 0
-        admonition = "success" if s == t > 0 else "note"
-
-        lines += [
-            f'??? {admonition} "{pattern} &nbsp;·&nbsp; {s} / {t} ({pct}%)"',
-            f'    <div class="lc-progress-bar">'
-            f'<div class="lc-progress-fill" style="width:{pct}%"></div></div>',
-            "",
-            *(f"    - [{'x' if _normalize(name) in solved_set else ' '}] {name}" for name in problems),
-            "",
-        ]
+    for title, names in lists.items():
+        lines += _render_list_tab(title, names, mapping, solved)
 
     if unmatched:
         lines += [
@@ -193,15 +231,14 @@ def main() -> None:
     """Regenerate progress dashboards and stage the updated files."""
     logging.basicConfig(format="%(message)s", level=logging.INFO)
 
-    nc250 = json.loads(_NEETCODE_MAP.read_text())
-    mapping: dict[str, str] = nc250["mapping"]
-    totals: dict[str, int] = nc250["patterns"]
+    mapping, lists = _load_neetcode()
+    totals = Counter(mapping.values())
 
     files = _scan()
     counts, pattern_solved, unmatched = _classify(files, mapping)
 
     readme = _render_readme(counts, pattern_solved, totals)
-    docs = _render_docs(counts, pattern_solved, totals, mapping, unmatched)
+    docs = _render_docs(counts, pattern_solved, mapping, lists, unmatched)
 
     _README.write_text(_inject(_README.read_text(), *_README_MARKERS, readme))
     _DOCS_INDEX.write_text(_inject(_DOCS_INDEX.read_text(), *_DOCS_MARKERS, docs))
