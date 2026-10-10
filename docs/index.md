@@ -7,7 +7,7 @@ A collection of LeetCode solutions in Python, organised by difficulty, with note
 <!-- DASHBOARD:START -->
 <div class="lc-stats">
 <div class="lc-stat lc-easy"><span class="lc-num">27</span><span class="lc-label">Easy</span></div>
-<div class="lc-stat lc-medium"><span class="lc-num">91</span><span class="lc-label">Medium</span></div>
+<div class="lc-stat lc-medium"><span class="lc-num">92</span><span class="lc-label">Medium</span></div>
 <div class="lc-stat lc-hard"><span class="lc-num">3</span><span class="lc-label">Hard</span></div>
 </div>
 
@@ -386,10 +386,10 @@ A collection of LeetCode solutions in Python, organised by difficulty, with note
         - [ ] Set Matrix Zeroes
         - [ ] Spiral Matrix
 
-=== "NeetCode 250 &nbsp;·&nbsp; 97 / 250"
+=== "NeetCode 250 &nbsp;·&nbsp; 98 / 250"
 
-    ??? note "Arrays & Hashing &nbsp;·&nbsp; 5 / 22 (23%)"
-        <div class="lc-progress-bar"><div class="lc-progress-fill" style="width:23%"></div></div>
+    ??? note "Arrays & Hashing &nbsp;·&nbsp; 6 / 22 (27%)"
+        <div class="lc-progress-bar"><div class="lc-progress-fill" style="width:27%"></div></div>
 
         - [ ] Best Time to Buy And Sell Stock II
         - [ ] Concatenation of Array
@@ -408,7 +408,7 @@ A collection of LeetCode solutions in Python, organised by difficulty, with note
         - [ ] Remove Element
         - [ ] Sort an Array
         - [ ] Sort Colors
-        - [ ] Subarray Sum Equals K
+        - [x] Subarray Sum Equals K
         - [ ] Top K Frequent Elements
         - [x] Two Sum
         - [ ] Valid Anagram
