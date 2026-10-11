@@ -41,11 +41,11 @@ class Solution:
 
     def splitArray(self, nums: list[int], k: int) -> int:
 
-        def check_feasibility(t: int) -> bool:
+        def check_feasibility(max_allowed_sum: int) -> bool:
             curr_sum = 0
             num_subarrays = 1
             for num in nums:
-                if curr_sum + num > t:
+                if curr_sum + num > max_allowed_sum:
                     num_subarrays += 1
                     curr_sum = 0
                 curr_sum += num
