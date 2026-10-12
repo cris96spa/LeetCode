@@ -8,7 +8,7 @@ A collection of LeetCode solutions in Python, organised by difficulty, with note
 <div class="lc-stats">
 <div class="lc-stat lc-easy"><span class="lc-num">27</span><span class="lc-label">Easy</span></div>
 <div class="lc-stat lc-medium"><span class="lc-num">92</span><span class="lc-label">Medium</span></div>
-<div class="lc-stat lc-hard"><span class="lc-num">3</span><span class="lc-label">Hard</span></div>
+<div class="lc-stat lc-hard"><span class="lc-num">4</span><span class="lc-label">Hard</span></div>
 </div>
 
 ## NeetCode Progress
@@ -162,7 +162,7 @@ A collection of LeetCode solutions in Python, organised by difficulty, with note
         - [ ] Set Matrix Zeroes
         - [ ] Spiral Matrix
 
-=== "NeetCode 150 &nbsp;·&nbsp; 82 / 150"
+=== "NeetCode 150 &nbsp;·&nbsp; 83 / 150"
 
     ??? note "Arrays & Hashing &nbsp;·&nbsp; 4 / 9 (44%)"
         <div class="lc-progress-bar"><div class="lc-progress-fill" style="width:44%"></div></div>
@@ -177,12 +177,12 @@ A collection of LeetCode solutions in Python, organised by difficulty, with note
         - [ ] Valid Anagram
         - [ ] Valid Sudoku
 
-    ??? note "Two Pointers &nbsp;·&nbsp; 3 / 5 (60%)"
-        <div class="lc-progress-bar"><div class="lc-progress-fill" style="width:60%"></div></div>
+    ??? note "Two Pointers &nbsp;·&nbsp; 4 / 5 (80%)"
+        <div class="lc-progress-bar"><div class="lc-progress-fill" style="width:80%"></div></div>
 
         - [x] 3Sum
         - [ ] Container With Most Water
-        - [ ] Trapping Rain Water
+        - [x] Trapping Rain Water
         - [x] Two Sum II Input Array Is Sorted
         - [x] Valid Palindrome
 
@@ -386,7 +386,7 @@ A collection of LeetCode solutions in Python, organised by difficulty, with note
         - [ ] Set Matrix Zeroes
         - [ ] Spiral Matrix
 
-=== "NeetCode 250 &nbsp;·&nbsp; 98 / 250"
+=== "NeetCode 250 &nbsp;·&nbsp; 99 / 250"
 
     ??? note "Arrays & Hashing &nbsp;·&nbsp; 6 / 22 (27%)"
         <div class="lc-progress-bar"><div class="lc-progress-fill" style="width:27%"></div></div>
@@ -414,8 +414,8 @@ A collection of LeetCode solutions in Python, organised by difficulty, with note
         - [ ] Valid Anagram
         - [ ] Valid Sudoku
 
-    ??? note "Two Pointers &nbsp;·&nbsp; 3 / 13 (23%)"
-        <div class="lc-progress-bar"><div class="lc-progress-fill" style="width:23%"></div></div>
+    ??? note "Two Pointers &nbsp;·&nbsp; 4 / 13 (31%)"
+        <div class="lc-progress-bar"><div class="lc-progress-fill" style="width:31%"></div></div>
 
         - [x] 3Sum
         - [ ] 4Sum
@@ -426,7 +426,7 @@ A collection of LeetCode solutions in Python, organised by difficulty, with note
         - [ ] Remove Duplicates From Sorted Array
         - [ ] Reverse String
         - [ ] Rotate Array
-        - [ ] Trapping Rain Water
+        - [x] Trapping Rain Water
         - [x] Two Sum II Input Array Is Sorted
         - [x] Valid Palindrome
         - [ ] Valid Palindrome II

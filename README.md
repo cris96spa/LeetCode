@@ -22,14 +22,14 @@ The repository is structured as follows:
 <!-- PROGRESS:START -->
 | | 🟢 Easy | 🟡 Medium | 🔴 Hard |
 |:--:|:--:|:--:|:--:|
-| **Solved** | **27** | **92** | **3** |
+| **Solved** | **27** | **92** | **4** |
 
-> **NeetCode 250** &nbsp;·&nbsp; 98 / 250 problems tracked
+> **NeetCode 250** &nbsp;·&nbsp; 99 / 250 problems tracked
 
 | Pattern | Solved | Total | Progress |
 |---------|-------:|------:|:---------|
 | Arrays & Hashing | 6 | 22 | `███░░░░░░░░░` 27% |
-| Two Pointers | 3 | 13 | `███░░░░░░░░░` 23% |
+| Two Pointers | 4 | 13 | `████░░░░░░░░` 31% |
 | Sliding Window | 3 | 9 | `████░░░░░░░░` 33% |
 | Stack | 4 | 14 | `███░░░░░░░░░` 29% |
 | Binary Search | 10 | 14 | `█████████░░░` 71% |
