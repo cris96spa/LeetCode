@@ -7,13 +7,13 @@ A collection of LeetCode solutions in Python, organised by difficulty, with note
 <!-- DASHBOARD:START -->
 <div class="lc-stats">
 <div class="lc-stat lc-easy"><span class="lc-num">27</span><span class="lc-label">Easy</span></div>
-<div class="lc-stat lc-medium"><span class="lc-num">92</span><span class="lc-label">Medium</span></div>
+<div class="lc-stat lc-medium"><span class="lc-num">93</span><span class="lc-label">Medium</span></div>
 <div class="lc-stat lc-hard"><span class="lc-num">4</span><span class="lc-label">Hard</span></div>
 </div>
 
 ## NeetCode Progress
 
-=== "Blind 75 &nbsp;·&nbsp; 43 / 75"
+=== "Blind 75 &nbsp;·&nbsp; 44 / 75"
 
     ??? note "Arrays & Hashing &nbsp;·&nbsp; 4 / 8 (50%)"
         <div class="lc-progress-bar"><div class="lc-progress-fill" style="width:50%"></div></div>
@@ -126,8 +126,8 @@ A collection of LeetCode solutions in Python, organised by difficulty, with note
         - [x] Combination Sum
         - [ ] Word Search
 
-    ??? note "1-D Dynamic Programming &nbsp;·&nbsp; 8 / 10 (80%)"
-        <div class="lc-progress-bar"><div class="lc-progress-fill" style="width:80%"></div></div>
+    ??? note "1-D Dynamic Programming &nbsp;·&nbsp; 9 / 10 (90%)"
+        <div class="lc-progress-bar"><div class="lc-progress-fill" style="width:90%"></div></div>
 
         - [x] Climbing Stairs
         - [x] Coin Change
@@ -135,7 +135,7 @@ A collection of LeetCode solutions in Python, organised by difficulty, with note
         - [x] House Robber
         - [x] House Robber II
         - [x] Longest Increasing Subsequence
-        - [ ] Longest Palindromic Substring
+        - [x] Longest Palindromic Substring
         - [ ] Maximum Product Subarray
         - [x] Palindromic Substrings
         - [x] Word Break
@@ -162,7 +162,7 @@ A collection of LeetCode solutions in Python, organised by difficulty, with note
         - [ ] Set Matrix Zeroes
         - [ ] Spiral Matrix
 
-=== "NeetCode 150 &nbsp;·&nbsp; 83 / 150"
+=== "NeetCode 150 &nbsp;·&nbsp; 84 / 150"
 
     ??? note "Arrays & Hashing &nbsp;·&nbsp; 4 / 9 (44%)"
         <div class="lc-progress-bar"><div class="lc-progress-fill" style="width:44%"></div></div>
@@ -332,8 +332,8 @@ A collection of LeetCode solutions in Python, organised by difficulty, with note
         - [x] Subsets II
         - [ ] Word Search
 
-    ??? note "1-D Dynamic Programming &nbsp;·&nbsp; 10 / 12 (83%)"
-        <div class="lc-progress-bar"><div class="lc-progress-fill" style="width:83%"></div></div>
+    ??? note "1-D Dynamic Programming &nbsp;·&nbsp; 11 / 12 (92%)"
+        <div class="lc-progress-bar"><div class="lc-progress-fill" style="width:92%"></div></div>
 
         - [x] Climbing Stairs
         - [x] Coin Change
@@ -341,7 +341,7 @@ A collection of LeetCode solutions in Python, organised by difficulty, with note
         - [x] House Robber
         - [x] House Robber II
         - [x] Longest Increasing Subsequence
-        - [ ] Longest Palindromic Substring
+        - [x] Longest Palindromic Substring
         - [ ] Maximum Product Subarray
         - [x] Min Cost Climbing Stairs
         - [x] Palindromic Substrings
@@ -386,7 +386,7 @@ A collection of LeetCode solutions in Python, organised by difficulty, with note
         - [ ] Set Matrix Zeroes
         - [ ] Spiral Matrix
 
-=== "NeetCode 250 &nbsp;·&nbsp; 99 / 250"
+=== "NeetCode 250 &nbsp;·&nbsp; 100 / 250"
 
     ??? note "Arrays & Hashing &nbsp;·&nbsp; 6 / 22 (27%)"
         <div class="lc-progress-bar"><div class="lc-progress-fill" style="width:27%"></div></div>
@@ -638,8 +638,8 @@ A collection of LeetCode solutions in Python, organised by difficulty, with note
         - [ ] Word Break II
         - [ ] Word Search
 
-    ??? note "1-D Dynamic Programming &nbsp;·&nbsp; 11 / 17 (65%)"
-        <div class="lc-progress-bar"><div class="lc-progress-fill" style="width:65%"></div></div>
+    ??? note "1-D Dynamic Programming &nbsp;·&nbsp; 12 / 17 (71%)"
+        <div class="lc-progress-bar"><div class="lc-progress-fill" style="width:71%"></div></div>
 
         - [x] Climbing Stairs
         - [x] Coin Change
@@ -649,7 +649,7 @@ A collection of LeetCode solutions in Python, organised by difficulty, with note
         - [x] House Robber II
         - [ ] Integer Break
         - [x] Longest Increasing Subsequence
-        - [ ] Longest Palindromic Substring
+        - [x] Longest Palindromic Substring
         - [ ] Maximum Product Subarray
         - [x] Min Cost Climbing Stairs
         - [ ] N-th Tribonacci Number
