@@ -6,7 +6,7 @@ A collection of LeetCode solutions in Python, organised by difficulty, with note
 
 <!-- DASHBOARD:START -->
 <div class="lc-stats">
-<div class="lc-stat lc-easy"><span class="lc-num">27</span><span class="lc-label">Easy</span></div>
+<div class="lc-stat lc-easy"><span class="lc-num">28</span><span class="lc-label">Easy</span></div>
 <div class="lc-stat lc-medium"><span class="lc-num">93</span><span class="lc-label">Medium</span></div>
 <div class="lc-stat lc-hard"><span class="lc-num">4</span><span class="lc-label">Hard</span></div>
 </div>
@@ -386,7 +386,7 @@ A collection of LeetCode solutions in Python, organised by difficulty, with note
         - [ ] Set Matrix Zeroes
         - [ ] Spiral Matrix
 
-=== "NeetCode 250 &nbsp;·&nbsp; 100 / 250"
+=== "NeetCode 250 &nbsp;·&nbsp; 101 / 250"
 
     ??? note "Arrays & Hashing &nbsp;·&nbsp; 6 / 22 (27%)"
         <div class="lc-progress-bar"><div class="lc-progress-fill" style="width:27%"></div></div>
@@ -414,14 +414,14 @@ A collection of LeetCode solutions in Python, organised by difficulty, with note
         - [ ] Valid Anagram
         - [ ] Valid Sudoku
 
-    ??? note "Two Pointers &nbsp;·&nbsp; 4 / 13 (31%)"
-        <div class="lc-progress-bar"><div class="lc-progress-fill" style="width:31%"></div></div>
+    ??? note "Two Pointers &nbsp;·&nbsp; 5 / 13 (38%)"
+        <div class="lc-progress-bar"><div class="lc-progress-fill" style="width:38%"></div></div>
 
         - [x] 3Sum
         - [ ] 4Sum
         - [ ] Boats to Save People
         - [ ] Container With Most Water
-        - [ ] Merge Sorted Array
+        - [x] Merge Sorted Array
         - [ ] Merge Strings Alternately
         - [ ] Remove Duplicates From Sorted Array
         - [ ] Reverse String
