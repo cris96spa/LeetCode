@@ -7,7 +7,7 @@ A collection of LeetCode solutions in Python, organised by difficulty, with note
 <!-- DASHBOARD:START -->
 <div class="lc-stats">
 <div class="lc-stat lc-easy"><span class="lc-num">28</span><span class="lc-label">Easy</span></div>
-<div class="lc-stat lc-medium"><span class="lc-num">93</span><span class="lc-label">Medium</span></div>
+<div class="lc-stat lc-medium"><span class="lc-num">94</span><span class="lc-label">Medium</span></div>
 <div class="lc-stat lc-hard"><span class="lc-num">6</span><span class="lc-label">Hard</span></div>
 </div>
 
@@ -710,9 +710,9 @@ A collection of LeetCode solutions in Python, organised by difficulty, with note
         - [ ] Spiral Matrix
         - [ ] Transpose Matrix
 
-## Other Solutions &nbsp;·&nbsp; 24
+## Other Solutions &nbsp;·&nbsp; 25
 
-??? note "Show 24 solutions"
+??? note "Show 25 solutions"
     | File | Difficulty | Inferred name |
     |------|:----------:|---------------|
     | `29_divide_two_integers.py` | Medium | Divide Two Integers |
@@ -720,6 +720,7 @@ A collection of LeetCode solutions in Python, organised by difficulty, with note
     | `116_populating_next_right_pointers_in_each_node.py` | Medium | Populating Next Right Pointers In Each Node |
     | `137_single_number_2.py` | Medium | Single Number 2 |
     | `162_find_peak_element.py` | Medium | Find Peak Element |
+    | `179_largest_number.py` | Medium | Largest Number |
     | `201_range_bitwise_and.py` | Medium | Range Bitwise And |
     | `202_is_happy.py` | Easy | Is Happy |
     | `319_BulbSwitcher.py` | Medium | Bulbswitcher |
