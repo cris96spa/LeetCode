@@ -8,32 +8,30 @@ class Solution:
 
     Approach:
         Sliding window. Maintain a frequency map and the max frequency in the window.
-        If (window size - max frequency) > k, shrink the window from the left. Track
-        the maximum valid window length throughout.
+        If (window size - max frequency) > k, the characters that differ from the most
+        frequent one cannot all be replaced in k moves, so shrink the window from the left.
+
+        max_freq is never decreased when the window shrinks, so it ends up as the highest
+        count of a single character reached by any valid window. That window holds max_freq
+        copies plus at most k others, so extending it with any neighbours up to length
+        max_freq + k still needs at most k replacements. Hence the answer is
+        min(max_freq + k, len(s)), with no need to track the best window length.
 
     Complexity:
-        Time: O(n) — each character processed at most twice.
+        Time: O(n) — each character enters and leaves the window at most once.
         Space: O(1) — frequency map bounded by alphabet size (26).
     """
 
     def characterReplacement(self, s: str, k: int) -> int:
-        n = len(s)
-        if n <= k:
-            return n
+        window: dict[str, int] = {}
+        lo, max_freq = 0, 0
 
-        left = 0
-        max_len = 0
-        char_freq: dict[str, int] = {}
-        max_freq = 0
+        for hi, char in enumerate(s):
+            window[char] = window.get(char, 0) + 1
+            max_freq = max(max_freq, window[char])
 
-        for right in range(n):
-            char_freq[s[right]] = char_freq.get(s[right], 0) + 1
-            max_freq = max(max_freq, char_freq[s[right]])
+            while hi - lo + 1 - max_freq > k:
+                window[s[lo]] -= 1
+                lo += 1
 
-            while right - left + 1 - max_freq > k:
-                char_freq[s[left]] -= 1
-                left += 1
-
-            max_len = max(max_len, right - left + 1)
-
-        return max_len
+        return min(max_freq + k, len(s))
