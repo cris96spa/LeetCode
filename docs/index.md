@@ -8,7 +8,7 @@ A collection of LeetCode solutions in Python, organised by difficulty, with note
 <div class="lc-stats">
 <div class="lc-stat lc-easy"><span class="lc-num">28</span><span class="lc-label">Easy</span></div>
 <div class="lc-stat lc-medium"><span class="lc-num">94</span><span class="lc-label">Medium</span></div>
-<div class="lc-stat lc-hard"><span class="lc-num">6</span><span class="lc-label">Hard</span></div>
+<div class="lc-stat lc-hard"><span class="lc-num">7</span><span class="lc-label">Hard</span></div>
 </div>
 
 ## NeetCode Progress
@@ -710,9 +710,9 @@ A collection of LeetCode solutions in Python, organised by difficulty, with note
         - [ ] Spiral Matrix
         - [ ] Transpose Matrix
 
-## Other Solutions &nbsp;·&nbsp; 25
+## Other Solutions &nbsp;·&nbsp; 26
 
-??? note "Show 25 solutions"
+??? note "Show 26 solutions"
     | File | Difficulty | Inferred name |
     |------|:----------:|---------------|
     | `29_divide_two_integers.py` | Medium | Divide Two Integers |
@@ -725,6 +725,7 @@ A collection of LeetCode solutions in Python, organised by difficulty, with note
     | `202_is_happy.py` | Easy | Is Happy |
     | `319_BulbSwitcher.py` | Medium | Bulbswitcher |
     | `354_russian_doll_envelopes.py` | Hard | Russian Doll Envelopes |
+    | `493_reverse_pairs.py` | Hard | Reverse Pairs |
     | `496_next_greater_element.py` | Easy | Next Greater Element |
     | `547_number_of_province.py` | Medium | Number Of Province |
     | `637_average_of_levels_in_binary_tree.py` | Easy | Average Of Levels In Binary Tree |
