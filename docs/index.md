@@ -7,7 +7,7 @@ A collection of LeetCode solutions in Python, organised by difficulty, with note
 <!-- DASHBOARD:START -->
 <div class="lc-stats">
 <div class="lc-stat lc-easy"><span class="lc-num">29</span><span class="lc-label">Easy</span></div>
-<div class="lc-stat lc-medium"><span class="lc-num">95</span><span class="lc-label">Medium</span></div>
+<div class="lc-stat lc-medium"><span class="lc-num">97</span><span class="lc-label">Medium</span></div>
 <div class="lc-stat lc-hard"><span class="lc-num">7</span><span class="lc-label">Hard</span></div>
 </div>
 
@@ -386,7 +386,7 @@ A collection of LeetCode solutions in Python, organised by difficulty, with note
         - [ ] Set Matrix Zeroes
         - [ ] Spiral Matrix
 
-=== "NeetCode 250 &nbsp;·&nbsp; 103 / 250"
+=== "NeetCode 250 &nbsp;·&nbsp; 105 / 250"
 
     ??? note "Arrays & Hashing &nbsp;·&nbsp; 7 / 22 (32%)"
         <div class="lc-progress-bar"><div class="lc-progress-fill" style="width:32%"></div></div>
@@ -480,12 +480,12 @@ A collection of LeetCode solutions in Python, organised by difficulty, with note
         - [x] Sqrt(x)
         - [x] Time Based Key Value Store
 
-    ??? note "Linked List &nbsp;·&nbsp; 7 / 14 (50%)"
-        <div class="lc-progress-bar"><div class="lc-progress-fill" style="width:50%"></div></div>
+    ??? note "Linked List &nbsp;·&nbsp; 9 / 14 (64%)"
+        <div class="lc-progress-bar"><div class="lc-progress-fill" style="width:64%"></div></div>
 
         - [ ] Add Two Numbers
         - [x] Copy List With Random Pointer
-        - [ ] Design Circular Queue
+        - [x] Design Circular Queue
         - [x] Find The Duplicate Number
         - [ ] LFU Cache
         - [x] Linked List Cycle
@@ -495,7 +495,7 @@ A collection of LeetCode solutions in Python, organised by difficulty, with note
         - [x] Remove Nth Node From End of List
         - [x] Reorder List
         - [x] Reverse Linked List
-        - [ ] Reverse Linked List II
+        - [x] Reverse Linked List II
         - [ ] Reverse Nodes In K Group
 
     ??? note "Trees &nbsp;·&nbsp; 11 / 23 (48%)"
