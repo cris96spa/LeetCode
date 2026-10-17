@@ -22,7 +22,7 @@ The repository is structured as follows:
 <!-- PROGRESS:START -->
 | | 🟢 Easy | 🟡 Medium | 🔴 Hard |
 |:--:|:--:|:--:|:--:|
-| **Solved** | **28** | **95** | **7** |
+| **Solved** | **29** | **95** | **7** |
 
 > **NeetCode 250** &nbsp;·&nbsp; 103 / 250 problems tracked
 
