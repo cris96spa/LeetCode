@@ -38,6 +38,6 @@ lint-doc: # check the docstring style
 pdf: # export the cheat sheet and common patterns to docs/assets/leetcode_notes.pdf (needs pandoc and xelatex)
 	uv run python utils/export_pdf.py
 
-doc: # create the project documentation; Build and visualize documentation through a local server
+doc: pdf # create the project documentation (rebuilding the PDF first); Build and visualize documentation through a local server
 	uv run python utils/update_progress.py
 	uv run properdocs serve -f properdocs.yml --dev-addr 0.0.0.0:$(DOC_PORT)
