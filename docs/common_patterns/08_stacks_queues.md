@@ -124,7 +124,29 @@ def is_valid(s: str) -> bool:
     return not stack          # anything left open is an error
 ```
 
-When there's only one bracket type, the stack degenerates into a **counter** (depth). For Longest Valid Parentheses (LC 32), push *indices* rather than characters, so that the distance between the current index and the index below the top gives the length of the valid run ending here.
+When there's only one bracket type, the stack degenerates into a **counter** (depth).
+
+### Longest Valid Parentheses (LC 32)
+
+Find the longest well-formed substring. Push *indices* rather than characters, and keep one extra index at the bottom of the stack: the position just before the current valid run (initially `-1`, later the last unmatched `)`). Above it sit the indices of unmatched `(`.
+
+```python
+def longest_valid_parentheses(s: str) -> int:
+    stack = [-1]                     # bottom: index just before the current valid run
+    best = 0
+    for i, ch in enumerate(s):
+        if ch == "(":
+            stack.append(i)
+        else:
+            stack.pop()
+            if stack:
+                best = max(best, i - stack[-1])
+            else:
+                stack.append(i)      # unmatched ')': no valid run can cross it
+    return best
+```
+
+After a `)` pops its match, the new top is the last index that is still unmatched, so everything after it up to `i` is balanced: a valid run of length `i - stack[-1]`. If the pop empties the stack, the `)` had no match, and it becomes the new bottom. $O(n)$ time and space.
 
 ### Nested state: Decode String (LC 394)
 
@@ -195,7 +217,29 @@ def calculate(s: str) -> int:
     return sum(stack)
 ```
 
-With parentheses (LC 224), push the running result and sign when you see `(`, and combine when you see `)` — the same "save the enclosing context" idea as Decode String.
+With parentheses and only `+ -` (LC 224), push the running result and the sign in front of the `(`, start a fresh result inside, and combine when you see `)` — the same "save the enclosing context" idea as Decode String:
+
+```python
+def calculate_with_parens(s: str) -> int:
+    stack: list[tuple[int, int]] = []        # (result before '(', sign in front of '(')
+    result, num, sign = 0, 0, 1
+    for ch in s:
+        if ch.isdigit():
+            num = num * 10 + int(ch)
+        elif ch in "+-":
+            result += sign * num
+            num, sign = 0, (1 if ch == "+" else -1)
+        elif ch == "(":
+            stack.append((result, sign))
+            result, sign = 0, 1
+        elif ch == ")":
+            result += sign * num
+            prev, prev_sign = stack.pop()
+            result, num = prev + prev_sign * result, 0
+    return result + sign * num
+```
+
+Unary minus needs no special case: `-(2+3)` adds `+0`, then applies sign `-1` to the parenthesized group.
 
 ---
 
@@ -298,11 +342,41 @@ def remove_k_digits(num: str, k: int) -> str:
     return "".join(stack).lstrip("0") or "0"
 ```
 
-The same pattern solves Remove Duplicate Letters (LC 316) and building the lexicographically smallest subsequence.
+**Remove Duplicate Letters** (LC 316, same as LC 1081) uses the same stack with two extra rules: every letter must appear exactly once, so a letter already on the stack is skipped, and a larger letter on top may be popped only if it **occurs again later** — otherwise it would be lost for good.
+
+```python
+def remove_duplicate_letters(s: str) -> str:
+    last = {ch: i for i, ch in enumerate(s)}
+    stack: list[str] = []
+    on_stack: set[str] = set()
+    for i, ch in enumerate(s):
+        if ch in on_stack:
+            continue
+        while stack and stack[-1] > ch and last[stack[-1]] > i:
+            on_stack.remove(stack.pop())
+        stack.append(ch)
+        on_stack.add(ch)
+    return "".join(stack)
+```
 
 ### Counting contributions
 
-**Sum of Subarray Minimums** (LC 907): add up $\min$ over all $\Theta(n^2)$ subarrays. Flip the question: for each element, *in how many subarrays is it the minimum?* If $L$ is the distance to its previous smaller element and $R$ the distance to its next smaller-or-equal element, it is the minimum of exactly $L \cdot R$ subarrays (choose a start in $L$ ways, an end in $R$ ways). Both distances come from monotonic stacks, so the total is $O(n)$. (Breaking ties asymmetrically — strict on one side, non-strict on the other — ensures a subarray with repeated minimums is counted exactly once.)
+**Sum of Subarray Minimums** (LC 907): add up $\min$ over all $\Theta(n^2)$ subarrays. Flip the question: for each element, *in how many subarrays is it the minimum?* If $L$ is the distance to its previous smaller element and $R$ the distance to its next smaller-or-equal element, it is the minimum of exactly $L \cdot R$ subarrays (choose a start in $L$ ways, an end in $R$ ways). (Breaking ties asymmetrically — strict on one side, non-strict on the other — ensures a subarray with repeated minimums is counted exactly once.)
+
+Both distances come out of a single pass, exactly as in the histogram: when `j` is popped, the newcomer `i` is its next smaller-or-equal element and the new top is its previous strictly smaller one.
+
+```python
+def sum_subarray_mins(arr: list[int]) -> int:
+    stack: list[int] = []                         # indices; arr strictly increasing
+    total = 0
+    for i, x in enumerate(arr + [0]):             # sentinel (arr[i] >= 1) flushes the stack
+        while stack and arr[stack[-1]] >= x:
+            j = stack.pop()
+            left = stack[-1] if stack else -1
+            total += arr[j] * (j - left) * (i - j)
+        stack.append(i)
+    return total % (10**9 + 7)
+```
 
 !!! tip "Take-Home Lesson"
     When a problem asks about "the nearest larger/smaller element," or about every subarray's max/min, think monotonic stack. The key insight is that an element dominated by a newer one can never be the answer for anything that comes later — so it can be discarded forever.
@@ -338,6 +412,7 @@ The **monotonic deque** is the queue-flavored sibling of the monotonic stack: it
 | Problem | Technique |
 |---|---|
 | Valid Parentheses (LC 20) | Stack of open brackets |
+| Longest Valid Parentheses (LC 32) | Index stack with a base index |
 | Implement Queue using Stacks (LC 232) | Inbox / outbox, amortized $O(1)$ |
 | Design Circular Queue (LC 622) | Array with wrap-around |
 | Min Stack (LC 155) | Augmented entries |
@@ -352,4 +427,5 @@ The **monotonic deque** is the queue-flavored sibling of the monotonic stack: it
 | Largest Rectangle in Histogram (LC 84) | Previous / next smaller |
 | Maximal Rectangle (LC 85) | Histogram per row |
 | Remove K Digits (LC 402) | Greedy increasing stack |
+| Remove Duplicate Letters (LC 316) | Greedy stack, pop only if seen later |
 | Sum of Subarray Minimums (LC 907) | Contribution counting |

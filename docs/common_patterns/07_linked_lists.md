@@ -249,15 +249,51 @@ def reverse_between(head: ListNode | None, left: int, right: int) -> ListNode | 
     return dummy.next
 ```
 
-Reversing in groups of $k$ (LC 25) is this same operation applied to successive blocks.
+### Reverse in groups of $k$ (LC 25)
+
+The same move-to-front, applied to successive blocks of $k$. Two details: first check that $k$ nodes remain (a short final block stays as is), and after reversing, the block's original first node is its new tail — the `before` of the next block.
+
+```python
+def reverse_k_group(head: ListNode | None, k: int) -> ListNode | None:
+    dummy = ListNode(0, head)
+    before = dummy
+    while True:
+        probe = before
+        for _ in range(k):                   # are there k nodes left?
+            probe = probe.next
+            if probe is None:
+                return dummy.next
+        first = before.next
+        for _ in range(k - 1):               # move-to-front, as in LC 92
+            moved = first.next
+            first.next = moved.next
+            moved.next = before.next
+            before.next = moved
+        before = first
+```
+
+$O(n)$ time: each node is probed once and moved once. $O(1)$ space.
 
 ### Sort a list (LC 148): mergesort
 
-Mergesort is the natural sort for linked lists: splitting uses the middle-finding runners, merging relinks nodes with no extra space, and nothing needs random access. $O(n \log n)$ time. See [Sorting](06_sorting.md#mergesort-divide-and-conquer).
+Mergesort is the natural sort for linked lists: splitting uses the middle-finding runners, merging relinks nodes with no extra space, and nothing needs random access. See [Sorting](06_sorting.md#mergesort-divide-and-conquer).
+
+```python
+def sort_list(head: ListNode | None) -> ListNode | None:
+    if not head or not head.next:
+        return head
+    slow, fast = head, head.next             # slow stops at the end of the first half
+    while fast and fast.next:
+        slow, fast = slow.next, fast.next.next
+    second, slow.next = slow.next, None      # cut, or the halves stay connected
+    return merge_two_lists_iter(sort_list(head), sort_list(second))
+```
+
+$O(n \log n)$ time, $O(\log n)$ recursion depth. Starting `fast` at `head.next` matters: with `fast = head`, a two-node list splits into two nodes and nothing, and the recursion never ends.
 
 ### Merge $k$ sorted lists (LC 23)
 
-Merging lists pairwise, one after another, costs $O(nk)$ for $n$ total nodes. Two better approaches, both $O(n \log k)$: keep the $k$ current heads in a **min-heap** and repeatedly pop the smallest (see [Heaps](10_heaps.md)), or merge lists in pairs like the levels of mergesort.
+Merging lists pairwise, one after another, costs $O(nk)$ for $n$ total nodes. Two better approaches, both $O(n \log k)$: keep the $k$ current heads in a **min-heap** and repeatedly pop the smallest (see [Heaps](10_heaps.md#pattern-2-merging-sorted-streams)), or merge lists in pairs like the levels of mergesort. With nodes, push `(node.val, i, node)`: nodes aren't orderable, and the list index `i` breaks ties before Python ever compares two nodes.
 
 ---
 

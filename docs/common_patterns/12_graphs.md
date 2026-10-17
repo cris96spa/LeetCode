@@ -863,6 +863,28 @@ The hardest part of most graph problems is noticing that they are graph problems
 
 Two recurring tricks stand out. First, **the obvious vertices are not always the right ones**: in Bus Routes, making each route a vertex turns "fewest buses" into plain BFS. Second, **when a constraint depends on history, put the history into the state**: "at most $k$ stops" or "holding these keys" become part of the vertex, and the enlarged graph is searched with the ordinary algorithm.
 
+### Eulerian paths: Reconstruct Itinerary (LC 332)
+
+An **Eulerian path** uses every *edge* exactly once. In a directed graph whose edges are all connected, one exists iff every vertex has in-degree equal to out-degree, except possibly a start with one extra outgoing edge and an end with one extra incoming edge. LC 332 guarantees that a path exists and asks for the lexicographically smallest one.
+
+Walking greedily (always the smallest unused ticket) can get stuck early. From `JFK` with tickets to `KUL` and `NRT`, and `NRT → JFK`, greedy flies to `KUL` and dead-ends with tickets left. **Hierholzer's algorithm** fixes this by emitting airports in **post-order**. An airport is added to the route only once it has no unused tickets left, so it must come after everything still to be visited. Dead-end branches are therefore emitted first and end up at the end of the reversed route:
+
+```python
+def find_itinerary(tickets: list[list[str]]) -> list[str]:
+    graph: dict[str, list[str]] = defaultdict(list)
+    for src, dst in sorted(tickets, reverse=True):
+        graph[src].append(dst)                   # reverse-sorted, so pop() gives the smallest
+    route, stack = [], ["JFK"]
+    while stack:
+        if graph[stack[-1]]:
+            stack.append(graph[stack[-1]].pop())  # use the smallest unused ticket
+        else:
+            route.append(stack.pop())            # stuck: this airport goes last among what's left
+    return route[::-1]
+```
+
+Each ticket is pushed and popped once: $O(E \log E)$ for the sort, $O(E)$ for the walk.
+
 ---
 
 ## Common Mistakes

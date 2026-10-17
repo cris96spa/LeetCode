@@ -167,6 +167,36 @@ def count_inversions(a: list[int]) -> int:
 
 Brute force is $O(n^2)$; this is $O(n \log n)$. The same technique solves Reverse Pairs (LC 493) and Count of Smaller Numbers After Self (LC 315).
 
+LC 315 wants the count **per element**, so two things change. Sort the *indices* rather than the values, so each count can be credited to the element's original position. And count from the left element's point of view: when `left[i]` is placed, the `j - mid` right elements already placed are exactly the smaller ones to its right.
+
+```python
+def count_smaller(nums: list[int]) -> list[int]:
+    counts = [0] * len(nums)
+    idx = list(range(len(nums)))                  # sorted by value as the merges proceed
+
+    def sort(lo: int, hi: int) -> None:
+        if hi - lo <= 1:
+            return
+        mid = (lo + hi) // 2
+        sort(lo, mid)
+        sort(mid, hi)
+        merged, i, j = [], lo, mid
+        while i < mid or j < hi:
+            if j == hi or (i < mid and nums[idx[i]] <= nums[idx[j]]):
+                counts[idx[i]] += j - mid         # right elements already placed are smaller
+                merged.append(idx[i])
+                i += 1
+            else:
+                merged.append(idx[j])
+                j += 1
+        idx[lo:hi] = merged
+
+    sort(0, len(nums))
+    return counts
+```
+
+Taking the left element on ties (`<=`) keeps equal values out of the count, so only strictly smaller elements are counted.
+
 ---
 
 ## Quicksort: Sorting by Randomization
@@ -339,6 +369,27 @@ Distribution-sort ideas appear more often than distribution sorts themselves:
 - **H-Index (LC 274):** citations above $n$ can be capped at $n$, then counting sort.
 - **Maximum Gap (LC 164):** with $n$ numbers spread over range $R$, the maximum gap is at least $R / (n - 1)$ by the pigeonhole principle. With buckets of that width, the maximum gap can't occur *inside* a bucket, only *between* adjacent non-empty buckets. So only each bucket's min and max matter: $O(n)$.
 - **Sort Characters by Frequency (LC 451):** 26 or 128 possible characters make any key small.
+
+Maximum Gap is the one with fiddly details. Rounding the bucket width *down* keeps it at or below the smallest possible maximum gap. A gap inside a bucket is then smaller than the answer, so it can be ignored:
+
+```python
+def maximum_gap(nums: list[int]) -> int:
+    lo, hi = min(nums), max(nums)
+    if len(nums) < 2 or lo == hi:
+        return 0
+    width = max(1, (hi - lo) // (len(nums) - 1))
+    count = (hi - lo) // width + 1
+    mins, maxs = [float("inf")] * count, [float("-inf")] * count
+    for x in nums:
+        b = (x - lo) // width
+        mins[b], maxs[b] = min(mins[b], x), max(maxs[b], x)
+    best, prev_max = 0, lo
+    for b in range(count):
+        if mins[b] != float("inf"):               # skip empty buckets
+            best = max(best, mins[b] - prev_max)
+            prev_max = maxs[b]
+    return best
+```
 
 ---
 

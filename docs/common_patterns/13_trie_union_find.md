@@ -326,6 +326,24 @@ Sort edges by weight and add each one whose endpoints are in different component
 
 Land cells appear one at a time on a grid; after each addition, report the number of islands. Re-running a flood fill after each addition costs $O(mn)$ per step. With union-find, each new cell starts as its own island and unions with its land neighbors: $O(\alpha(mn))$ per step.
 
+```python
+def num_islands2(m: int, n: int, positions: list[list[int]]) -> list[int]:
+    uf = UnionFind(m * n)                        # cell (r, c) is element r * n + c
+    land = [[False] * n for _ in range(m)]
+    islands, result = 0, []
+    for r, c in positions:
+        if not land[r][c]:                       # the same cell may be added twice
+            land[r][c] = True
+            islands += 1
+            for nr, nc in ((r + 1, c), (r - 1, c), (r, c + 1), (r, c - 1)):
+                if 0 <= nr < m and 0 <= nc < n and land[nr][nc] and uf.union(r * n + c, nr * n + nc):
+                    islands -= 1                 # two islands just merged into one
+        result.append(islands)
+    return result
+```
+
+`uf.components` would count water cells too, so the island count is tracked separately: $+1$ for each new cell, and $-1$ for each `union` that actually merges two islands.
+
 This is where union-find truly beats BFS/DFS: when **edges arrive over time** and connectivity questions are interleaved with them.
 
 ### Union-Find vs. Traversal

@@ -251,6 +251,28 @@ The events technique generalizes: turn each interval into a "+1 at start, −1 a
 - Whether any point is covered by more than $k$ intervals (LC 731, 732).
 - The skyline of a set of buildings (LC 218), with a max-heap of active heights as the state.
 
+### The skyline (LC 218)
+
+Sweep the building edges left to right, keeping a max-heap of the buildings standing at the current $x$. The skyline changes exactly where the tallest active height changes. Removing an arbitrary building from a heap is awkward, so removal is **lazy**: each heap entry carries its right edge, and expired entries are popped only when they reach the top.
+
+```python
+def get_skyline(buildings: list[list[int]]) -> list[list[int]]:
+    events = sorted([(left, -h, right) for left, right, h in buildings]
+                    + [(right, 0, 0) for _, right, _ in buildings])
+    live = [(0, float("inf"))]                   # (-height, right edge); the ground never ends
+    skyline = [[0, 0]]
+    for x, neg_h, right in events:
+        while live[0][1] <= x:                   # drop buildings that ended at or before x
+            heapq.heappop(live)
+        if neg_h:
+            heapq.heappush(live, (neg_h, right))
+        if -live[0][0] != skyline[-1][1]:
+            skyline.append([x, -live[0][0]])
+    return skyline[1:]
+```
+
+The event order handles ties: at the same $x$, starts (negative key) come before ends (key 0), and taller starts come first. A building that starts exactly where another ends therefore never creates a false dip to the lower height. $O(n \log n)$.
+
 ### Difference arrays: sweep lines on integer grids
 
 When coordinates are small integers, skip the sort: record `+x` at the start and `-x` just past the end in an array, then take a prefix sum. Each prefix sum value is the total active at that position.

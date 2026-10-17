@@ -564,6 +564,32 @@ def min_abs_difference(nums: list[int], goal: int) -> int:
 
 **Time:** $O(2^{n/2} \cdot n)$, dominated by sorting the right half's $2^{n/2}$ sums: well under a second in Python at $n = 40$, compared with hours for brute force. The idea works whenever a solution splits into two independent halves whose combination can be checked quickly: by sorting and binary search, a hash map, or two pointers. **Partition Array Into Two Arrays to Minimize Sum Difference** (LC 2035) is the same trick, with the left and right sums grouped by how many elements they use.
 
+In LC 2035, `nums` has $2n$ elements and each part must take exactly $n$. If the first part takes $k$ elements from the left half, it must take $n - k$ from the right, so sums are matched only within those groups. With $t$ = `total - 2 * s`, the difference is $|t - 2r|$, so the best partner $r$ is the one closest to $t / 2$:
+
+```python
+def minimum_difference(nums: list[int]) -> int:
+    n, total = len(nums) // 2, sum(nums)
+
+    def sums_by_count(half: list[int]) -> list[list[int]]:
+        groups: list[list[int]] = [[] for _ in range(n + 1)]
+        for mask in range(1 << n):
+            groups[mask.bit_count()].append(sum(x for i, x in enumerate(half) if mask >> i & 1))
+        return groups
+
+    left = sums_by_count(nums[:n])
+    right = [sorted(g) for g in sums_by_count(nums[n:])]
+    best = float("inf")
+    for k in range(n + 1):
+        partners = right[n - k]
+        for s in left[k]:
+            t = total - 2 * s
+            i = bisect.bisect_left(partners, t // 2)
+            for j in (i - 1, i):
+                if 0 <= j < len(partners):
+                    best = min(best, abs(t - 2 * partners[j]))
+    return best
+```
+
 ---
 
 ## Heuristic Search (Briefly)

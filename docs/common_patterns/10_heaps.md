@@ -238,7 +238,25 @@ def merge_k_sorted(lists: list[list[int]]) -> list[int]:
     return result
 ```
 
-**Time:** $O(n \log k)$. The list index `i` in each tuple doubles as a tiebreaker. Smallest Range Covering Elements from K Lists (LC 632) is a variation: the heap holds one element per list, and the range is `[heap min, running max]`.
+**Time:** $O(n \log k)$. The list index `i` in each tuple doubles as a tiebreaker.
+
+**Smallest Range Covering Elements from K Lists** (LC 632) is a variation: the heap holds one element per list, and the range is `[heap min, running max]`. The minimum is the only element worth advancing. Advancing any other element can only raise the maximum, while the minimum stays the same. Once the list holding the minimum runs out, no later range can include that list, so the search stops.
+
+```python
+def smallest_range(lists: list[list[int]]) -> list[int]:
+    heap = [(lst[0], i, 0) for i, lst in enumerate(lists)]
+    heapq.heapify(heap)
+    hi = max(lst[0] for lst in lists)
+    best = [heap[0][0], hi]
+    while True:
+        lo, i, j = heapq.heappop(heap)
+        if hi - lo < best[1] - best[0]:
+            best = [lo, hi]
+        if j + 1 == len(lists[i]):
+            return best
+        hi = max(hi, lists[i][j + 1])
+        heapq.heappush(heap, (lists[i][j + 1], i, j + 1))
+```
 
 ---
 
@@ -301,7 +319,24 @@ class MedianFinder:
         return (-self.low[0] + self.high[0]) / 2
 ```
 
-`add_num` is $O(\log n)$ and `find_median` is $O(1)$. The same two-heap split answers any "running $k$-th order statistic" question, and appears in scheduling problems like IPO (LC 502), where one heap holds projects you can't afford yet (keyed by cost) and another holds those you can (keyed by profit).
+`add_num` is $O(\log n)$ and `find_median` is $O(1)$. The same two-heap split answers any "running $k$-th order statistic" question, and appears in scheduling problems like IPO (LC 502), where one heap holds projects you can't afford yet (keyed by cost) and another holds those you can (keyed by profit). Costs never change, so a sorted list with a pointer can replace the first heap:
+
+```python
+def find_maximized_capital(k: int, w: int, profits: list[int], capital: list[int]) -> int:
+    projects = sorted(zip(capital, profits))     # unaffordable ones, cheapest first
+    affordable: list[int] = []                   # max-heap of profits via negation
+    i = 0
+    for _ in range(k):
+        while i < len(projects) and projects[i][0] <= w:
+            heapq.heappush(affordable, -projects[i][1])
+            i += 1
+        if not affordable:
+            break
+        w -= heapq.heappop(affordable)           # take the most profitable affordable project
+    return w
+```
+
+Capital only grows, so a project that becomes affordable stays affordable. Taking the most profitable one each time is therefore safe: whatever you could afford with less capital, you can still afford with more.
 
 ---
 

@@ -299,6 +299,24 @@ The same two-row compression as edit distance brings the space down to $O(n)$.
 - **Approximate substring matching**: to find where pattern $P$ best matches *anywhere* in text $T$, make skipping a prefix of $T$ free ($D[0][j] = 0$) and take the best cell in the last row. Without this change, the "best" match of a short pattern in a long text is dominated by the cost of deleting everything else.
 - **Distinct Subsequences** (LC 115), **Interleaving String** (LC 97), **Regular Expression Matching** (LC 10), and **Wildcard Matching** (LC 44) are all two-index DPs with the same "what happens to the last characters?" derivation.
 
+**Regular Expression Matching** (LC 10) is the trickiest of these, because `*` belongs to the character before it. Let $M[i][j]$ mean that `s[:i]` matches `p[:j]`. If the pattern ends in `x*`, either the pair matches nothing (drop it: $M[i][j-2]$), or it matches the last character of `s` and may match more ($M[i-1][j]$, keeping `x*`):
+
+```python
+def is_match(s: str, p: str) -> bool:
+    m, n = len(s), len(p)
+    M = [[False] * (n + 1) for _ in range(m + 1)]
+    M[0][0] = True
+    for i in range(m + 1):                       # i = 0 too: "a*b*" matches ""
+        for j in range(1, n + 1):
+            if p[j - 1] == "*":
+                M[i][j] = M[i][j - 2] or (i > 0 and p[j - 2] in (s[i - 1], ".") and M[i - 1][j])
+            else:
+                M[i][j] = i > 0 and p[j - 1] in (s[i - 1], ".") and M[i - 1][j - 1]
+    return M[m][n]
+```
+
+Wildcard Matching (LC 44) is simpler: a `*` stands alone and matches any run, so $M[i][j] = M[i][j-1] \lor M[i-1][j]$.
+
 !!! tip "Take-Home Lesson"
     For optimization problems on objects with a natural **left-to-right order** — characters of a string, elements of a sequence, points along a line, leaves of a tree — dynamic programming very likely gives an efficient algorithm. The states are simply positions in the order.
 
@@ -575,6 +593,20 @@ def longest_palindrome_subseq(s: str) -> int:
 
 $$\text{dp}[i][j] = \max_{i < k < j} \big(\text{dp}[i][k] + a_i \cdot a_k \cdot a_j + \text{dp}[k][j]\big)$$
 
+Pad the array with a virtual balloon of value 1 at each end, and fill in order of increasing interval length, so both subintervals are ready:
+
+```python
+def max_coins(nums: list[int]) -> int:
+    a = [1] + nums + [1]
+    n = len(a)
+    dp = [[0] * n for _ in range(n)]             # dp[i][j]: best for the open interval (i, j)
+    for length in range(2, n):
+        for i in range(n - length):
+            j = i + length
+            dp[i][j] = max(dp[i][k] + a[i] * a[k] * a[j] + dp[k][j] for k in range(i + 1, j))
+    return dp[0][n - 1]
+```
+
 Choosing the *first* balloon instead would leave neighbors that depend on everything burst later — no clean subproblems. The same "last step" idea gives matrix-chain multiplication and optimal binary search trees, all $O(n^3)$.
 
 ---
@@ -600,7 +632,20 @@ def max_profit_cooldown(prices: list[int]) -> int:
     return max(sold, rest)
 ```
 
-The tuple assignment matters: every right-hand side must read *yesterday's* values. The other stock problems (LC 123, 188, 714) add a transaction counter or a fee to the same machine.
+The tuple assignment matters: every right-hand side must read *yesterday's* values. The other stock problems (LC 123, 188, 714) add a transaction counter or a fee to the same machine. With at most two transactions (LC 123), the modes are "after the first buy," "after the first sell," and so on:
+
+```python
+def max_profit_two_transactions(prices: list[int]) -> int:
+    buy1 = buy2 = float("-inf")
+    sell1 = sell2 = 0
+    for p in prices:
+        buy1, sell1, buy2, sell2 = (
+            max(buy1, -p), max(sell1, buy1 + p), max(buy2, sell1 - p), max(sell2, buy2 + p)
+        )
+    return sell2
+```
+
+For at most $k$ transactions (LC 188), use arrays `buy[1..k]` and `sell[1..k]` with `buy[t]` reading `sell[t - 1]`.
 
 ---
 
