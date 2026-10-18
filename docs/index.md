@@ -8,12 +8,12 @@ A collection of LeetCode solutions in Python, organised by difficulty, with note
 <div class="lc-stats">
 <div class="lc-stat lc-easy"><span class="lc-num">29</span><span class="lc-label">Easy</span></div>
 <div class="lc-stat lc-medium"><span class="lc-num">101</span><span class="lc-label">Medium</span></div>
-<div class="lc-stat lc-hard"><span class="lc-num">7</span><span class="lc-label">Hard</span></div>
+<div class="lc-stat lc-hard"><span class="lc-num">8</span><span class="lc-label">Hard</span></div>
 </div>
 
 ## NeetCode Progress
 
-=== "Blind 75 &nbsp;·&nbsp; 46 / 75"
+=== "Blind 75 &nbsp;·&nbsp; 47 / 75"
 
     ??? note "Arrays & Hashing &nbsp;·&nbsp; 5 / 8 (62%)"
         <div class="lc-progress-bar"><div class="lc-progress-fill" style="width:62%"></div></div>
@@ -85,10 +85,10 @@ A collection of LeetCode solutions in Python, organised by difficulty, with note
         - [ ] Implement Trie Prefix Tree
         - [ ] Word Search II
 
-    ??? note "Heap / Priority Queue &nbsp;·&nbsp; 0 / 1 (0%)"
-        <div class="lc-progress-bar"><div class="lc-progress-fill" style="width:0%"></div></div>
+    ??? success "Heap / Priority Queue &nbsp;·&nbsp; 1 / 1 (100%)"
+        <div class="lc-progress-bar"><div class="lc-progress-fill" style="width:100%"></div></div>
 
-        - [ ] Find Median From Data Stream
+        - [x] Find Median From Data Stream
 
     ??? success "Intervals &nbsp;·&nbsp; 5 / 5 (100%)"
         <div class="lc-progress-bar"><div class="lc-progress-fill" style="width:100%"></div></div>
@@ -162,7 +162,7 @@ A collection of LeetCode solutions in Python, organised by difficulty, with note
         - [ ] Set Matrix Zeroes
         - [ ] Spiral Matrix
 
-=== "NeetCode 150 &nbsp;·&nbsp; 86 / 150"
+=== "NeetCode 150 &nbsp;·&nbsp; 87 / 150"
 
     ??? note "Arrays & Hashing &nbsp;·&nbsp; 5 / 9 (56%)"
         <div class="lc-progress-bar"><div class="lc-progress-fill" style="width:56%"></div></div>
@@ -258,11 +258,11 @@ A collection of LeetCode solutions in Python, organised by difficulty, with note
         - [ ] Implement Trie Prefix Tree
         - [ ] Word Search II
 
-    ??? note "Heap / Priority Queue &nbsp;·&nbsp; 4 / 7 (57%)"
-        <div class="lc-progress-bar"><div class="lc-progress-fill" style="width:57%"></div></div>
+    ??? note "Heap / Priority Queue &nbsp;·&nbsp; 5 / 7 (71%)"
+        <div class="lc-progress-bar"><div class="lc-progress-fill" style="width:71%"></div></div>
 
         - [x] Design Twitter
-        - [ ] Find Median From Data Stream
+        - [x] Find Median From Data Stream
         - [x] K Closest Points to Origin
         - [ ] Kth Largest Element In a Stream
         - [x] Kth Largest Element In An Array
@@ -386,7 +386,7 @@ A collection of LeetCode solutions in Python, organised by difficulty, with note
         - [ ] Set Matrix Zeroes
         - [ ] Spiral Matrix
 
-=== "NeetCode 250 &nbsp;·&nbsp; 107 / 250"
+=== "NeetCode 250 &nbsp;·&nbsp; 108 / 250"
 
     ??? note "Arrays & Hashing &nbsp;·&nbsp; 8 / 22 (36%)"
         <div class="lc-progress-bar"><div class="lc-progress-fill" style="width:36%"></div></div>
@@ -533,12 +533,12 @@ A collection of LeetCode solutions in Python, organised by difficulty, with note
         - [ ] Implement Trie Prefix Tree
         - [ ] Word Search II
 
-    ??? note "Heap / Priority Queue &nbsp;·&nbsp; 4 / 12 (33%)"
-        <div class="lc-progress-bar"><div class="lc-progress-fill" style="width:33%"></div></div>
+    ??? note "Heap / Priority Queue &nbsp;·&nbsp; 5 / 12 (42%)"
+        <div class="lc-progress-bar"><div class="lc-progress-fill" style="width:42%"></div></div>
 
         - [ ] Car Pooling
         - [x] Design Twitter
-        - [ ] Find Median From Data Stream
+        - [x] Find Median From Data Stream
         - [ ] IPO
         - [x] K Closest Points to Origin
         - [ ] Kth Largest Element In a Stream

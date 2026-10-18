@@ -22,9 +22,9 @@ The repository is structured as follows:
 <!-- PROGRESS:START -->
 | | 🟢 Easy | 🟡 Medium | 🔴 Hard |
 |:--:|:--:|:--:|:--:|
-| **Solved** | **29** | **101** | **7** |
+| **Solved** | **29** | **101** | **8** |
 
-> **NeetCode 250** &nbsp;·&nbsp; 107 / 250 problems tracked
+> **NeetCode 250** &nbsp;·&nbsp; 108 / 250 problems tracked
 
 | Pattern | Solved | Total | Progress |
 |---------|-------:|------:|:---------|
@@ -36,7 +36,7 @@ The repository is structured as follows:
 | Linked List | 9 | 14 | `████████░░░░` 64% |
 | Trees | 11 | 23 | `██████░░░░░░` 48% |
 | Tries | 0 | 4 | `░░░░░░░░░░░░` 0% |
-| Heap / Priority Queue | 4 | 12 | `████░░░░░░░░` 33% |
+| Heap / Priority Queue | 5 | 12 | `█████░░░░░░░` 42% |
 | Intervals | 5 | 7 | `█████████░░░` 71% |
 | Greedy | 1 | 14 | `█░░░░░░░░░░░` 7% |
 | Graphs | 9 | 21 | `█████░░░░░░░` 43% |
