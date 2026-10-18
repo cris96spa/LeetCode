@@ -16,7 +16,7 @@ class MyHeap[T: Comparable]:
     def __init__(self, sequence: Sequence[T], heap_type: HeapType = HeapType.MIN):
         self._heap: list[T] = []
         self._heap_type = heap_type
-        self._initialize_heap(sequence)
+        self._initialize_heap_heapify(sequence)
 
     def _initialize_heap(self, sequence: Sequence[T]) -> None:
         """Initialize the heap using the insert_elem method for each element.
@@ -36,7 +36,7 @@ class MyHeap[T: Comparable]:
         the whole sequence, then fix the heap property by bubbling down each non-leaf node.
 
         The main rationale is that leaf nodes already dominate their (non-existent) children.
-        The overall complexity is O(n) since
+        The overall complexity is O(n) since each non-leaf node is bubbled down at most once.
         """
         self._heap = list(sequence)
 
@@ -70,6 +70,7 @@ class MyHeap[T: Comparable]:
         # If idx dominates its parent, swap them
         if self._is_dominant(self._heap[idx], self._heap[parent_idx]):
             self._swap_elements_by_idx(idx, parent_idx)
+            # After swapping, parent_idx contains the element originally at idx.
             self._bubble_up(parent_idx)
 
     def _get_parent_index(self, idx: int) -> int:
