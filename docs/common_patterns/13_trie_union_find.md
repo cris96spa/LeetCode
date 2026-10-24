@@ -50,11 +50,11 @@ Searching for $q$ walks down from the root following $q$'s characters. If an edg
 
 ```python
 class TrieNode:
-    __slots__ = ("children", "is_word")
+    __slots__ = ("children", "word")
 
     def __init__(self) -> None:
         self.children: dict[str, TrieNode] = {}
-        self.is_word = False
+        self.word: str | None = None             # the word ending here, if any
 
 
 class Trie:
@@ -64,8 +64,10 @@ class Trie:
     def insert(self, word: str) -> None:
         node = self.root
         for ch in word:
-            node = node.children.setdefault(ch, TrieNode())
-        node.is_word = True
+            if ch not in node.children:
+                node.children[ch] = TrieNode()
+            node = node.children[ch]
+        node.word = word
 
     def _walk(self, s: str) -> TrieNode | None:
         node = self.root
@@ -77,7 +79,7 @@ class Trie:
 
     def search(self, word: str) -> bool:
         node = self._walk(word)
-        return node is not None and node.is_word
+        return node is not None and node.word is not None
 
     def starts_with(self, prefix: str) -> bool:
         return self._walk(prefix) is not None
@@ -85,38 +87,18 @@ class Trie:
 
 Each operation is $O(k)$ for a string of length $k$. Space is $O(\text{total characters inserted})$ in the worst case (no shared prefixes), and much less when prefixes overlap. A `dict` of children works for any alphabet; a fixed array of 26 slots is faster in compiled languages but wastes space on sparse nodes.
 
-A compact alternative uses nested dictionaries directly, with a sentinel key marking word ends:
-
-```python
-def build_trie(words: list[str]) -> dict:
-    root: dict = {}
-    for w in words:
-        node = root
-        for ch in w:
-            node = node.setdefault(ch, {})
-        node["$"] = w            # store the word itself: handy when you find it later
-    return root
-```
+Marking word ends with the word itself rather than a boolean costs one reference per word, and a search that reaches the node gets the word back without rebuilding it — Word Search II below relies on this.
 
 ### Searching with Wildcards (LC 211)
 
 When the query contains `.` (matches any single character), the walk branches: at a `.`, try every child. The trie still prunes aggressively — a branch dies the moment its prefix isn't present.
 
 ```python
-class WordDictionary:
-    def __init__(self) -> None:
-        self.root = TrieNode()
-
-    def add_word(self, word: str) -> None:
-        node = self.root
-        for ch in word:
-            node = node.children.setdefault(ch, TrieNode())
-        node.is_word = True
-
+class WordDictionary(Trie):                     # words are added with Trie.insert
     def search(self, word: str) -> bool:
         def match(node: TrieNode, i: int) -> bool:
             if i == len(word):
-                return node.is_word
+                return node.word is not None
             ch = word[i]
             if ch == ".":
                 return any(match(child, i + 1) for child in node.children.values())
@@ -133,28 +115,37 @@ Find all dictionary words that can be traced on a letter grid by moving between 
 The key insight is the incremental-query advantage from above. A DFS on the board extends its current path by **one letter at a time**, so walk the trie **in lockstep** with it. Each board step is one trie step, and the moment the path's prefix is absent from the trie, that entire branch of the board search is abandoned. One DFS from each cell finds *all* words at once.
 
 ```python
+def grid_neighbors(r: int, c: int, rows: int, cols: int):
+    for nr, nc in ((r + 1, c), (r - 1, c), (r, c + 1), (r, c - 1)):
+        if 0 <= nr < rows and 0 <= nc < cols:
+            yield nr, nc
+
+
 def find_words(board: list[list[str]], words: list[str]) -> list[str]:
-    root = build_trie(words)
+    trie = Trie()
+    for word in words:
+        trie.insert(word)
     rows, cols = len(board), len(board[0])
     found: list[str] = []
 
-    def dfs(r: int, c: int, parent: dict) -> None:
-        ch = board[r][c]
-        node = parent[ch]
-        if "$" in node:
-            found.append(node.pop("$"))        # report once, then forget it
-        board[r][c] = "#"                      # mark as used on this path
-        for nr, nc in ((r + 1, c), (r - 1, c), (r, c + 1), (r, c - 1)):
-            if 0 <= nr < rows and 0 <= nc < cols and board[nr][nc] in node:
+    def dfs(r: int, c: int, parent: TrieNode) -> None:
+        letter = board[r][c]
+        node = parent.children[letter]
+        if node.word is not None:
+            found.append(node.word)
+            node.word = None                     # report each word only once
+        board[r][c] = "#"                        # mark as used on this path
+        for nr, nc in grid_neighbors(r, c, rows, cols):
+            if board[nr][nc] in node.children:
                 dfs(nr, nc, node)
-        board[r][c] = ch                       # backtrack
-        if not node:
-            parent.pop(ch)                     # prune: nothing left below this prefix
+        board[r][c] = letter                     # backtrack
+        if not node.children:
+            del parent.children[letter]          # prune: nothing left below this prefix
 
     for r in range(rows):
         for c in range(cols):
-            if board[r][c] in root:
-                dfs(r, c, root)
+            if board[r][c] in trie.root.children:
+                dfs(r, c, trie.root)
     return found
 ```
 
@@ -168,27 +159,28 @@ Two refinements make a big difference in practice: removing each word from the t
 - **Autocomplete / Search Suggestions** (LC 1268): walk to the prefix's node, then DFS (in alphabetical child order) to collect completions. For heavy traffic, cache the top suggestions at each node.
 - **Replace Words** (LC 648): for each word, walk the trie and stop at the first node marked as a root word.
 - **Longest Word in Dictionary** (LC 720): a word counts only if every prefix is also a word — a DFS that only descends through word-ending nodes.
-- **Binary tries for XOR** (LC 421): store numbers as 32-bit strings, most significant bit first. To maximize `x ^ y`, walk the trie from the top, at each level preferring the child with the **opposite** bit of `x` — a greedy choice that's correct because a higher bit outweighs all lower bits combined.
+- **Binary tries for XOR** (LC 421): store numbers as fixed-width bit strings, most significant bit first. To maximize `x ^ y`, walk the trie from the top, at each level preferring the child with the **opposite** bit of `x` — a greedy choice that's correct because a higher bit outweighs all lower bits combined.
 
 ```python
 def find_maximum_xor(nums: list[int]) -> int:
     bits = max(nums).bit_length()
-    root: dict = {}
-    for x in nums:                            # insert every number, high bit first
+    root: dict[int, dict] = {}                   # binary trie: bit -> child
+    for x in nums:                               # insert every number, high bit first
         node = root
-        for i in range(bits - 1, -1, -1):
+        for i in reversed(range(bits)):
             node = node.setdefault((x >> i) & 1, {})
     best = 0
-    for x in nums:                            # greedily take the opposite bit when possible
-        node, cur = root, 0
-        for i in range(bits - 1, -1, -1):
-            b = (x >> i) & 1
-            if 1 - b in node:
-                cur |= 1 << i
-                node = node[1 - b]
+    for x in nums:                               # greedily take the opposite bit when possible
+        node, xor = root, 0
+        for i in reversed(range(bits)):
+            bit = (x >> i) & 1
+            opposite = bit ^ 1
+            if opposite in node:
+                xor |= 1 << i
+                node = node[opposite]
             else:
-                node = node[b]
-        best = max(best, cur)
+                node = node[bit]
+        best = max(best, xor)
     return best
 ```
 
@@ -289,19 +281,22 @@ def find_redundant_connection(edges: list[list[int]]) -> list[int]:
 Accounts sharing any email belong to the same person. Rather than comparing accounts pairwise, union each account with the **first account that claimed each email**. Then gather emails by root.
 
 ```python
+from collections import defaultdict
+
+
 def accounts_merge(accounts: list[list[str]]) -> list[list[str]]:
     uf = UnionFind(len(accounts))
-    owner: dict[str, int] = {}
-    for i, (_, *emails) in enumerate(accounts):
-        for email in emails:
+    owner: dict[str, int] = {}                   # email -> first account that listed it
+    for i, account in enumerate(accounts):
+        for email in account[1:]:                # account[0] is the name
             if email in owner:
                 uf.union(i, owner[email])
             else:
                 owner[email] = i
-    groups: dict[int, list[str]] = {}
+    groups: dict[int, list[str]] = defaultdict(list)
     for email, i in owner.items():
-        groups.setdefault(uf.find(i), []).append(email)
-    return [[accounts[root][0], *sorted(emails)] for root, emails in groups.items()]
+        groups[uf.find(i)].append(email)
+    return [[accounts[root][0]] + sorted(emails) for root, emails in groups.items()]
 ```
 
 #### Equivalence constraints: Satisfiability of Equality Equations (LC 990)
@@ -309,13 +304,19 @@ def accounts_merge(accounts: list[list[str]]) -> list[list[str]]:
 Given constraints like `a==b` and `b!=c`, decide whether they can all hold. Equality is an equivalence relation, so union all `==` pairs first; then every `!=` pair must lie in different groups.
 
 ```python
+def letter_index(ch: str) -> int:
+    return ord(ch) - ord("a")
+
+
 def equations_possible(equations: list[str]) -> bool:
     uf = UnionFind(26)
-    idx = lambda ch: ord(ch) - ord("a")
-    for eq in equations:
-        if eq[1] == "=":
-            uf.union(idx(eq[0]), idx(eq[3]))
-    return all(not uf.connected(idx(eq[0]), idx(eq[3])) for eq in equations if eq[1] == "!")
+    for x, op, _, y in equations:                # "a==b" unpacks to "a", "=", "=", "b"
+        if op == "=":
+            uf.union(letter_index(x), letter_index(y))
+    for x, op, _, y in equations:
+        if op == "!" and uf.connected(letter_index(x), letter_index(y)):
+            return False
+    return True
 ```
 
 #### Kruskal's minimum spanning tree
@@ -328,15 +329,19 @@ Land cells appear one at a time on a grid; after each addition, report the numbe
 
 ```python
 def num_islands2(m: int, n: int, positions: list[list[int]]) -> list[int]:
-    uf = UnionFind(m * n)                        # cell (r, c) is element r * n + c
+    def cell_id(r: int, c: int) -> int:
+        return r * n + c
+
+    uf = UnionFind(m * n)
     land = [[False] * n for _ in range(m)]
-    islands, result = 0, []
+    islands = 0
+    result: list[int] = []
     for r, c in positions:
         if not land[r][c]:                       # the same cell may be added twice
             land[r][c] = True
             islands += 1
-            for nr, nc in ((r + 1, c), (r - 1, c), (r, c + 1), (r, c - 1)):
-                if 0 <= nr < m and 0 <= nc < n and land[nr][nc] and uf.union(r * n + c, nr * n + nc):
+            for nr, nc in grid_neighbors(r, c, m, n):
+                if land[nr][nc] and uf.union(cell_id(r, c), cell_id(nr, nc)):
                     islands -= 1                 # two islands just merged into one
         result.append(islands)
     return result
@@ -364,7 +369,7 @@ This is where union-find truly beats BFS/DFS: when **edges arrive over time** an
 
 1. **Confusing "prefix exists" with "word exists."** `starts_with("app")` can be true while `search("app")` is false. The end-of-word flag is what distinguishes them.
 
-2. **Rebuilding strings during DFS.** Concatenating `path + ch` at each step costs $O(k)$ per step. Store the full word at its terminal node (as `build_trie` does), or keep a list and join only when reporting.
+2. **Rebuilding strings during DFS.** Concatenating `path + ch` at each step costs $O(k)$ per step. Store the full word at its terminal node (as `TrieNode.word` does), or keep a list and join only when reporting.
 
 3. **Reporting duplicates in Word Search II.** A word reachable by two board paths is found twice unless you remove it from the trie (or use a set).
 
@@ -378,7 +383,7 @@ This is where union-find truly beats BFS/DFS: when **edges arrive over time** an
 
 3. **Unioning non-roots.** `parent[x] = y` links $x$'s node, not $x$'s whole tree. Always link `find(x)` to `find(y)`.
 
-4. **Mapping labels to indices.** For string or coordinate elements, maintain a `dict` from element to index, or implement the parent map itself as a `dict`.
+4. **Passing raw labels as elements.** `UnionFind` works on integers `0..n-1`. Map letters, strings or grid cells to indices first (`letter_index`, `cell_id`, or a `dict`), or key the parent map itself by the element.
 
 5. **Expecting deletions to work.** Union-find merges only. For splits, reverse time or use a different structure.
 
