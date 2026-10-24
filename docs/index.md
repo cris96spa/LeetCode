@@ -8,7 +8,7 @@ A collection of LeetCode solutions in Python, organised by difficulty, with note
 <div class="lc-stats">
 <div class="lc-stat lc-easy"><span class="lc-num">29</span><span class="lc-label">Easy</span></div>
 <div class="lc-stat lc-medium"><span class="lc-num">101</span><span class="lc-label">Medium</span></div>
-<div class="lc-stat lc-hard"><span class="lc-num">8</span><span class="lc-label">Hard</span></div>
+<div class="lc-stat lc-hard"><span class="lc-num">9</span><span class="lc-label">Hard</span></div>
 </div>
 
 ## NeetCode Progress
@@ -162,7 +162,7 @@ A collection of LeetCode solutions in Python, organised by difficulty, with note
         - [ ] Set Matrix Zeroes
         - [ ] Spiral Matrix
 
-=== "NeetCode 150 &nbsp;·&nbsp; 87 / 150"
+=== "NeetCode 150 &nbsp;·&nbsp; 88 / 150"
 
     ??? note "Arrays & Hashing &nbsp;·&nbsp; 5 / 9 (56%)"
         <div class="lc-progress-bar"><div class="lc-progress-fill" style="width:56%"></div></div>
@@ -318,14 +318,14 @@ A collection of LeetCode solutions in Python, organised by difficulty, with note
         - [x] Reconstruct Itinerary
         - [ ] Swim In Rising Water
 
-    ??? note "Backtracking &nbsp;·&nbsp; 7 / 10 (70%)"
-        <div class="lc-progress-bar"><div class="lc-progress-fill" style="width:70%"></div></div>
+    ??? note "Backtracking &nbsp;·&nbsp; 8 / 10 (80%)"
+        <div class="lc-progress-bar"><div class="lc-progress-fill" style="width:80%"></div></div>
 
         - [x] Combination Sum
         - [x] Combination Sum II
         - [x] Generate Parentheses
         - [x] Letter Combinations of a Phone Number
-        - [ ] N Queens
+        - [x] N Queens
         - [ ] Palindrome Partitioning
         - [x] Permutations
         - [x] Subsets
@@ -386,7 +386,7 @@ A collection of LeetCode solutions in Python, organised by difficulty, with note
         - [ ] Set Matrix Zeroes
         - [ ] Spiral Matrix
 
-=== "NeetCode 250 &nbsp;·&nbsp; 108 / 250"
+=== "NeetCode 250 &nbsp;·&nbsp; 109 / 250"
 
     ??? note "Arrays & Hashing &nbsp;·&nbsp; 8 / 22 (36%)"
         <div class="lc-progress-bar"><div class="lc-progress-fill" style="width:36%"></div></div>
@@ -617,8 +617,8 @@ A collection of LeetCode solutions in Python, organised by difficulty, with note
         - [x] Reconstruct Itinerary
         - [ ] Swim In Rising Water
 
-    ??? note "Backtracking &nbsp;·&nbsp; 10 / 17 (59%)"
-        <div class="lc-progress-bar"><div class="lc-progress-fill" style="width:59%"></div></div>
+    ??? note "Backtracking &nbsp;·&nbsp; 11 / 17 (65%)"
+        <div class="lc-progress-bar"><div class="lc-progress-fill" style="width:65%"></div></div>
 
         - [x] Combination Sum
         - [x] Combination Sum II
@@ -626,7 +626,7 @@ A collection of LeetCode solutions in Python, organised by difficulty, with note
         - [x] Generate Parentheses
         - [x] Letter Combinations of a Phone Number
         - [ ] Matchsticks to Square
-        - [ ] N Queens
+        - [x] N Queens
         - [ ] N Queens II
         - [ ] Palindrome Partitioning
         - [x] Partition to K Equal Sum Subsets

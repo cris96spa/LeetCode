@@ -335,7 +335,9 @@ In constraint satisfaction problems, every position has a domain of values and t
 
 ### N-Queens (LC 51)
 
-Place $n$ queens so that none attack each other. One queen per row, so the solution vector gives each row's column. A queen at $(r, c)$ occupies column $c$, "diagonal" $r - c$, and "anti-diagonal" $r + c$; three sets make each safety check $O(1)$:
+Place $n$ queens so that none attack each other. One queen per row, so the solution vector gives each row's column. A queen at $(r, c)$ occupies column $c$, "diagonal" $r - c$, and "anti-diagonal" $r + c$; three sets make each safety check $O(1)$.
+
+The solution vector has a fixed length $n$, with `-1` marking an empty row. Besides reading naturally (`queens[r] = c`), this supports a variant where some queens are placed in advance: set their rows and constraint sets before the search, and skip those rows during it. The [Sudoku solver](#sudoku-lc-37-choose-the-most-constrained-cell) below works exactly this way with its given cells.
 
 ```python
 def solve_n_queens(n: int) -> list[list[str]]:
@@ -343,18 +345,32 @@ def solve_n_queens(n: int) -> list[list[str]]:
     cols: set[int] = set()
     diag: set[int] = set()
     anti: set[int] = set()
-    queens: list[int] = []                       # queens[r] = column of the queen in row r
+    queens = [-1] * n       # queens[r] = column of the queen in row r, -1 if empty
+
+    def is_free(r: int, c: int) -> bool:
+        return c not in cols and r - c not in diag and r + c not in anti
+
+    def set_queen(r: int, c: int) -> None:
+        queens[r] = c
+        cols.add(c)
+        diag.add(r - c)
+        anti.add(r + c)
+
+    def unset_queen(r: int, c: int) -> None:
+        queens[r] = -1
+        cols.remove(c)
+        diag.remove(r - c)
+        anti.remove(r + c)
 
     def place(r: int) -> None:
         if r == n:
             result.append(["." * c + "Q" + "." * (n - c - 1) for c in queens])
             return
         for c in range(n):
-            if c in cols or r - c in diag or r + c in anti:
-                continue
-            cols.add(c); diag.add(r - c); anti.add(r + c); queens.append(c)
-            place(r + 1)
-            cols.remove(c); diag.remove(r - c); anti.remove(r + c); queens.pop()
+            if is_free(r, c):
+                set_queen(r, c)
+                place(r + 1)
+                unset_queen(r, c)
 
     place(0)
     return result
