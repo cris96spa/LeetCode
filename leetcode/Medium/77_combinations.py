@@ -16,9 +16,10 @@ class Solution:
     - Complete: when the candidate holds `k` numbers, record a copy.
     - Make move: append the next number, then recurse from the number after it.
     - Unmake move: pop it.
-    - Prune: with `remaining = k - len(candidate)` numbers still to pick, the next number
-      must leave at least `remaining - 1` larger ones after it, so the loop stops at
-      index `n - remaining` instead of `n - 1`.
+    - Prune: with `remaining = k - len(candidate)` numbers still to pick, the other
+      `remaining - 1` picks must come from indices after `i`, so
+      `i + remaining - 1 <= n - 1`, i.e. `i <= n - remaining`. `range` excludes its end,
+      hence `range(start, n - remaining + 1)`.
 
     Complexity:
     -----------
@@ -37,9 +38,9 @@ class Solution:
                 return
 
             remaining = k - len(candidate)
-            for idx in range(start, n - remaining + 1):  # leave room for the remaining picks
-                candidate.append(idx + 1)
-                backtrack(idx + 1)
+            for i in range(start, n - remaining + 1):  # leave room for the remaining picks
+                candidate.append(i + 1)  # index i holds the number i + 1
+                backtrack(i + 1)
                 candidate.pop()
 
         backtrack(0)

@@ -120,12 +120,12 @@ def combine(n: int, k: int) -> list[list[int]]:
             result.append(chosen[:])
             return
         need = k - len(chosen)
-        for x in range(start, n - need + 2):     # leave room for the remaining picks
-            chosen.append(x)
-            extend(x + 1)
+        for i in range(start, n - need + 1):
+            chosen.append(i + 1)        # index i holds the number i + 1
+            extend(i + 1)
             chosen.pop()
 
-    extend(1)
+    extend(0)
     return result
 ```
 
