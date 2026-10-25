@@ -8,7 +8,7 @@ A collection of LeetCode solutions in Python, organised by difficulty, with note
 <div class="lc-stats">
 <div class="lc-stat lc-easy"><span class="lc-num">29</span><span class="lc-label">Easy</span></div>
 <div class="lc-stat lc-medium"><span class="lc-num">101</span><span class="lc-label">Medium</span></div>
-<div class="lc-stat lc-hard"><span class="lc-num">9</span><span class="lc-label">Hard</span></div>
+<div class="lc-stat lc-hard"><span class="lc-num">10</span><span class="lc-label">Hard</span></div>
 </div>
 
 ## NeetCode Progress
@@ -710,13 +710,14 @@ A collection of LeetCode solutions in Python, organised by difficulty, with note
         - [ ] Spiral Matrix
         - [ ] Transpose Matrix
 
-## Other Solutions &nbsp;·&nbsp; 29
+## Other Solutions &nbsp;·&nbsp; 30
 
-??? note "Show 29 solutions"
+??? note "Show 30 solutions"
     | File | Difficulty | Inferred name |
     |------|:----------:|---------------|
     | `29_divide_two_integers.py` | Medium | Divide Two Integers |
     | `34_find_first_and_last_position_of_element_in_sorted_array.py` | Medium | Find First And Last Position Of Element In Sorted Array |
+    | `37_sudoku_solver.py` | Hard | Sudoku Solver |
     | `116_populating_next_right_pointers_in_each_node.py` | Medium | Populating Next Right Pointers In Each Node |
     | `137_single_number_2.py` | Medium | Single Number 2 |
     | `162_find_peak_element.py` | Medium | Find Peak Element |

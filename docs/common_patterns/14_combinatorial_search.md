@@ -385,39 +385,51 @@ A natural Sudoku solver fills empty cells in reading order, trying each digit no
 
 ```python
 def solve_sudoku(board: list[list[str]]) -> None:
-    rows = [set() for _ in range(9)]
-    cols = [set() for _ in range(9)]
-    boxes = [set() for _ in range(9)]
-    empty = []
+    rows: list[set[str]] = [set() for _ in range(9)]
+    cols: list[set[str]] = [set() for _ in range(9)]
+    boxes: list[set[str]] = [set() for _ in range(9)]
+    empty: set[tuple[int, int]] = set()
+
+    def box(r: int, c: int) -> int:
+        return r // 3 * 3 + c // 3
+
+    def candidates(r: int, c: int) -> set[str]:
+        return set("123456789") - rows[r] - cols[c] - boxes[box(r, c)]
+
+    def num_candidates(cell: tuple[int, int]) -> int:
+        r, c = cell
+        return len(candidates(r, c))
+
+    def make_move(r: int, c: int, d: str) -> None:
+        board[r][c] = d
+        rows[r].add(d)
+        cols[c].add(d)
+        boxes[box(r, c)].add(d)
+
+    def unmake_move(r: int, c: int, d: str) -> None:
+        board[r][c] = "."
+        rows[r].remove(d)
+        cols[c].remove(d)
+        boxes[box(r, c)].remove(d)
+
     for r in range(9):
         for c in range(9):
             if board[r][c] == ".":
-                empty.append((r, c))
+                empty.add((r, c))
             else:
-                d = board[r][c]
-                rows[r].add(d); cols[c].add(d); boxes[r // 3 * 3 + c // 3].add(d)
-
-    def candidates(r: int, c: int) -> set[str]:
-        return set("123456789") - rows[r] - cols[c] - boxes[r // 3 * 3 + c // 3]
+                make_move(r, c, board[r][c])     # register the given digit
 
     def solve() -> bool:
         if not empty:
             return True
-        # most constrained cell: fewest candidates (0 candidates => dead end immediately)
-        i = min(range(len(empty)), key=lambda j: len(candidates(*empty[j])))
-        r, c = empty[i]
-        options = candidates(r, c)
-        empty[i] = empty[-1]
-        empty.pop()
-        for d in options:
-            board[r][c] = d
-            rows[r].add(d); cols[c].add(d); boxes[r // 3 * 3 + c // 3].add(d)
+        r, c = min(empty, key=num_candidates)    # most constrained; 0 candidates = dead end
+        empty.remove((r, c))
+        for d in candidates(r, c):
+            make_move(r, c, d)
             if solve():
                 return True
-            rows[r].remove(d); cols[c].remove(d); boxes[r // 3 * 3 + c // 3].remove(d)
-        board[r][c] = "."
-        empty.append((r, c))                     # restore the list of empty cells
-        empty[i], empty[-1] = empty[-1], empty[i]
+            unmake_move(r, c, d)
+        empty.add((r, c))
         return False
 
     solve()
@@ -437,25 +449,36 @@ Choosing the most constrained cell looks like it only *reorders* the work, but i
 Trace a word through adjacent cells without reusing a cell. The partial solution is the path so far; the candidates are unvisited neighbors holding the next letter. Marking the cell in place and restoring it afterward is the make/unmake pair:
 
 ```python
+def grid_neighbors(r: int, c: int, rows: int, cols: int):
+    for nr, nc in ((r + 1, c), (r - 1, c), (r, c + 1), (r, c - 1)):
+        if 0 <= nr < rows and 0 <= nc < cols:
+            yield nr, nc
+
+
 def exist(board: list[list[str]], word: str) -> bool:
     rows, cols = len(board), len(board[0])
 
-    def match(r: int, c: int, i: int) -> bool:
-        if board[r][c] != word[i]:
-            return False
+    def trace(r: int, c: int, i: int) -> bool:
+        """Can word[i:] be traced from (r, c)? The caller guarantees board[r][c] == word[i]."""
         if i == len(word) - 1:
             return True
-        board[r][c] = "#"                        # make move: mark used
-        found = any(
-            match(nr, nc, i + 1)
-            for nr, nc in ((r + 1, c), (r - 1, c), (r, c + 1), (r, c - 1))
-            if 0 <= nr < rows and 0 <= nc < cols
-        )
+        board[r][c] = "#"                        # make move: mark the cell as used
+        found = False
+        for nr, nc in grid_neighbors(r, c, rows, cols):
+            if board[nr][nc] == word[i + 1] and trace(nr, nc, i + 1):
+                found = True
+                break
         board[r][c] = word[i]                    # unmake move
         return found
 
-    return any(match(r, c, 0) for r in range(rows) for c in range(cols))
+    for r in range(rows):
+        for c in range(cols):
+            if board[r][c] == word[0] and trace(r, c, 0):
+                return True
+    return False
 ```
+
+Every call is made only on a cell holding the next letter: `word[0]` for the starting cells, `word[i + 1]` for the neighbors. A used cell holds `"#"`, which never equals a letter of `word`, so the same check also rejects revisits.
 
 A cheap global prune before searching: if the board doesn't contain enough copies of each letter in the word, return `False` immediately. For many words at once, drive the search with a trie (Word Search II; see [Trie & Union Find](13_trie_union_find.md#word-search-ii-lc-212-walking-a-trie-and-a-grid-together)).
 
